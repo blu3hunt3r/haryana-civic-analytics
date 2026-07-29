@@ -739,12 +739,17 @@ function bindControls(): void {
   document.querySelector<HTMLInputElement>("#search")!.addEventListener("input", (event) => {
     window.clearTimeout(searchTimer);
     searchTimer = window.setTimeout(async () => {
-      const query = (event.target as HTMLInputElement).value.trim();
+      const input = event.target as HTMLInputElement;
+      const query = input.value.trim();
+      input.dataset.searchState = "loading";
       if (query && fullDescriptionSearch.size === 0) {
+        document.querySelector("#result-count")!.textContent =
+          "Loading the full work-description index…";
         fullDescriptionSearch = await loadSearchIndex();
       }
-      filters.query = query;
+      filters.query = input.value.trim();
       applyFilters();
+      input.dataset.searchState = "ready";
     }, 180);
   });
   document.querySelector("#previous-page")!.addEventListener("click", () => {

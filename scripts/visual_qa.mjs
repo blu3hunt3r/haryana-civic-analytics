@@ -62,7 +62,9 @@ for (const viewport of [
   await page.locator("#gurugram-view").click();
   await page.locator('input[data-layer="sectors"]').check();
   await page.locator("#search").fill("drainage");
-  await page.waitForTimeout(500);
+  await page
+    .locator('#search[data-search-state="ready"]')
+    .waitFor({ timeout: 20_000 });
   const resultText = await page.locator("#result-count").innerText();
   await page.locator(".tender-row").first().click();
   await page.locator("#tender-dialog[open]").waitFor();
