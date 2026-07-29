@@ -5,6 +5,7 @@ import test from "node:test";
 const root = new URL("../public/data/", import.meta.url);
 const overview = JSON.parse(await readFile(new URL("overview.json", root), "utf8"));
 const validation = JSON.parse(await readFile(new URL("validation.json", root), "utf8"));
+const places = JSON.parse(await readFile(new URL("places.json", root), "utf8"));
 const tenderIndex = JSON.parse(await readFile(new URL("tenders.json", root), "utf8"));
 const tenders = tenderIndex.rows.map((row) =>
   Object.fromEntries(tenderIndex.schema.map((field, index) => [field, row[index]])),
@@ -63,5 +64,17 @@ test("public tender year is derived from the stable Tender ID prefix", () => {
     const match = row.id.match(/^(\d{4})_/);
     if (match) assert.equal(row.year, match[1], row.id);
     if (row.publishedDateConflict) assert.equal(row.month, null, row.id);
+  }
+});
+
+test("place index is name evidence and never invented boundary geometry", () => {
+  assert.equal(places.length, 435);
+  assert.equal(
+    places.filter((place) => place.boundaryGeometryAvailable).length,
+    0,
+  );
+  const ids = new Set(tenders.map((row) => row.id));
+  for (const place of places) {
+    for (const id of place.tenderIds) assert.ok(ids.has(id), `${place.name}: ${id}`);
   }
 });

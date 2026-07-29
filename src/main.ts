@@ -536,6 +536,11 @@ function renderDynamicCharts(): void {
   renderFilteredValueChart(
     document.querySelector<HTMLElement>("#value-chart")!,
     filteredRows,
+    (year) => {
+      filters.year = year;
+      (document.querySelector("#year-filter") as HTMLSelectElement).value = year;
+      applyFilters();
+    },
   );
   renderDepartmentComponentHeatmap(
     document.querySelector<HTMLElement>("#department-component-heatmap")!,
@@ -583,6 +588,11 @@ function renderDynamicCharts(): void {
   renderTrendChart(
     document.querySelector<HTMLElement>("#trend-chart")!,
     [...periodMetrics].sort().map(([period, value]) => ({ period, ...value })),
+    (year) => {
+      filters.year = year;
+      (document.querySelector("#year-filter") as HTMLSelectElement).value = year;
+      applyFilters();
+    },
   );
 }
 

@@ -79,6 +79,7 @@ export function renderStatusChart(
 export function renderTrendChart(
   element: HTMLElement,
   rows: Array<Metric & { period: string }>,
+  onSelect: (year: string) => void = () => undefined,
 ): void {
   const yearly = new Map<string, Metric>();
   for (const row of rows) {
@@ -98,7 +99,8 @@ export function renderTrendChart(
     yearly.set(year, current);
   }
   const values = [...yearly.entries()].sort();
-  chart(element).setOption({
+  const instance = chart(element);
+  instance.setOption({
     animationDuration: 350,
     color: [primary, accent],
     grid: { left: 52, right: 18, top: 24, bottom: 34 },
@@ -132,6 +134,8 @@ export function renderTrendChart(
       },
     ],
   });
+  instance.off("click");
+  instance.on("click", (event) => onSelect(String(event.name)));
 }
 
 export function renderDepartmentChart(
@@ -215,6 +219,7 @@ export function renderComponentDonut(
 export function renderFilteredValueChart(
   element: HTMLElement,
   rows: TenderIndexRow[],
+  onSelect: (year: string) => void = () => undefined,
 ): void {
   const years = new Map<string, number>();
   for (const row of rows) {
@@ -222,7 +227,8 @@ export function renderFilteredValueChart(
     years.set(row.year, (years.get(row.year) ?? 0) + row.contractValue);
   }
   const values = [...years.entries()].sort();
-  chart(element).setOption({
+  const instance = chart(element);
+  instance.setOption({
     grid: { left: 70, right: 18, top: 20, bottom: 34 },
     tooltip: {
       trigger: "axis",
@@ -252,6 +258,8 @@ export function renderFilteredValueChart(
       },
     ],
   });
+  instance.off("click");
+  instance.on("click", (event) => onSelect(String(event.name)));
 }
 
 export function renderDepartmentComponentHeatmap(
