@@ -1,0 +1,698 @@
+{
+  "ok": true,
+  "datasetVersion": "2026-07-28.1",
+  "checksPassed": 103,
+  "checks": [
+    {
+      "name": "source_tender_ids_unique",
+      "passed": true,
+      "expected": 49121,
+      "actual": 49121
+    },
+    {
+      "name": "public_tender_ids_unique",
+      "passed": true,
+      "expected": 49121,
+      "actual": 49121
+    },
+    {
+      "name": "public_tender_count",
+      "passed": true,
+      "expected": 49121,
+      "actual": 49121
+    },
+    {
+      "name": "public_tender_id_set",
+      "passed": true,
+      "expected": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      },
+      "actual": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      }
+    },
+    {
+      "name": "scope_counts_reconcile",
+      "passed": true,
+      "expected": {
+        "confirmed_gurugram": 31241,
+        "not_gurugram": 7892,
+        "statewide_multi_location": 3328,
+        "likely_gurugram": 6660
+      },
+      "actual": {
+        "confirmed_gurugram": 31241,
+        "not_gurugram": 7892,
+        "statewide_multi_location": 3328,
+        "likely_gurugram": 6660
+      }
+    },
+    {
+      "name": "overview_confirmed_count",
+      "passed": true,
+      "expected": 31241,
+      "actual": 31241
+    },
+    {
+      "name": "overview_confirmed_plus_likely_count",
+      "passed": true,
+      "expected": 37901,
+      "actual": 37901
+    },
+    {
+      "name": "overview_confirmed_awarded",
+      "passed": true,
+      "expected": 13398,
+      "actual": 13398
+    },
+    {
+      "name": "overview_contract_value_uses_controlling_awards_only",
+      "passed": true,
+      "expected": 83295707464.37,
+      "actual": 83295707464.37
+    },
+    {
+      "name": "cancelled_or_retendered_never_controlling_award",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "statewide_not_in_confirmed_default",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "document_record_count",
+      "passed": true,
+      "expected": 248056,
+      "actual": 248056
+    },
+    {
+      "name": "analytics_year_uses_tender_id_prefix",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "conflicted_portal_dates_never_supply_month",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "overview_portal_date_conflict_count",
+      "passed": true,
+      "expected": 436,
+      "actual": 436
+    },
+    {
+      "name": "haryana_district_geometry_count",
+      "passed": true,
+      "expected": 23,
+      "actual": 23
+    },
+    {
+      "name": "all_district_links_resolve_to_geometry",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": []
+    },
+    {
+      "name": "district_contract_values_exclude_multi_district_duplication",
+      "passed": true,
+      "expected": {
+        "confirmed_gurugram|Gurugram": 65865653414.110115,
+        "statewide_multi_location|Gurugram": 7666994.0,
+        "likely_gurugram|Gurugram": 3229349277.4900007,
+        "confirmed_gurugram|Palwal": 210463500.0,
+        "statewide_multi_location|Palwal": 1345675746.98,
+        "not_gurugram|Gurugram": 87745781.4,
+        "confirmed_gurugram|Hisar": 73542438.64,
+        "likely_gurugram|Hisar": 2130191.0,
+        "not_gurugram|Nuh": 2196401.0,
+        "statewide_multi_location|Rewari": 102085727.1,
+        "not_gurugram|Sirsa": 478934842.84999996,
+        "confirmed_gurugram|Faridabad": 5056149.79,
+        "statewide_multi_location|Faridabad": 25378188.25,
+        "confirmed_gurugram|Jhajjar": 860056617.2,
+        "confirmed_gurugram|Panchkula": 12154042.0,
+        "statewide_multi_location|Jhajjar": 37592240.2,
+        "confirmed_gurugram|Nuh": 337788.0
+      },
+      "actual": {
+        "confirmed_gurugram|Faridabad": 5056149.79,
+        "confirmed_gurugram|Gurugram": 65865653414.110115,
+        "confirmed_gurugram|Hisar": 73542438.64,
+        "confirmed_gurugram|Jhajjar": 860056617.2,
+        "confirmed_gurugram|Nuh": 337788.0,
+        "confirmed_gurugram|Palwal": 210463500.0,
+        "confirmed_gurugram|Panchkula": 12154042.0,
+        "likely_gurugram|Gurugram": 3229349277.4900007,
+        "likely_gurugram|Hisar": 2130191.0,
+        "not_gurugram|Gurugram": 87745781.4,
+        "not_gurugram|Nuh": 2196401.0,
+        "not_gurugram|Sirsa": 478934842.84999996,
+        "statewide_multi_location|Faridabad": 25378188.25,
+        "statewide_multi_location|Gurugram": 7666994.0,
+        "statewide_multi_location|Jhajjar": 37592240.2,
+        "statewide_multi_location|Palwal": 1345675746.98,
+        "statewide_multi_location|Rewari": 102085727.1
+      }
+    },
+    {
+      "name": "detail_shard_no_duplicate_00",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_01",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_02",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_03",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_04",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_05",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_06",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_07",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_08",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_09",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_10",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_11",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_12",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_13",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_14",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_15",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_16",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_17",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_18",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_19",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_20",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_21",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_22",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_23",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_24",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_25",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_26",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_27",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_28",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_29",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_30",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_31",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_32",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_33",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_34",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_35",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_36",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_37",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_38",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_39",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_40",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_41",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_42",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_43",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_44",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_45",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_46",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_47",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_48",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_49",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_50",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_51",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_52",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_53",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_54",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_55",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_56",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_57",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_58",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_59",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_60",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_61",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_62",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_no_duplicate_63",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "detail_shard_count",
+      "passed": true,
+      "expected": 64,
+      "actual": 64
+    },
+    {
+      "name": "detail_tender_coverage",
+      "passed": true,
+      "expected": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      },
+      "actual": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      }
+    },
+    {
+      "name": "detail_document_coverage",
+      "passed": true,
+      "expected": 248056,
+      "actual": 248056
+    },
+    {
+      "name": "source_exists_tenders",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/tenders.csv"
+    },
+    {
+      "name": "source_hash_tenders",
+      "passed": true,
+      "expected": "98eb2e677fc53325449bea1971e3ced703b7fe9b76b309898d4078c143693702",
+      "actual": "98eb2e677fc53325449bea1971e3ced703b7fe9b76b309898d4078c143693702"
+    },
+    {
+      "name": "source_exists_scope",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/gurugram_scope.csv"
+    },
+    {
+      "name": "source_hash_scope",
+      "passed": true,
+      "expected": "690508650eac3110af263f82f813db87e5735cb62d27df755dd4cd4397a8db84",
+      "actual": "690508650eac3110af263f82f813db87e5735cb62d27df755dd4cd4397a8db84"
+    },
+    {
+      "name": "source_exists_documents",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/documents.csv"
+    },
+    {
+      "name": "source_hash_documents",
+      "passed": true,
+      "expected": "52a10046e458881e6e84d5a061d501883ef145540ae39c1c8e3ae8e4aaa6e946",
+      "actual": "52a10046e458881e6e84d5a061d501883ef145540ae39c1c8e3ae8e4aaa6e946"
+    },
+    {
+      "name": "source_exists_provenance",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/field_provenance.csv"
+    },
+    {
+      "name": "source_hash_provenance",
+      "passed": true,
+      "expected": "137833c335b6c04df5be21918e9fda60adccfa22d003a2d6e596eb5f3851a2f1",
+      "actual": "137833c335b6c04df5be21918e9fda60adccfa22d003a2d6e596eb5f3851a2f1"
+    },
+    {
+      "name": "source_exists_awards",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/derived/award_verification_v2.csv"
+    },
+    {
+      "name": "source_hash_awards",
+      "passed": true,
+      "expected": "36723bf7917c7a091724058209d5ac694f7a607b59262b6476d46b2c6f761d15",
+      "actual": "36723bf7917c7a091724058209d5ac694f7a607b59262b6476d46b2c6f761d15"
+    },
+    {
+      "name": "source_exists_chains",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/derived/procurement_chains.csv"
+    },
+    {
+      "name": "source_hash_chains",
+      "passed": true,
+      "expected": "6f3245a5a9982bac8095a50004d828d0203e4962fb2d94fdbd1b98dd9d74f98f",
+      "actual": "6f3245a5a9982bac8095a50004d828d0203e4962fb2d94fdbd1b98dd9d74f98f"
+    },
+    {
+      "name": "source_exists_areas",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/derived/tender_area_index.csv"
+    },
+    {
+      "name": "source_hash_areas",
+      "passed": true,
+      "expected": "434f202e4dba5a2eced13094a6ff81cf7cdd47a5bf1031d7b5533c97e81b2d54",
+      "actual": "434f202e4dba5a2eced13094a6ff81cf7cdd47a5bf1031d7b5533c97e81b2d54"
+    },
+    {
+      "name": "source_exists_hewp",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/hewp_gurugram_public_works_deduplicated.csv"
+    },
+    {
+      "name": "source_hash_hewp",
+      "passed": true,
+      "expected": "72e4871b582a9db8ed7a56f3d4bb2f67fd68d8e2a8bdff8f48f057995d0aa9c5",
+      "actual": "72e4871b582a9db8ed7a56f3d4bb2f67fd68d8e2a8bdff8f48f057995d0aa9c5"
+    },
+    {
+      "name": "source_exists_mcg",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/mcg_public_execution_works.csv"
+    },
+    {
+      "name": "source_hash_mcg",
+      "passed": true,
+      "expected": "9a154949531dd71c9637a9c80e74ecb35714ccb0a457512458eddc93ce5d055e",
+      "actual": "9a154949531dd71c9637a9c80e74ecb35714ccb0a457512458eddc93ce5d055e"
+    }
+  ],
+  "semantics": {
+    "contractValue": "controlling confirmed awards only; not money paid",
+    "defaultScope": "confirmed_gurugram only",
+    "completion": "scheduled and actual completion remain separate"
+  }
+}

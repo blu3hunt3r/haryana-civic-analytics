@@ -1,0 +1,25 @@
+{
+  "name": "haryana-civic-analytics",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "data:build": "python3 scripts/build_analytics.py",
+    "data:validate": "python3 scripts/validate_analytics.py",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "verify": "npm run data:validate && npm test && npm run build",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.mjs",
+    "qa:ui": "node scripts/visual_qa.mjs"
+  },
+  "dependencies": {
+    "echarts": "^6.1.0",
+    "maplibre-gl": "^5.6.1"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6"
+  }
+}
