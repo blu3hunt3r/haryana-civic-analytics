@@ -30,6 +30,9 @@ machine that has the verified source corpus.
 - Department-by-work-family heatmap.
 - Competition, contractor-concentration and procurement-chain views.
 - Repeated-work review signals.
+- Searchable HEWP village/town index without invented boundary geometry.
+- Exact Tender-ID HEWP links, graded MCG links, and validated road-asset links
+  on the tender evidence page.
 - Full tender search and evidence detail with document/source SHA-256 values.
 - Dataset freshness, confidence labels and explicit missing-evidence states.
 

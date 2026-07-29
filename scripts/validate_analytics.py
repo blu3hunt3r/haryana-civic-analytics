@@ -96,6 +96,18 @@ def main() -> None:
     source_tenders = read_csv(ROOT / "data/final/tenders.csv")
     source_scope = read_csv(ROOT / "data/final/gurugram_scope.csv")
     source_documents = read_csv(ROOT / "data/final/documents.csv")
+    source_hewp_links = read_csv(ROOT / "data/final/hewp_exact_links.csv")
+    source_mcg_links = read_csv(ROOT / "data/final/mcg_gepnic_links.csv")
+    source_asset_links = read_csv(ROOT / "data/derived/contract_asset_links.csv")
+    source_places = read_csv(ROOT / "data/derived/gurugram_places.csv")
+    places = load_json(DATA / "places.json")
+    embedded_link_counts = Counter()
+    for index in range(manifest["records"]["detailShards"]):
+        shard = load_json(DATA / "tender-details" / f"{index:02d}.json")
+        for detail in shard.values():
+            embedded_link_counts["hewp"] += len(detail["hewpRecords"])
+            embedded_link_counts["mcg"] += len(detail["mcgLinks"])
+            embedded_link_counts["assets"] += len(detail["assetLinks"])
 
     source_ids = [row["tender_id"] for row in source_tenders]
     public_ids = [row["id"] for row in tenders]
@@ -103,6 +115,51 @@ def main() -> None:
     audit.check("public_tender_ids_unique", len(public_ids), len(set(public_ids)))
     audit.check("public_tender_count", len(source_ids), len(public_ids))
     audit.check("public_tender_id_set", set(source_ids), set(public_ids))
+    audit.check("place_count", len(source_places), len(places))
+    audit.check(
+        "place_index_contains_no_invented_boundaries",
+        0,
+        sum(place["boundaryGeometryAvailable"] for place in places),
+    )
+    audit.true(
+        "place_tender_ids_resolve",
+        {
+            tender_id
+            for place in places
+            for tender_id in place["tenderIds"]
+        }
+        <= set(public_ids),
+    )
+    audit.check(
+        "hewp_exact_link_count",
+        len(source_hewp_links),
+        manifest["records"]["hewpExactLinks"],
+    )
+    audit.check(
+        "mcg_link_count",
+        len(source_mcg_links),
+        manifest["records"]["mcgLinks"],
+    )
+    audit.check(
+        "confirmed_asset_link_count",
+        sum(row["proof_grade"] == "B" for row in source_asset_links),
+        manifest["records"]["confirmedAssetLinks"],
+    )
+    audit.check(
+        "hewp_links_embedded_in_tender_details",
+        len(source_hewp_links),
+        embedded_link_counts["hewp"],
+    )
+    audit.check(
+        "mcg_links_embedded_in_tender_details",
+        len(source_mcg_links),
+        embedded_link_counts["mcg"],
+    )
+    audit.check(
+        "confirmed_asset_links_embedded_in_tender_details",
+        sum(row["proof_grade"] == "B" for row in source_asset_links),
+        embedded_link_counts["assets"],
+    )
 
     source_scope_counts = Counter(row["scope_classification"] for row in source_scope)
     public_scope_counts = Counter(row["scope"] for row in tenders)

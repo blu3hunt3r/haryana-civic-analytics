@@ -33,6 +33,9 @@ The portal keeps four facts separate:
   point inside the polygon is covered by the tender.
 - Roads on the map are context until an exact, validated contract-to-asset link
   exists.
+- The HEWP place index exposes 435 village/town names and their exact Tender-ID
+  links. The local archive has no usable village-boundary geometry, so places
+  are searchable but are not drawn as made-up polygons.
 
 ## Work families
 
@@ -52,10 +55,18 @@ category.
 - Repeated descriptions and high concentration are review signals, not
   allegations.
 
+## Cross-portal links
+
+- HEWP links are contractual identity only when the public HEWP row and GePNIC
+  row share the exact Tender ID.
+- MCG links labelled `exact` carry the Tender ID in the MCG work name.
+- Normalized MCG title matches remain candidates even when their amounts agree.
+- Contract-to-road links render only when the offline route validator returned
+  `CONFIRMED` / proof grade B. Refuted and weak links stay out of public claims.
+
 ## Evidence and provenance
 
 Every tender detail includes source-page SHA-256 hashes. Document rows include
 the published filename, portal section, retrieval outcome, hash when downloaded,
 and the official link when available. The 75 GB raw blob archive is retained
 outside this public repository.
-

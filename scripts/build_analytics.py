@@ -67,7 +67,11 @@ SOURCES = {
     "chains": "data/derived/procurement_chains.csv",
     "areas": "data/derived/tender_area_index.csv",
     "hewp": "data/hewp_gurugram_public_works_deduplicated.csv",
+    "hewp_exact_links": "data/final/hewp_exact_links.csv",
     "mcg": "data/mcg_public_execution_works.csv",
+    "mcg_links": "data/final/mcg_gepnic_links.csv",
+    "places": "data/derived/gurugram_places.csv",
+    "contract_asset_links": "data/derived/contract_asset_links.csv",
 }
 
 GEO_SOURCES = {
@@ -388,6 +392,57 @@ def main() -> None:
     chains = {row["tender_id"]: row for row in read_csv(SOURCES["chains"])}
     area_rows = read_csv(SOURCES["areas"])
     documents = read_csv(SOURCES["documents"])
+    hewp_links_by_tender: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_csv(SOURCES["hewp_exact_links"]):
+        hewp_links_by_tender[row["tender_id"]].append(
+            {
+                "place": row["village_town"],
+                "areaType": row["area_type"],
+                "block": row["block_name"],
+                "panchayat": row["panchayat_name"],
+                "department": row["department_name"],
+                "division": row["division_name"],
+                "estimateName": row["estimate_name"],
+                "agreementName": row["agreement_name"],
+                "estimateValue": number(row["estimate_cost_inr"]),
+                "contractStart": row["contract_start_date"],
+                "contractEnd": row["contract_end_date"],
+                "agency": row["agency_name"],
+                "sourceUrl": row["source_url"],
+                "sourceSha256": row["source_response_sha256"],
+                "linkMethod": row["link_method"],
+            }
+        )
+    mcg_links_by_tender: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_csv(SOURCES["mcg_links"]):
+        mcg_links_by_tender[row["tender_id"]].append(
+            {
+                "workId": row["mcg_work_id"],
+                "workName": row["mcg_work_name"],
+                "contractor": row["mcg_contractor_name"],
+                "sanctionedValue": number(row["mcg_sanctioned_amount_inr"]),
+                "workStart": row["mcg_work_start_date"],
+                "progressPercent": number(row["mcg_progress_percent"]),
+                "physicalStatus": row["mcg_physical_status"],
+                "linkMethod": row["link_method"],
+                "linkGrade": row["link_grade"],
+                "interpretation": row["interpretation"],
+            }
+        )
+    asset_links_by_tender: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_csv(SOURCES["contract_asset_links"]):
+        if row["proof_grade"] != "B":
+            continue
+        asset_links_by_tender[row["tender_id"]].append(
+            {
+                "assetKey": row["logical_asset_key"],
+                "component": row["work_component"],
+                "coverage": row["coverage_type"],
+                "proofGrade": row["proof_grade"],
+                "validatorReason": row["validator_reason"],
+                "evidenceSha256": row["evidence_sha256"],
+            }
+        )
     districts = district_catalogue()
 
     areas_by_tender: dict[str, list[dict[str, str]]] = defaultdict(list)
@@ -596,6 +651,9 @@ def main() -> None:
                 else None
             ),
             "documents": document_rows.get(tid, []),
+            "hewpRecords": hewp_links_by_tender.get(tid, []),
+            "mcgLinks": mcg_links_by_tender.get(tid, []),
+            "assetLinks": asset_links_by_tender.get(tid, []),
             "evidenceLanguage": {
                 "contractValue": "Published contract value; not money paid.",
                 "scheduledCompletion": (
@@ -722,6 +780,30 @@ def main() -> None:
             if row["description"]
         ],
     )
+    places = []
+    for row in read_csv(SOURCES["places"]):
+        places.append(
+            {
+                "name": row["canonical_name"],
+                "variants": row["spelling_variants"].split("|")
+                if row["spelling_variants"]
+                else [],
+                "block": row["block_name"],
+                "panchayat": row["panchayat_name"],
+                "areaType": row["area_type"],
+                "locationCode": row["location_code"],
+                "workCount": integer(row["hewp_work_count"]) or 0,
+                "awardedWorkCount": integer(row["hewp_awarded_work_count"]) or 0,
+                "tenderIds": row["hewp_tender_ids"].split("|")
+                if row["hewp_tender_ids"]
+                else [],
+                "boundaryGeometryAvailable": (
+                    row["village_boundary_geometry_in_local_archive"] == "true"
+                ),
+                "sourceSha256": row["source_file_sha256"],
+            }
+        )
+    write_json(OUT / "places.json", places)
     write_json(OUT / "contractors.json", contractor_output)
     for index, shard in enumerate(detail_shards):
         write_json(OUT / "tender-details" / f"{index:02d}.json", shard)
@@ -787,6 +869,12 @@ def main() -> None:
             "tenders": len(cross_filter_rows),
             "documents": len(documents),
             "areas": len(area_rows),
+            "places": len(places),
+            "hewpExactLinks": sum(len(rows) for rows in hewp_links_by_tender.values()),
+            "mcgLinks": sum(len(rows) for rows in mcg_links_by_tender.values()),
+            "confirmedAssetLinks": sum(
+                len(rows) for rows in asset_links_by_tender.values()
+            ),
             "detailShards": DETAIL_SHARDS,
             "indexEncoding": "schema_and_rows",
         },

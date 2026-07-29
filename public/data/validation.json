@@ -1,7 +1,7 @@
 {
   "ok": true,
   "datasetVersion": "2026-07-28.1",
-  "checksPassed": 103,
+  "checksPassed": 120,
   "checks": [
     {
       "name": "source_tender_ids_unique",
@@ -32,6 +32,60 @@
         "count": 49121,
         "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
       }
+    },
+    {
+      "name": "place_count",
+      "passed": true,
+      "expected": 435,
+      "actual": 435
+    },
+    {
+      "name": "place_index_contains_no_invented_boundaries",
+      "passed": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "place_tender_ids_resolve",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "hewp_exact_link_count",
+      "passed": true,
+      "expected": 4654,
+      "actual": 4654
+    },
+    {
+      "name": "mcg_link_count",
+      "passed": true,
+      "expected": 237,
+      "actual": 237
+    },
+    {
+      "name": "confirmed_asset_link_count",
+      "passed": true,
+      "expected": 23,
+      "actual": 23
+    },
+    {
+      "name": "hewp_links_embedded_in_tender_details",
+      "passed": true,
+      "expected": 4654,
+      "actual": 4654
+    },
+    {
+      "name": "mcg_links_embedded_in_tender_details",
+      "passed": true,
+      "expected": 237,
+      "actual": 237
+    },
+    {
+      "name": "confirmed_asset_links_embedded_in_tender_details",
+      "passed": true,
+      "expected": 23,
+      "actual": 23
     },
     {
       "name": "scope_counts_reconcile",
@@ -677,6 +731,19 @@
       "actual": "72e4871b582a9db8ed7a56f3d4bb2f67fd68d8e2a8bdff8f48f057995d0aa9c5"
     },
     {
+      "name": "source_exists_hewp_exact_links",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/hewp_exact_links.csv"
+    },
+    {
+      "name": "source_hash_hewp_exact_links",
+      "passed": true,
+      "expected": "46046088e59df3ffd4e619b783d797f0c451b9678bda1d94e54283daa2b5670a",
+      "actual": "46046088e59df3ffd4e619b783d797f0c451b9678bda1d94e54283daa2b5670a"
+    },
+    {
       "name": "source_exists_mcg",
       "passed": true,
       "expected": true,
@@ -688,6 +755,45 @@
       "passed": true,
       "expected": "9a154949531dd71c9637a9c80e74ecb35714ccb0a457512458eddc93ce5d055e",
       "actual": "9a154949531dd71c9637a9c80e74ecb35714ccb0a457512458eddc93ce5d055e"
+    },
+    {
+      "name": "source_exists_mcg_links",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/final/mcg_gepnic_links.csv"
+    },
+    {
+      "name": "source_hash_mcg_links",
+      "passed": true,
+      "expected": "0d4f582407ec0043c65c812dc72717cdc68fcb568da70f0031e00f65a45801a4",
+      "actual": "0d4f582407ec0043c65c812dc72717cdc68fcb568da70f0031e00f65a45801a4"
+    },
+    {
+      "name": "source_exists_places",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/derived/gurugram_places.csv"
+    },
+    {
+      "name": "source_hash_places",
+      "passed": true,
+      "expected": "54016f5a7b6eed495c7c582fdcdbd22523d872640d88daa282e46321074086e0",
+      "actual": "54016f5a7b6eed495c7c582fdcdbd22523d872640d88daa282e46321074086e0"
+    },
+    {
+      "name": "source_exists_contract_asset_links",
+      "passed": true,
+      "expected": true,
+      "actual": true,
+      "detail": "data/derived/contract_asset_links.csv"
+    },
+    {
+      "name": "source_hash_contract_asset_links",
+      "passed": true,
+      "expected": "74b421a1a42f3f1565e6d4b55ce0d1625e52ba10fe2ba046a96b8a86e8cd4fc7",
+      "actual": "74b421a1a42f3f1565e6d4b55ce0d1625e52ba10fe2ba046a96b8a86e8cd4fc7"
     }
   ],
   "semantics": {

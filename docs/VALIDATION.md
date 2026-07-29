@@ -11,7 +11,11 @@ Dataset version: `2026-07-28.1`
 | Confirmed + likely Gurugram | 37,901 |
 | Confirmed awarded contracts | 13,398 |
 | Confirmed controlling contract value | ₹8,329.57 crore |
-| Source-reconciliation assertions | 103 passed |
+| Source-reconciliation assertions | 120 passed |
+| HEWP exact Tender-ID links | 4,654 |
+| MCG public-work links | 237 (52 exact; 185 candidate) |
+| Validated contract-to-road links | 23 |
+| Gurugram village/town names | 435 |
 | Browser QA | Desktop and mobile passed |
 | Browser console/page/request errors | 0 |
 | Horizontal overflow | 0 |
@@ -32,6 +36,9 @@ The test suite verifies that:
 5. each procurement chain contributes at most one controlling award;
 6. displayed tender year follows the stable Tender ID prefix;
 7. a conflicting portal publication date cannot create a false month.
+8. every place-linked Tender ID resolves to the public tender index;
+9. HEWP, MCG and confirmed asset-link counts reconcile to their source tables;
+10. no village polygon is invented when the archive only supplies names.
 
 ## Supported claims
 
@@ -55,4 +62,3 @@ The test suite verifies that:
 
 The interface states these limits next to the relevant metrics rather than
 burying them in a disclaimer.
-

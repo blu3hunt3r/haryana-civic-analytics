@@ -1,4 +1,9 @@
-import type { Overview, TenderDetail, TenderIndexRow } from "./types";
+import type {
+  Overview,
+  PlaceRecord,
+  TenderDetail,
+  TenderIndexRow,
+} from "./types";
 
 let tenderRowsPromise: Promise<TenderIndexRow[]> | null = null;
 let searchRowsPromise: Promise<Map<string, string>> | null = null;
@@ -32,6 +37,10 @@ export function loadSearchIndex(): Promise<Map<string, string>> {
     "/data/search-index.json",
   ).then((rows) => new Map(rows));
   return searchRowsPromise;
+}
+
+export function loadPlaces(): Promise<PlaceRecord[]> {
+  return getJson<PlaceRecord[]>("/data/places.json");
 }
 
 export async function loadTenderDetail(

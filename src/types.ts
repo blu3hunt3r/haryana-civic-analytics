@@ -132,6 +132,43 @@ export interface TenderDetail extends TenderIndexRow {
     ambiguityReasons: string;
   };
   documents: DocumentEvidence[];
+  hewpRecords: Array<{
+    place: string;
+    areaType: string;
+    block: string;
+    panchayat: string;
+    department: string;
+    division: string;
+    estimateName: string;
+    agreementName: string;
+    estimateValue: number | null;
+    contractStart: string;
+    contractEnd: string;
+    agency: string;
+    sourceUrl: string;
+    sourceSha256: string;
+    linkMethod: string;
+  }>;
+  mcgLinks: Array<{
+    workId: string;
+    workName: string;
+    contractor: string;
+    sanctionedValue: number | null;
+    workStart: string;
+    progressPercent: number | null;
+    physicalStatus: string;
+    linkMethod: string;
+    linkGrade: string;
+    interpretation: string;
+  }>;
+  assetLinks: Array<{
+    assetKey: string;
+    component: string;
+    coverage: string;
+    proofGrade: string;
+    validatorReason: string;
+    evidenceSha256: string;
+  }>;
 }
 
 export interface Filters {
@@ -144,7 +181,22 @@ export interface Filters {
   competition: string;
   chain: string;
   repeatGroup: string;
+  place: string;
   areaLevel: string;
   areaValue: string;
   query: string;
+}
+
+export interface PlaceRecord {
+  name: string;
+  variants: string[];
+  block: string;
+  panchayat: string;
+  areaType: string;
+  locationCode: string;
+  workCount: number;
+  awardedWorkCount: number;
+  tenderIds: string[];
+  boundaryGeometryAvailable: boolean;
+  sourceSha256: string;
 }

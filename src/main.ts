@@ -12,6 +12,7 @@ import {
 } from "./charts";
 import {
   loadOverview,
+  loadPlaces,
   loadSearchIndex,
   loadTenderDetail,
   loadTenders,
@@ -22,6 +23,7 @@ import type {
   Filters,
   Metric,
   Overview,
+  PlaceRecord,
   Scope,
   TenderDetail,
   TenderIndexRow,
@@ -41,6 +43,7 @@ const filters: Filters = {
   competition: "",
   chain: "",
   repeatGroup: "",
+  place: "",
   areaLevel: "",
   areaValue: "",
   query: "",
@@ -50,6 +53,8 @@ let overview: Overview;
 let allRows: TenderIndexRow[] = [];
 let filteredRows: TenderIndexRow[] = [];
 let fullDescriptionSearch = new Map<string, string>();
+let allPlaces: PlaceRecord[] = [];
+let selectedPlaceTenderIds = new Set<string>();
 let evidenceMap: EvidenceMap;
 let indexReady = false;
 let currentPage = 0;
@@ -114,6 +119,7 @@ function matches(row: TenderIndexRow): boolean {
   if (filters.chain === "reworked" && !row.chainHasCancelOrRetender) return false;
   if (filters.chain === "ambiguous" && !row.chainAmbiguous) return false;
   if (filters.repeatGroup && row.titleKey !== filters.repeatGroup) return false;
+  if (filters.place && !selectedPlaceTenderIds.has(row.id)) return false;
   if (filters.areaValue) {
     const target = normalizeArea(filters.areaValue);
     const found = row.areas.some(
@@ -238,6 +244,26 @@ function renderShell(): void {
 
       <p class="load-state" id="index-state" role="status">Preparing cross-filtered tender evidence…</p>
 
+      <section class="place-explorer" aria-label="Gurugram village and town works index">
+        <header>
+          <div>
+            <p class="eyebrow">Rural and town coverage</p>
+            <h2>HEWP village and town index</h2>
+            <p>These are named places from Haryana's public works register. The archive contains names and codes, but no usable village-boundary geometry—so the map does not invent polygons.</p>
+          </div>
+          <label class="search-field">Find a village or town
+            <input id="place-search" type="search" placeholder="e.g. Abheypur or Sohna">
+          </label>
+        </header>
+        <div class="place-stats">
+          <article><strong id="place-count">—</strong><span>named places</span></article>
+          <article><strong id="place-work-count">—</strong><span>place-to-work references (a multi-place work can repeat)</span></article>
+          <article><strong id="place-award-count">—</strong><span>references with an agreement name</span></article>
+          <article><strong>0</strong><span>village boundaries in this archive</span></article>
+        </div>
+        <div id="place-list" class="place-list"><span>Loading the place index…</span></div>
+      </section>
+
       <section class="analytics-grid">
         <article class="panel panel-wide">
           <header><div><p class="eyebrow">Lifecycle</p><h2>Tender status</h2></div><p>Click a bar to filter the entire portal.</p></header>
@@ -284,10 +310,12 @@ function renderShell(): void {
         <div class="accountability-lists">
           <article class="ranked-panel" id="contractors">
             <header><div><p class="eyebrow">Published awardees</p><h2>Contractor concentration</h2></div><p>Name matching only; no authoritative contractor ID is published.</p></header>
+            <div id="contractor-profile" class="selection-profile" hidden></div>
             <div id="contractor-list" class="ranked-list"></div>
           </article>
           <article class="ranked-panel">
             <header><div><p class="eyebrow">Repeat signal</p><h2>Repeated work descriptions</h2></div><p>Same normalized description can reflect phases, annual maintenance, or retendering. Open the rows before drawing a conclusion.</p></header>
+            <div id="repeat-timeline" class="selection-profile" hidden></div>
             <div id="repeat-list" class="ranked-list"></div>
           </article>
         </div>
@@ -402,6 +430,75 @@ function renderMapMetrics(rows: TenderIndexRow[]): void {
   evidenceMap.setDistrictMetrics(counts);
 }
 
+function renderPlaces(query = ""): void {
+  const list = document.querySelector<HTMLElement>("#place-list")!;
+  const needle = query.trim().toLowerCase();
+  const rows = allPlaces
+    .filter((place) => {
+      if (!needle) return true;
+      return [
+        place.name,
+        place.block,
+        place.panchayat,
+        ...place.variants,
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(needle);
+    })
+    .sort(
+      (a, b) =>
+        b.awardedWorkCount - a.awardedWorkCount ||
+        b.workCount - a.workCount ||
+        a.name.localeCompare(b.name),
+    )
+    .slice(0, 18);
+  list.innerHTML = rows.length
+    ? rows
+        .map(
+          (place) => `
+            <button type="button" data-place="${escapeHtml(place.name)}">
+              <span><b>${escapeHtml(place.name)}</b><small>${escapeHtml(place.areaType)}${place.block ? ` · ${escapeHtml(place.block)}` : ""}${place.variants.length > 1 ? ` · variants: ${escapeHtml(place.variants.join(", "))}` : ""}</small></span>
+              <strong>${formatCount(place.workCount)} works</strong>
+              <small>${formatCount(place.awardedWorkCount)} with agreement name · ${formatCount(place.tenderIds.length)} exact Tender IDs</small>
+            </button>`,
+        )
+        .join("")
+    : `<div class="empty-state">No place name matches that search.</div>`;
+  list.querySelectorAll<HTMLButtonElement>("[data-place]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const place = allPlaces.find((row) => row.name === button.dataset.place);
+      if (!place) return;
+      filters.place = place.name;
+      selectedPlaceTenderIds = new Set(place.tenderIds);
+      applyFilters();
+      document.querySelector("#tenders")?.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+}
+
+async function hydratePlaces(): Promise<void> {
+  try {
+    allPlaces = await loadPlaces();
+    document.querySelector("#place-count")!.textContent = formatCount(allPlaces.length);
+    document.querySelector("#place-work-count")!.textContent = formatCount(
+      allPlaces.reduce((sum, row) => sum + row.workCount, 0),
+    );
+    document.querySelector("#place-award-count")!.textContent = formatCount(
+      allPlaces.reduce((sum, row) => sum + row.awardedWorkCount, 0),
+    );
+    renderPlaces();
+    document
+      .querySelector<HTMLInputElement>("#place-search")!
+      .addEventListener("input", (event) => {
+        renderPlaces((event.target as HTMLInputElement).value);
+      });
+  } catch (error) {
+    document.querySelector("#place-list")!.textContent =
+      `The place index could not be loaded: ${String(error)}`;
+  }
+}
+
 function renderDynamicCharts(): void {
   const statuses = Object.fromEntries(
     dimension(filteredRows, "status").map((row) => [row.key, row.tenders]),
@@ -490,6 +587,27 @@ function renderDynamicCharts(): void {
 }
 
 function renderRankedLists(rows: TenderIndexRow[]): void {
+  const contractorProfile =
+    document.querySelector<HTMLElement>("#contractor-profile")!;
+  if (filters.contractor) {
+    const awarded = rows.filter((row) => row.isControllingAward);
+    const departments = dimension(rows, "department")
+      .slice(0, 4)
+      .map((row) => row.key)
+      .join(", ");
+    const components = dimension(rows, "component")
+      .slice(0, 4)
+      .map((row) => label(row.key))
+      .join(", ");
+    contractorProfile.hidden = false;
+    contractorProfile.innerHTML = `
+      <b>${escapeHtml(rows[0]?.contractor || "Selected contractor")}</b>
+      <span>${formatCount(awarded.length)} controlling awards · ${formatRupees(awarded.reduce((sum, row) => sum + (row.contractValue ?? 0), 0))}</span>
+      <small>Departments: ${escapeHtml(departments || "not published")}<br>Work families: ${escapeHtml(components || "unclassified")}</small>`;
+  } else {
+    contractorProfile.hidden = true;
+    contractorProfile.innerHTML = "";
+  }
   const contractors = new Map<
     string,
     { name: string; awards: number; value: number }
@@ -562,6 +680,26 @@ function renderRankedLists(rows: TenderIndexRow[]): void {
     )
     .slice(0, 12);
   const repeatList = document.querySelector<HTMLElement>("#repeat-list")!;
+  const repeatTimeline =
+    document.querySelector<HTMLElement>("#repeat-timeline")!;
+  if (filters.repeatGroup) {
+    repeatTimeline.hidden = false;
+    repeatTimeline.innerHTML = `
+      <b>Published timeline for this normalized description</b>
+      <ol>${[...rows]
+        .sort(
+          (a, b) =>
+            (a.year ?? "").localeCompare(b.year ?? "") || a.id.localeCompare(b.id),
+        )
+        .map(
+          (row) =>
+            `<li><span>${escapeHtml(row.year ?? "Year unavailable")} · ${escapeHtml(row.status)}</span><code>${escapeHtml(row.id)}</code><small>${row.isAwarded ? formatRupees(row.contractValue) : "No confirmed award"}</small></li>`,
+        )
+        .join("")}</ol>`;
+  } else {
+    repeatTimeline.hidden = true;
+    repeatTimeline.innerHTML = "";
+  }
   repeatList.innerHTML = repeats.length
     ? repeats
         .map(
@@ -594,6 +732,7 @@ function renderActiveFilters(): void {
   if (filters.competition) parts.push(label(filters.competition));
   if (filters.chain) parts.push(`${label(filters.chain)} chains`);
   if (filters.repeatGroup) parts.push("Repeated work group");
+  if (filters.place) parts.push(`HEWP place ${filters.place}`);
   if (filters.areaValue) parts.push(`${label(filters.areaLevel)} ${filters.areaValue}`);
   document.querySelector("#active-filter-summary")!.textContent = parts.join(" · ");
 }
@@ -661,6 +800,30 @@ function renderDetail(detail: TenderDetail): string {
         `<li><span>${escapeHtml(label(name))}</span><code>${escapeHtml(value)}</code></li>`,
     )
     .join("");
+  const hewpRecords = detail.hewpRecords?.length
+    ? detail.hewpRecords
+        .map(
+          (record) => `
+            <li><div><b>${escapeHtml(record.place || record.estimateName)}</b><span>${escapeHtml(record.areaType)}${record.block ? ` · ${escapeHtml(record.block)}` : ""} · exact Tender ID link</span></div><div>${escapeHtml(record.agreementName || "Agreement name not published")}</div><div>${record.contractStart || record.contractEnd ? `Published schedule ${escapeHtml(record.contractStart || "?")} → ${escapeHtml(record.contractEnd || "?")}` : "Schedule not published"} · ${formatRupees(record.estimateValue)}</div><code>${shortHash(record.sourceSha256)}</code>${record.sourceUrl ? `<a href="${escapeHtml(record.sourceUrl)}" target="_blank" rel="noopener">HEWP source ↗</a>` : ""}</li>`,
+        )
+        .join("")
+    : "";
+  const mcgLinks = detail.mcgLinks?.length
+    ? detail.mcgLinks
+        .map(
+          (record) => `
+            <li><div><b>${escapeHtml(record.workName)}</b><span>${record.linkGrade === "exact" ? "Exact Tender ID in MCG work name" : "Candidate link—not contractual identity"}</span></div><div>MCG work ${escapeHtml(record.workId)} · ${formatRupees(record.sanctionedValue)}${record.progressPercent !== null ? ` · published progress ${record.progressPercent}%` : ""}</div><small>${escapeHtml(record.interpretation)}</small></li>`,
+        )
+        .join("")
+    : "";
+  const assetLinks = detail.assetLinks?.length
+    ? detail.assetLinks
+        .map(
+          (record) => `
+            <li><div><b>${escapeHtml(record.assetKey)}</b><span>Validated contract-to-asset link · proof grade ${escapeHtml(record.proofGrade)}</span></div><div>${escapeHtml(label(record.component))} · ${escapeHtml(record.coverage)}</div><small>${escapeHtml(record.validatorReason)}</small><code>${shortHash(record.evidenceSha256)}</code></li>`,
+        )
+        .join("")
+    : "";
 
   return `
     <div class="detail-header">
@@ -685,6 +848,9 @@ function renderDetail(detail: TenderDetail): string {
     </dl>
     <section class="detail-section"><h3>Published scope</h3><p>${escapeHtml(detail.description || "No full work description was published.")}</p><p><b>Location:</b> ${escapeHtml(detail.workLocation || "Not published")} ${detail.pincode ? `· ${escapeHtml(detail.pincode)}` : ""}</p></section>
     ${detail.chain ? `<section class="detail-section"><h3>Procurement chain</h3><p>Root ${escapeHtml(detail.chain.root)} · position ${detail.chain.position ?? "?"} of ${detail.chain.length ?? "?"} · terminal ${escapeHtml(detail.chain.terminal || "not resolved")}</p>${detail.chain.ambiguous ? `<p class="warning-text">The chain is ambiguous: ${escapeHtml(detail.chain.ambiguityReasons)}</p>` : ""}</section>` : ""}
+    ${assetLinks ? `<section class="detail-section"><h3>Validated asset links</h3><ul class="record-link-list">${assetLinks}</ul></section>` : ""}
+    ${hewpRecords ? `<section class="detail-section"><h3>HEWP public works register</h3><p>Linked by the shared government Tender ID. Schedule dates are not actual completion.</p><ul class="record-link-list">${hewpRecords}</ul></section>` : ""}
+    ${mcgLinks ? `<section class="detail-section"><h3>MCG public works register</h3><p>Only rows labelled exact share a Tender ID. Title matches remain candidates.</p><ul class="record-link-list">${mcgLinks}</ul></section>` : ""}
     <section class="detail-section"><h3>Documents (${detail.documents.length})</h3><ul class="document-list">${documents}</ul></section>
     <section class="detail-section"><h3>Source-page hashes</h3><ul class="hash-list">${hashes}</ul></section>
     <div class="detail-actions">
@@ -770,6 +936,8 @@ function bindControls(): void {
     filters.competition = "";
     filters.chain = "";
     filters.repeatGroup = "";
+    filters.place = "";
+    selectedPlaceTenderIds = new Set();
     filters.areaLevel = "";
     filters.areaValue = "";
     filters.query = "";
@@ -924,6 +1092,7 @@ async function bootstrap(): Promise<void> {
       () => undefined,
     );
     bindMap();
+    void hydratePlaces();
     evidenceMap.setDistrictMetrics(
       new Map(
         overview.areas
