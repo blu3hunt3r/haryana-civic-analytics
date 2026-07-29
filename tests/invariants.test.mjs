@@ -5,7 +5,10 @@ import test from "node:test";
 const root = new URL("../public/data/", import.meta.url);
 const overview = JSON.parse(await readFile(new URL("overview.json", root), "utf8"));
 const validation = JSON.parse(await readFile(new URL("validation.json", root), "utf8"));
-const tenders = JSON.parse(await readFile(new URL("tenders.json", root), "utf8"));
+const tenderIndex = JSON.parse(await readFile(new URL("tenders.json", root), "utf8"));
+const tenders = tenderIndex.rows.map((row) =>
+  Object.fromEntries(tenderIndex.schema.map((field, index) => [field, row[index]])),
+);
 
 test("public headline uses the full verified tender corpus", () => {
   assert.equal(overview.headline.publishedTendersAllScopes, 49_121);

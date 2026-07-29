@@ -29,6 +29,34 @@ ROOT = Path(
 ).resolve()
 OUT = REPO / "public" / "data"
 DETAIL_SHARDS = 64
+INDEX_FIELDS = [
+    "id",
+    "title",
+    "scope",
+    "status",
+    "awardState",
+    "isAwarded",
+    "isControllingAward",
+    "estimateValue",
+    "contractValue",
+    "year",
+    "month",
+    "publishedDateConflict",
+    "department",
+    "component",
+    "contractor",
+    "contractorKey",
+    "awardedBidCount",
+    "chainRoot",
+    "chainLength",
+    "chainAmbiguous",
+    "chainHasCancelOrRetender",
+    "titleKey",
+    "areas",
+    "documentCount",
+    "downloadedDocumentCount",
+    "detailShard",
+]
 
 SOURCES = {
     "tenders": "data/final/tenders.csv",
@@ -676,7 +704,24 @@ def main() -> None:
     }
 
     write_json(OUT / "overview.json", overview)
-    write_json(OUT / "tenders.json", cross_filter_rows)
+    write_json(
+        OUT / "tenders.json",
+        {
+            "schema": INDEX_FIELDS,
+            "rows": [
+                [row.get(field) for field in INDEX_FIELDS]
+                for row in cross_filter_rows
+            ],
+        },
+    )
+    write_json(
+        OUT / "search-index.json",
+        [
+            [row["id"], row["description"]]
+            for row in cross_filter_rows
+            if row["description"]
+        ],
+    )
     write_json(OUT / "contractors.json", contractor_output)
     for index, shard in enumerate(detail_shards):
         write_json(OUT / "tender-details" / f"{index:02d}.json", shard)
@@ -743,6 +788,7 @@ def main() -> None:
             "documents": len(documents),
             "areas": len(area_rows),
             "detailShards": DETAIL_SHARDS,
+            "indexEncoding": "schema_and_rows",
         },
         "sources": source_manifest,
         "geometry": geo_manifest,

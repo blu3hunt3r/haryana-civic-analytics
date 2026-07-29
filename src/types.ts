@@ -26,7 +26,7 @@ export interface AreaRef {
 export interface TenderIndexRow {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   scope: Scope | "unclassified";
   status: string;
   awardState: string;

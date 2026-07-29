@@ -10,7 +10,12 @@ import {
   renderTrendChart,
   resizeCharts,
 } from "./charts";
-import { loadOverview, loadTenderDetail, loadTenders } from "./data";
+import {
+  loadOverview,
+  loadSearchIndex,
+  loadTenderDetail,
+  loadTenders,
+} from "./data";
 import { escapeHtml, formatCount, formatRupees, label, shortHash } from "./format";
 import { EvidenceMap } from "./map";
 import type {
@@ -44,6 +49,7 @@ const filters: Filters = {
 let overview: Overview;
 let allRows: TenderIndexRow[] = [];
 let filteredRows: TenderIndexRow[] = [];
+let fullDescriptionSearch = new Map<string, string>();
 let evidenceMap: EvidenceMap;
 let indexReady = false;
 let currentPage = 0;
@@ -122,7 +128,7 @@ function matches(row: TenderIndexRow): boolean {
     const haystack = [
       row.id,
       row.title,
-      row.description,
+      row.description ?? fullDescriptionSearch.get(row.id) ?? "",
       row.department,
       row.component,
       row.contractor,
@@ -536,7 +542,7 @@ function renderRankedLists(rows: TenderIndexRow[]): void {
   for (const row of rows) {
     if (!row.titleKey) continue;
     const entry = repeatGroups.get(row.titleKey) ?? {
-      sample: row.description || row.title,
+      sample: row.description ?? row.title,
       rows: 0,
       chains: new Set<string>(),
       awarded: 0,
@@ -618,7 +624,7 @@ function renderTenderList(): void {
             <button class="tender-row" type="button" data-tender="${escapeHtml(row.id)}">
               <span class="status-pill ${row.isAwarded ? "is-awarded" : ""}">${escapeHtml(row.status)}</span>
               <span class="tender-main">
-                <b>${escapeHtml(row.title || row.description.slice(0, 140) || row.id)}</b>
+                <b>${escapeHtml(row.title || row.id)}</b>
                 <small>${escapeHtml(row.id)} · ${escapeHtml(row.department)} · ${escapeHtml(label(row.component))}</small>
               </span>
               <span class="tender-value">${row.isAwarded ? formatRupees(row.contractValue) : "Not awarded"}<small>${row.documentCount} documents</small></span>
@@ -659,7 +665,7 @@ function renderDetail(detail: TenderDetail): string {
   return `
     <div class="detail-header">
       <p class="eyebrow">${escapeHtml(detail.id)}</p>
-      <h2>${escapeHtml(detail.title || detail.description)}</h2>
+      <h2>${escapeHtml(detail.title || detail.description || detail.id)}</h2>
       <div class="detail-badges">
         <span>${escapeHtml(detail.status)}</span>
         <span>${escapeHtml(label(detail.scope))}</span>
@@ -732,8 +738,12 @@ function bindControls(): void {
   let searchTimer = 0;
   document.querySelector<HTMLInputElement>("#search")!.addEventListener("input", (event) => {
     window.clearTimeout(searchTimer);
-    searchTimer = window.setTimeout(() => {
-      filters.query = (event.target as HTMLInputElement).value.trim();
+    searchTimer = window.setTimeout(async () => {
+      const query = (event.target as HTMLInputElement).value.trim();
+      if (query && fullDescriptionSearch.size === 0) {
+        fullDescriptionSearch = await loadSearchIndex();
+      }
+      filters.query = query;
       applyFilters();
     }, 180);
   });

@@ -1,6 +1,7 @@
 import type { Overview, TenderDetail, TenderIndexRow } from "./types";
 
 let tenderRowsPromise: Promise<TenderIndexRow[]> | null = null;
+let searchRowsPromise: Promise<Map<string, string>> | null = null;
 const detailCache = new Map<number, Promise<Record<string, TenderDetail>>>();
 
 async function getJson<T>(path: string): Promise<T> {
@@ -14,8 +15,23 @@ export function loadOverview(): Promise<Overview> {
 }
 
 export function loadTenders(): Promise<TenderIndexRow[]> {
-  tenderRowsPromise ??= getJson<TenderIndexRow[]>("/data/tenders.json");
+  tenderRowsPromise ??= getJson<{ schema: string[]; rows: unknown[][] }>(
+    "/data/tenders.json",
+  ).then(({ schema, rows }) =>
+    rows.map((values) =>
+      Object.fromEntries(
+        schema.map((field, index) => [field, values[index]]),
+      ) as unknown as TenderIndexRow,
+    ),
+  );
   return tenderRowsPromise;
+}
+
+export function loadSearchIndex(): Promise<Map<string, string>> {
+  searchRowsPromise ??= getJson<Array<[string, string]>>(
+    "/data/search-index.json",
+  ).then((rows) => new Map(rows));
+  return searchRowsPromise;
 }
 
 export async function loadTenderDetail(
@@ -34,4 +50,3 @@ export async function loadTenderDetail(
   if (!tender) throw new Error(`Tender ${id} was not found in shard ${shard}.`);
   return tender;
 }
-

@@ -87,7 +87,11 @@ def main() -> None:
     audit = Audit()
     manifest = load_json(DATA / "manifest.json")
     overview = load_json(DATA / "overview.json")
-    tenders = load_json(DATA / "tenders.json")
+    tender_index = load_json(DATA / "tenders.json")
+    tenders = [
+        dict(zip(tender_index["schema"], row, strict=True))
+        for row in tender_index["rows"]
+    ]
 
     source_tenders = read_csv(ROOT / "data/final/tenders.csv")
     source_scope = read_csv(ROOT / "data/final/gurugram_scope.csv")

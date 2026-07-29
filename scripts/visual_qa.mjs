@@ -10,6 +10,9 @@ const browser = await chromium.launch({
   executablePath:
     process.env.CHROME_PATH ??
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  args: process.env.HOST_RESOLVER_RULES
+    ? [`--host-resolver-rules=${process.env.HOST_RESOLVER_RULES}`]
+    : [],
 });
 
 const results = [];
