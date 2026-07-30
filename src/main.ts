@@ -62,7 +62,7 @@ let filteredRows: TenderIndexRow[] = [];
 let fullDescriptionSearch = new Map<string, string>();
 let allPlaces: PlaceRecord[] = [];
 let selectedPlaceTenderIds = new Set<string>();
-let evidenceMap: EvidenceMap;
+let evidenceMap: EvidenceMap | undefined;
 let indexReady = false;
 let currentPage = 0;
 function pageSize(): number {
@@ -211,6 +211,10 @@ function renderShell(): void {
     </header>
 
     <section class="story-stage" id="story" aria-label="Guided procurement findings"></section>
+
+    <!-- Populated by reportBootFailures() when an optional panel could not be drawn.
+         Silent when everything rendered. -->
+    <aside class="boot-notice" id="boot-notice" role="status" hidden></aside>
 
     <main id="investigation">
       <section class="hero investigation-hero">
@@ -454,7 +458,7 @@ function renderMapMetrics(rows: TenderIndexRow[]): void {
       counts.set(district, (counts.get(district) ?? 0) + 1);
     }
   }
-  evidenceMap.setDistrictMetrics(counts);
+  evidenceMap?.setDistrictMetrics(counts);
 }
 
 function renderPlaces(query = ""): void {
@@ -1152,16 +1156,16 @@ function bindMap(): void {
     handleMapSelection,
   );
   document.querySelector("#haryana-view")!.addEventListener("click", () => {
-    evidenceMap.haryana();
+    evidenceMap?.haryana();
     document.querySelector("#map-selection")!.textContent = "Haryana overview";
   });
   document.querySelector("#gurugram-view")!.addEventListener("click", () => {
-    evidenceMap.gurugram();
+    evidenceMap?.gurugram();
     document.querySelector("#map-selection")!.textContent = "Gurugram detail";
   });
   document.querySelectorAll<HTMLInputElement>("[data-layer]").forEach((input) => {
     input.addEventListener("change", () => {
-      evidenceMap.toggleLayer(
+      evidenceMap?.toggleLayer(
         input.dataset.layer as "wards" | "sectors" | "roads",
         input.checked,
       );
@@ -1199,16 +1203,57 @@ async function hydrateIndex(): Promise<void> {
   }
 }
 
+/* ── ONE SUBSYSTEM MUST NOT BE ABLE TO TAKE DOWN THE RECORD ───────────────────────
+   Everything in bootstrap() used to run inside a single try/catch whose catch replaced
+   the whole document with "The analytics portal could not start." The live site was
+   serving exactly that, because `new maplibregl.Map()` throws synchronously when WebGL
+   is unavailable — and the story, the charts, the 49,121-record index and search need no
+   WebGL whatsoever.
+
+   `stage()` isolates each optional subsystem: a failure is recorded and surfaced, and
+   everything else still renders. Only the two files the portal cannot exist without —
+   overview.json and story.json — remain fatal. */
+const bootFailures: Array<{ stage: string; error: string }> = [];
+
+function stage(name: string, run: () => void): void {
+  try {
+    run();
+  } catch (error) {
+    bootFailures.push({ stage: name, error: String(error) });
+    console.warn(`[boot] ${name} failed and was skipped:`, error);
+  }
+}
+
+/* Stated once, plainly. A reader is entitled to know a panel is missing rather than
+   conclude the underlying data is empty. */
+function reportBootFailures(): void {
+  const host = document.querySelector<HTMLElement>("#boot-notice");
+  if (!host) return;
+  if (!bootFailures.length) {
+    host.hidden = true;
+    return;
+  }
+  host.hidden = false;
+  host.innerHTML =
+    `<p><strong>${bootFailures.length} panel${bootFailures.length === 1 ? "" : "s"} could not be ` +
+    `drawn in this browser.</strong> Every published figure and every tender evidence ` +
+    `page is still available.</p><ul>${bootFailures
+      .map((f) => `<li>${escapeHtml(f.stage)} — ${escapeHtml(f.error.slice(0, 160))}</li>`)
+      .join("")}</ul>`;
+}
+
 async function bootstrap(): Promise<void> {
   try {
     [overview, story] = await Promise.all([loadOverview(), loadStory()]);
     renderShell();
-    new StoryExperience(
-      document.querySelector<HTMLElement>("#story")!,
-      story,
-      overview,
-      { investigate: openInvestigation },
-    );
+    stage("Guided narrative", () => {
+      new StoryExperience(
+        document.querySelector<HTMLElement>("#story")!,
+        story,
+        overview,
+        { investigate: openInvestigation },
+      );
+    });
     renderStats(
       Array.from({ length: overview.headline.confirmedGurugram }, () => ({
         isAwarded: false,
@@ -1242,44 +1287,62 @@ async function bootstrap(): Promise<void> {
     document.querySelector("#flag-date-conflict")!.textContent = formatCount(
       overview.reviewFlags.portalPublishedDateConflictsWithTenderIdYear,
     );
-    renderStatusChart(
-      document.querySelector<HTMLElement>("#status-chart")!,
-      overview.status.confirmed_gurugram,
-      () => undefined,
-    );
-    renderTrendChart(
-      document.querySelector<HTMLElement>("#trend-chart")!,
-      overview.trends.confirmed_gurugram,
-    );
-    renderDepartmentChart(
-      document.querySelector<HTMLElement>("#department-chart")!,
-      overview.departments.confirmed_gurugram,
-      () => undefined,
-    );
-    renderComponentDonut(
-      document.querySelector<HTMLElement>("#component-chart")!,
-      overview.components.confirmed_gurugram,
-      () => undefined,
-    );
-    bindMap();
-    void hydratePlaces();
-    evidenceMap.setDistrictMetrics(
-      new Map(
-        overview.areas
-          .filter(
-            (area) =>
-              area.scope === "confirmed_gurugram" && area.level === "district",
-          )
-          .map((area) => [area.value, area.tenders]),
-      ),
-    );
-    window.addEventListener("resize", () => {
-      resizeCharts();
-      evidenceMap.resize();
+    /* Each chart is its own stage. ECharts can fail on a canvas-restricted browser for
+       the same class of reason the map does, and losing one chart must cost one chart. */
+    stage("Tender status chart", () => {
+      renderStatusChart(
+        document.querySelector<HTMLElement>("#status-chart")!,
+        overview.status.confirmed_gurugram,
+        () => undefined,
+      );
     });
+    stage("Published-by-year chart", () => {
+      renderTrendChart(
+        document.querySelector<HTMLElement>("#trend-chart")!,
+        overview.trends.confirmed_gurugram,
+      );
+    });
+    stage("Department chart", () => {
+      renderDepartmentChart(
+        document.querySelector<HTMLElement>("#department-chart")!,
+        overview.departments.confirmed_gurugram,
+        () => undefined,
+      );
+    });
+    stage("Work-component chart", () => {
+      renderComponentDonut(
+        document.querySelector<HTMLElement>("#component-chart")!,
+        overview.components.confirmed_gurugram,
+        () => undefined,
+      );
+    });
+    /* THE ONE THAT TOOK THE SITE DOWN. EvidenceMap now degrades internally too, so this
+       is belt and braces: either layer alone is enough to keep the portal alive. */
+    stage("Evidence map", () => {
+      bindMap();
+      evidenceMap?.setDistrictMetrics(
+        new Map(
+          overview.areas
+            .filter(
+              (area) =>
+                area.scope === "confirmed_gurugram" && area.level === "district",
+            )
+            .map((area) => [area.value, area.tenders]),
+        ),
+      );
+    });
+    void hydratePlaces();
+    window.addEventListener("resize", () => {
+      /* Guarded individually: a throw here would fire on every resize. */
+      try { resizeCharts(); } catch { /* a chart that cannot resize is not fatal */ }
+      try { evidenceMap?.resize(); } catch { /* nor is a map that cannot */ }
+    });
+    reportBootFailures();
     void hydrateIndex();
   } catch (error) {
-    app.innerHTML = `<div class="fatal-error"><h1>The analytics portal could not start.</h1><p>${escapeHtml(String(error))}</p></div>`;
+    /* Reached only when overview.json or story.json is unusable — the portal genuinely
+       has nothing to show without them. */
+    app.innerHTML = `<div class="fatal-error"><h1>The analytics portal could not start.</h1><p>${escapeHtml(String(error))}</p><p class="fatal-hint">This is a data-loading failure, not a browser capability problem.</p></div>`;
   }
 }
 

@@ -12,41 +12,86 @@ const GURUGRAM_BOUNDS: [[number, number], [number, number]] = [
 
 type GeographyHandler = (level: string, value: string) => void;
 
+/* ── THE MAP IS OPTIONAL, AND THAT IS A CORRECTNESS REQUIREMENT ──────────────────
+   `new maplibregl.Map()` throws SYNCHRONOUSLY when a WebGL context cannot be created.
+   That call used to sit inside main.ts's single bootstrap try/catch, so on any browser
+   without WebGL the whole portal rendered "The analytics portal could not start." —
+   measured on the live deployment, which was down for exactly this reason. Story,
+   charts, the 49,121-record index and search need no WebGL at all, and a public
+   accountability record must not be gated on a graphics context.
+
+   So `map` is nullable, construction is guarded, and every method is a no-op when it is
+   absent. `available()` lets the caller say so honestly in the UI rather than showing an
+   empty grey panel. */
 export class EvidenceMap {
-  private map: MapLibreMap;
+  private map: MapLibreMap | null = null;
   private handler: GeographyHandler;
   private container: HTMLElement;
   private districtCounts = new Map<string, number>();
+  private failure: string | null = null;
 
   constructor(container: HTMLElement, handler: GeographyHandler) {
     this.handler = handler;
     this.container = container;
-    this.map = new maplibregl.Map({
-      container,
-      style: "https://tiles.openfreemap.org/styles/liberty",
-      center: [76.3, 29.25],
-      zoom: 6.5,
-      minZoom: 5.5,
-      maxZoom: 18,
-      attributionControl: false,
-    });
-    this.map.addControl(new maplibregl.NavigationControl(), "top-right");
-    this.map.addControl(
-      new maplibregl.AttributionControl({ compact: true }),
-      "bottom-right",
-    );
-    this.map.on("load", () => void this.addEvidenceLayers());
+    try {
+      this.map = new maplibregl.Map({
+        container,
+        style: "https://tiles.openfreemap.org/styles/liberty",
+        center: [76.3, 29.25],
+        zoom: 6.5,
+        minZoom: 5.5,
+        maxZoom: 18,
+        attributionControl: false,
+      });
+      this.map.addControl(new maplibregl.NavigationControl(), "top-right");
+      this.map.addControl(
+        new maplibregl.AttributionControl({ compact: true }),
+        "bottom-right",
+      );
+      this.map.on("load", () => void this.addEvidenceLayers());
+      /* A later WebGL loss must also not be fatal: the context can be dropped by the
+         driver or by a backgrounded tab, and MapLibre surfaces that as an error event. */
+      this.map.on("error", (event: unknown) => {
+        const message = String((event as { error?: { message?: string } })?.error?.message ?? "");
+        if (/webgl|context/i.test(message)) this.degrade(message);
+      });
+    } catch (error) {
+      this.degrade(String(error));
+    }
+  }
+
+  /* Say what happened, in the panel where the map would have been. A citizen who cannot
+     see the geography still needs to know the rest of the record is intact. */
+  private degrade(reason: string): void {
+    this.map = null;
+    this.failure = reason;
+    this.container.classList.add("map-unavailable");
+    this.container.innerHTML =
+      `<div class="map-fallback" role="status">` +
+      `<p class="map-fallback-title">The map cannot be drawn in this browser.</p>` +
+      `<p class="map-fallback-body">It needs WebGL, which is unavailable or blocked here. ` +
+      `Every other part of this record — the outcome funnel, departments, the tender ` +
+      `index and each tender's evidence page — works without it.</p></div>`;
+  }
+
+  available(): boolean {
+    return this.map !== null;
+  }
+
+  unavailableReason(): string | null {
+    return this.failure;
   }
 
   haryana(): void {
-    this.map.fitBounds(HARYANA_BOUNDS, { padding: 36, duration: 700 });
+    this.map?.fitBounds(HARYANA_BOUNDS, { padding: 36, duration: 700 });
   }
 
   gurugram(): void {
-    this.map.fitBounds(GURUGRAM_BOUNDS, { padding: 28, duration: 700 });
+    this.map?.fitBounds(GURUGRAM_BOUNDS, { padding: 28, duration: 700 });
   }
 
   toggleLayer(name: "wards" | "sectors" | "roads", visible: boolean): void {
+    if (!this.map) return;
     for (const suffix of ["fill", "line", "label"]) {
       const id = `${name}-${suffix}`;
       if (this.map.getLayer(id)) {
@@ -56,12 +101,14 @@ export class EvidenceMap {
   }
 
   resize(): void {
-    this.map.resize();
+    this.map?.resize();
   }
 
   setDistrictMetrics(values: Map<string, number>): void {
+    /* Retained even with no map: the numbers are still the truth, and a later successful
+       init (or a non-map consumer) must see them. */
     this.districtCounts = values;
-    if (!this.map.getSource("districts")) return;
+    if (!this.map || !this.map.getSource("districts")) return;
     const maximum = Math.max(1, ...values.values());
     for (const [district, count] of values) {
       this.map.setFeatureState(
@@ -76,6 +123,7 @@ export class EvidenceMap {
     url: string,
     promoteId?: string,
   ): Promise<void> {
+    if (!this.map) return;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Could not load ${id} geometry.`);
     const data = await response.json();
@@ -83,6 +131,7 @@ export class EvidenceMap {
   }
 
   private async addEvidenceLayers(): Promise<void> {
+    if (!this.map) return;
     try {
       await Promise.all([
         this.addGeoJsonSource(
@@ -264,22 +313,26 @@ export class EvidenceMap {
         const geometry = feature?.geometry;
         if (geometry && "coordinates" in geometry) {
           extendBounds(bounds, geometry.coordinates);
-          if (!bounds.isEmpty()) this.map.fitBounds(bounds, { padding: 36, duration: 700 });
+          if (!bounds.isEmpty()) this.map?.fitBounds(bounds, { padding: 36, duration: 700 });
         }
       });
       for (const layer of ["districts-fill", "wards-fill", "sectors-fill"]) {
         this.map.on("mouseenter", layer, () => {
-          this.map.getCanvas().style.cursor = "pointer";
+          const canvas = this.map?.getCanvas();
+          if (canvas) canvas.style.cursor = "pointer";
         });
         this.map.on("mouseleave", layer, () => {
-          this.map.getCanvas().style.cursor = "";
+          const canvas = this.map?.getCanvas();
+          if (canvas) canvas.style.cursor = "";
         });
       }
       this.map.once("idle", () => {
         this.container.dataset.mapReady = "true";
       });
     } catch (error) {
-      const element = this.map.getContainer().querySelector(".map-error");
+      /* Geometry failed to load, but the map itself is alive — say so in place rather
+         than throwing into the caller, which is what used to reach the bootstrap. */
+      const element = this.map?.getContainer().querySelector(".map-error");
       if (element) element.textContent = String(error);
     }
   }
