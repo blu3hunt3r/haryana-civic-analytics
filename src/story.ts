@@ -555,14 +555,43 @@ function hash(value: string): number {
   return result >>> 0;
 }
 
+/* Machine keys from the scene definitions (`confirmed`, `awarded`, `no_award_doc`…)
+   turned into words a reader recognises. `label()` from format.ts already does the
+   general case; this adds the scope and evidence keys the share bar surfaces, which the
+   particle field never had to name because it never labelled anything. */
+const SHARE_LABELS: Record<string, string> = {
+  confirmed: "Confirmed Gurugram",
+  likely: "Likely Gurugram",
+  statewide: "Statewide / multi-location",
+  outside: "Outside Gurugram",
+  not_gurugram: "Outside Gurugram",
+  relationships: "typed relationships",
+  awarded: "Awarded",
+  cancelled: "Cancelled",
+  retendered: "Retendered",
+  under_evaluation: "Under evaluation",
+  other_published: "Other published states",
+  controlling: "Controlling awards",
+  superseded: "Superseded in a chain",
+  contractor_named: "Contractor named",
+  contractor_absent: "Contractor not published",
+  award_document: "Award document retrieved",
+  no_award_doc: "No award document retrieved",
+  execution: "Execution evidence located",
+  no_execution: "No execution evidence",
+  completion: "Reviewed actual completion",
+  no_completion: "No reviewed completion record",
+};
+
+function shareLabel(key: string): string {
+  return SHARE_LABELS[key] ?? label(key);
+}
+
 export class StoryExperience {
   private readonly scenes: Scene[];
   private current = 0;
-  private readonly canvas: HTMLCanvasElement;
-  private readonly context: CanvasRenderingContext2D;
   private readonly svg: SVGSVGElement;
   private readonly callbacks: StoryCallbacks;
-  private resizeObserver: ResizeObserver;
 
   constructor(
     private readonly root: HTMLElement,
@@ -579,10 +608,11 @@ export class StoryExperience {
         <p class="story-explanation"></p>
       </div>
       <div class="story-world" aria-label="Interactive procurement relationship narrative">
-        <canvas class="story-particles" aria-hidden="true"></canvas>
         <svg class="story-graph" viewBox="0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}" role="img"></svg>
         <div class="story-mobile-nodes"></div>
       </div>
+      <!-- Replaces the particle canvas. See renderShare(). -->
+      <figure class="story-share" aria-live="polite"></figure>
       <div class="story-controls">
         <button type="button" data-story="previous" aria-label="Previous finding">←</button>
         <div class="story-dots" role="tablist" aria-label="Procurement findings"></div>
@@ -591,8 +621,6 @@ export class StoryExperience {
       </div>
       <p class="story-footnote"></p>
     `;
-    this.canvas = this.root.querySelector<HTMLCanvasElement>("canvas")!;
-    this.context = this.canvas.getContext("2d")!;
     this.svg = this.root.querySelector<SVGSVGElement>("svg")!;
     this.root.querySelector("[data-story='previous']")!.addEventListener("click", () => {
       this.go(this.current - 1);
@@ -612,8 +640,6 @@ export class StoryExperience {
       button.addEventListener("click", () => this.go(index));
       dots.append(button);
     });
-    this.resizeObserver = new ResizeObserver(() => this.drawParticles());
-    this.resizeObserver.observe(this.canvas);
     this.go(0);
   }
 
@@ -633,7 +659,7 @@ export class StoryExperience {
       },
     );
     this.renderGraph(scene);
-    this.drawParticles();
+    this.renderShare(scene);
   }
 
   private renderGraph(scene: Scene): void {
@@ -649,8 +675,25 @@ export class StoryExperience {
       .join("");
     const nodes = scene.nodes
       .map((node) => {
+        /* HEIGHT IS DERIVED FROM THE CONTENT, not fixed at 68 px.
+           Measured on the deployed build: .story-node-copy pays 24 px of vertical
+           padding, the title clamps to 2 lines at 16px/1.13 (~36 px) and the detail to
+           2 lines at 10.5px/1.25 (~26 px) plus a 5 px margin — about 91 px of content in
+           a 68 px box. Every multi-word label was cut through the middle of its second
+           line: "Confirmed Gurugram", "Statewide / multi-location" and "Outside
+           Gurugram" all rendered truncated, on desktop and at 320 px.
+           Titles are measured against the real wrap width so a one-line label keeps a
+           compact pill and only genuinely long ones grow. */
         const width = Math.max(150, Math.min(260, 150 * (node.size ?? 1)));
-        const height = Math.max(68, 68 * (node.size ?? 1));
+        const titleSize = node.kind === "root" ? 22 : 16;
+        const charsPerLine = Math.max(8, Math.floor((width - 30) / (titleSize * 0.52)));
+        const titleLines = Math.min(2, Math.max(1, Math.ceil(node.title.length / charsPerLine)));
+        const detailLines = node.detail ? Math.min(2, Math.ceil(node.detail.length / 26)) : 0;
+        const contentHeight =
+          24 +                                       // .story-node-copy padding
+          titleLines * Math.round(titleSize * 1.13) +
+          (detailLines ? 5 + detailLines * 14 : 0);  // margin + 10.5px/1.25 lines
+        const height = Math.max(68, contentHeight, 68 * (node.size ?? 1));
         const action = node.action
           ? `data-action="${node.action.type}" data-value="${escapeHtml(node.action.value)}" role="button" aria-label="Investigate ${escapeHtml(node.title)}"`
           : "";
@@ -694,48 +737,91 @@ export class StoryExperience {
       });
   }
 
-  private drawParticles(): void {
-    const rect = this.canvas.getBoundingClientRect();
-    const ratio = Math.min(devicePixelRatio || 1, 2);
-    this.canvas.width = Math.max(1, Math.round(rect.width * ratio));
-    this.canvas.height = Math.max(1, Math.round(rect.height * ratio));
-    this.context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    this.context.clearRect(0, 0, rect.width, rect.height);
-    const scene = this.scenes[this.current];
-    const total = scene.particles.reduce((sum, group) => sum + group.count, 0);
-    const maximumDots = 49_121;
-    const scale = total > maximumDots ? maximumDots / total : 1;
-    const clusters = scene.particles.length;
-    const styles = getComputedStyle(this.root);
-    const colors: Record<string, string> = {
-      root: styles.getPropertyValue("--story-root").trim(),
-      published: styles.getPropertyValue("--story-published").trim(),
-      awarded: styles.getPropertyValue("--story-awarded").trim(),
-      missing: styles.getPropertyValue("--story-missing").trim(),
-      review: styles.getPropertyValue("--story-review").trim(),
-      entity: styles.getPropertyValue("--story-entity").trim(),
-    };
-    scene.particles.forEach((group, groupIndex) => {
-      const random = seeded(hash(`${this.current}:${group.key}`));
-      const count = Math.round(group.count * scale);
-      const columns = Math.ceil(Math.sqrt(clusters));
-      const rows = Math.ceil(clusters / columns);
-      const column = groupIndex % columns;
-      const row = Math.floor(groupIndex / columns);
-      const centerX = ((column + 0.5) / columns) * rect.width;
-      const centerY = ((row + 0.5) / rows) * rect.height;
-      const spreadX = rect.width / columns / 2.6;
-      const spreadY = rect.height / rows / 2.6;
-      this.context.fillStyle = colors[group.kind] || colors.entity;
-      this.context.globalAlpha = group.kind === "missing" ? 0.16 : 0.28;
-      for (let index = 0; index < count; index += 1) {
-        const angle = random() * Math.PI * 2;
-        const radius = Math.sqrt(random());
-        const x = centerX + Math.cos(angle) * radius * spreadX;
-        const y = centerY + Math.sin(angle) * radius * spreadY;
-        this.context.fillRect(x, y, 1.25, 1.25);
-      }
+  /* ── A PROPORTIONAL SHARE BAR, NOT A PARTICLE FIELD ──────────────────────────────
+     What was here drew one ellipse per group and scattered `count` dots inside it. The
+     ellipse was a FIXED size — only the dot density varied — so 31,241 confirmed-Gurugram
+     records and 6,660 likely-Gurugram records occupied exactly the same area. The visual
+     therefore could not communicate the one thing scene 1 exists to say, and the cluster
+     grid was positioned independently of the labelled nodes, so the "Confirmed Gurugram"
+     pill sat top-centre while its blob sat on the left. It read as decoration because it
+     was decoration.
+
+     This encodes the number in the one channel people read accurately: LENGTH. Each
+     segment's width is its share of the scene total, it carries its own label and count,
+     and where the scene supplies an action the segment drills into investigation — so a
+     finding is never a dead end. Built from DOM rather than canvas, so it is selectable,
+     screen-reader legible, needs no devicePixelRatio handling, and reflows at 320 px
+     instead of being redrawn. */
+  private renderShare(scene: Scene): void {
+    const host = this.root.querySelector<HTMLElement>(".story-share");
+    if (!host) return;
+    const groups = scene.particles.filter((group) => group.count > 0);
+    const total = groups.reduce((sum, group) => sum + group.count, 0);
+    if (!total || groups.length === 0) {
+      host.hidden = true;
+      host.innerHTML = "";
+      return;
+    }
+    host.hidden = false;
+
+    /* A single group is a magnitude, not a division, so a full-width bar would imply a
+       share of something unstated. Show the figure instead. */
+    if (groups.length === 1) {
+      const only = groups[0];
+      host.innerHTML =
+        `<figcaption class="story-share-single ${escapeHtml(only.kind)}">` +
+        `<strong>${formatCount(only.count)}</strong> ` +
+        `<span>${escapeHtml(shareLabel(only.key))}</span></figcaption>`;
+      return;
+    }
+
+    /* MINIMUM 3% PER SEGMENT so a small-but-real class stays visible and clickable —
+       3,328 statewide records are 6.8% of the corpus and must not collapse to a hairline.
+       The remaining width is distributed by true share, so the ORDER and the relative
+       lengths stay honest; only the smallest segments are floored. The exact count is
+       printed on every segment, so no reader has to measure a bar to get a number. */
+    const MIN_SHARE = 0.03;
+    const floored = groups.map((group) => Math.max(MIN_SHARE, group.count / total));
+    const flooredTotal = floored.reduce((sum, value) => sum + value, 0);
+    const widths = floored.map((value) => (value / flooredTotal) * 100);
+
+    const segments = groups
+      .map((group, index) => {
+        const share = (group.count / total) * 100;
+        const action = scene.nodes.find(
+          (node) => node.action && node.id.includes(group.key),
+        )?.action;
+        const tag = action ? "button" : "span";
+        const attrs = action
+          ? ` type="button" data-share-action="${action.type}" data-share-value="${escapeHtml(action.value)}"`
+          : "";
+        return `<${tag} class="story-share-segment ${escapeHtml(group.kind)}"${attrs}` +
+          ` style="--share:${widths[index].toFixed(3)}%"` +
+          ` title="${escapeHtml(shareLabel(group.key))} — ${formatCount(group.count)} of ${formatCount(total)} (${share.toFixed(1)}%)">` +
+          `<b>${formatCount(group.count)}</b>` +
+          `<i>${escapeHtml(shareLabel(group.key))}</i>` +
+          `<u>${share.toFixed(1)}%</u>` +
+          `</${tag}>`;
+      })
+      .join("");
+
+    host.innerHTML =
+      `<div class="story-share-bar" role="img" aria-label="${escapeHtml(
+        groups
+          .map((g) => `${shareLabel(g.key)} ${formatCount(g.count)}`)
+          .join(", "),
+      )}">${segments}</div>` +
+      `<figcaption>${formatCount(total)} records, divided by share. ` +
+      `Segments below three per cent are widened so they stay readable; every count is printed.</figcaption>`;
+
+    host.querySelectorAll<HTMLButtonElement>("[data-share-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.callbacks.investigate({
+          type: button.dataset.shareAction as Action["type"],
+          value: button.dataset.shareValue ?? "",
+        } as Action);
+      });
     });
-    this.context.globalAlpha = 1;
   }
+
 }

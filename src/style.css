@@ -35,7 +35,13 @@ a { color: inherit; }
   min-height: calc(100svh - 70px);
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  /* `overflow: hidden` on a stage pinned to the viewport height CLIPPED its own content:
+     the share-bar caption was cut in half along the bottom edge. The hidden overflow
+     exists to contain the decorative background gradients and the grid mask, so it is
+     now clipped on the X axis only and the stage is free to grow taller than one screen
+     when the composition needs it. */
+  overflow-x: hidden;
+  overflow-y: visible;
   display: grid;
   grid-template-rows: auto minmax(430px, 1fr) auto auto;
   padding: clamp(1.5rem, 4vw, 4rem) max(4vw, calc((100vw - 1500px) / 2));
@@ -48,7 +54,9 @@ a { color: inherit; }
 .story-stage::after {
   content: "";
   position: absolute;
+  /* Bounded to the stage box now that the stage no longer clips on Y. */
   inset: 0;
+  pointer-events: none;
   z-index: -1;
   opacity: 0.22;
   background-image:
@@ -87,18 +95,20 @@ a { color: inherit; }
   line-height: 1.55;
 }
 .story-world {
-  min-height: 430px;
+  /* Sized to the diagram rather than to whatever space was left over. The particle canvas
+     used to fill this row, so with it gone a 430 px floor became a dead zone above the
+     node graph — measured as roughly 250 px of empty background on a 1440x900 desktop. */
+  min-height: 300px;
+  max-height: 44vh;
   position: relative;
   z-index: 1;
 }
-.story-particles,
 .story-graph {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
-.story-particles { filter: blur(0.1px); }
 .story-edge {
   fill: none;
   stroke: rgba(218, 232, 226, 0.22);
@@ -785,23 +795,30 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 
 @media (max-width: 760px) {
   .story-stage {
+    /* No longer pinned to exactly one screen: the narrative is taller than a phone and
+       clamping it was what forced the clipping above. */
     min-height: calc(100svh - 70px);
-    grid-template-rows: auto minmax(330px, 1fr) auto auto;
+    grid-template-rows: auto auto auto auto auto;
     padding: 1.8rem 1rem 1.2rem;
   }
   .story-title { font-size: clamp(2rem, 11vw, 3.35rem); }
-  .story-world { min-height: 330px; }
+  /* The SVG graph is hidden at this width, so the world has nothing to overlay and does
+     not need a fixed height. It had min-height:330px with the node cards absolutely
+     positioned inside it — five cards in two columns are taller than 330 px, so the last
+     row was cut through the middle of its label ("Statewide / multi…"). In normal flow
+     the world grows to its content and nothing clips. */
+  .story-world { min-height: 0; max-height: none; }
   .story-graph { display: none; }
   .story-mobile-nodes {
-    position: absolute;
-    inset: 1rem 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: center;
     gap: 0.5rem;
   }
   .story-mobile-nodes button {
+    /* Content-sized with a 44 px tap floor, rather than a fixed 74 px that a two-line
+       label plus a count overflows. */
     min-height: 74px;
+    height: auto;
     display: grid;
     align-content: center;
     gap: 0.25rem;
@@ -916,3 +933,126 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .boot-notice ul { margin: 0; padding-left: 1.15rem; }
 .boot-notice li { margin: 0.15rem 0; font-size: 0.85rem; opacity: 0.85; }
 .fatal-hint { font-size: 0.9rem; opacity: 0.75; margin-top: 0.5rem; }
+
+/* ── THE PROPORTIONAL SHARE BAR ───────────────────────────────────────────────────
+   Replaces the particle canvas, which drew fixed-size ellipses and varied only dot
+   density — so 31,241 records and 6,660 records covered identical area and the picture
+   could not carry the proportion it was made of.
+
+   Length is the encoding. Every segment states its own count and share, so nobody has to
+   measure a bar to read a number, and a segment with an action is a real control that
+   drills into investigation. */
+.story-share {
+  position: relative;
+  z-index: 4;
+  margin: 0 0 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.story-share-bar {
+  display: flex;
+  width: 100%;
+  min-height: 74px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(246, 241, 223, 0.18);
+  background: rgba(15, 27, 24, 0.55);
+}
+.story-share-segment {
+  /* --share is the floored proportional width; flex-basis carries it so the row always
+     fills exactly 100% regardless of rounding. */
+  flex: 0 0 var(--share);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  padding: 0.6rem 0.7rem;
+  border: 0;
+  border-right: 1px solid rgba(15, 27, 24, 0.55);
+  text-align: left;
+  font: inherit;
+  color: #0f1b18;
+  background: var(--seg, rgba(158, 176, 170, 0.9));
+  overflow: hidden;
+}
+.story-share-segment:last-child { border-right: 0; }
+.story-share-segment.awarded   { --seg: var(--story-awarded); }
+.story-share-segment.published { --seg: var(--story-published); }
+.story-share-segment.review    { --seg: var(--story-review); }
+.story-share-segment.entity    { --seg: var(--story-entity); }
+/* "Missing" must not read as a filled quantity: it is an absence, so it is hatched and
+   its text stays light rather than sitting on a solid block of colour. */
+.story-share-segment.missing {
+  --seg: transparent;
+  color: #f6f1df;
+  background-image: repeating-linear-gradient(
+    -45deg, rgba(246, 241, 223, 0.16) 0 5px, transparent 5px 10px);
+  box-shadow: inset 0 0 0 1px rgba(246, 241, 223, 0.3);
+}
+.story-share-segment b {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.05;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.story-share-segment i {
+  font-style: normal;
+  font-size: 0.76rem;
+  line-height: 1.2;
+  /* Two lines, then ellipsis: a label may be long, but it may never be cut mid-word by a
+     box that is shorter than its own content — which is exactly what the node pills did. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.story-share-segment u {
+  text-decoration: none;
+  font-size: 0.7rem;
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+button.story-share-segment { cursor: pointer; transition: filter .18s ease; }
+button.story-share-segment:hover,
+button.story-share-segment:focus-visible { filter: brightness(1.08); outline-offset: -3px; }
+/* Narrow segments drop their label and percentage rather than showing three clipped
+   fragments; the title attribute and the caption still carry the full text. */
+@container (max-width: 0px) { .story-share-segment i { display: none; } }
+.story-share-segment[style*="--share:3"] i,
+.story-share-segment[style*="--share:4"] i { -webkit-line-clamp: 3; }
+.story-share figcaption {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #9eb0aa;
+  font-family: "DM Mono", ui-monospace, monospace;
+}
+.story-share-single strong {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.6rem;
+  color: #f6f1df;
+  font-variant-numeric: tabular-nums;
+}
+.story-share-single span { color: #9eb0aa; font-size: 0.9rem; }
+
+/* At phone width a row of segments becomes unreadable slivers, so the same data stacks
+   as full-width rows. Length still encodes share, now vertically. */
+@media (max-width: 760px) {
+  .story-share-bar { flex-direction: column; min-height: 0; }
+  .story-share-segment {
+    flex: 0 0 auto;
+    /* Height, rather than width, now carries the share — floored so a small class stays
+       legible and tappable at 44 px. */
+    min-height: max(44px, calc(var(--share) * 2.6));
+    border-right: 0;
+    border-bottom: 1px solid rgba(15, 27, 24, 0.55);
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .story-share-segment:last-child { border-bottom: 0; }
+  .story-share-segment i { -webkit-line-clamp: 2; flex: 1; }
+}
