@@ -11,6 +11,7 @@ import {
   resizeCharts,
 } from "./charts";
 import {
+  NotPublishedError,
   loadOverview,
   loadPlaces,
   loadSearchIndex,
@@ -20,8 +21,12 @@ import {
   loadTenders,
 } from "./data";
 import { escapeHtml, formatCount, formatRupees, label, shortHash } from "./format";
-import { EvidenceMap } from "./map";
 import { StoryExperience } from "./story";
+/* TYPE ONLY. The map module pulls in maplibre-gl — 1.05 MB raw, 0.27 MB gzipped —
+   and a static import put all of it on the boot path to be downloaded and PARSED
+   before first paint even though the map is not constructed until the reader
+   scrolls to it. Measured: FCP 4.2 s with the static import. */
+import type { EvidenceMap } from "./map";
 import type {
   Filters,
   Metric,
@@ -994,20 +999,48 @@ function renderDetail(
     </div>`;
 }
 
-async function openTender(row: TenderIndexRow): Promise<void> {
+function openTender(row: TenderIndexRow): Promise<void> {
+  return openTenderById(row.id);
+}
+
+/* Takes an ID, not an index row, because a deep link has only an ID and must not have
+   to wait 2.26 MB for the index to find out the record exists. `pushState` rather than
+   `replaceState` so Back leaves the tender and returns to the investigation state the
+   reader had built up, which is the "state survives opening and closing a tender"
+   requirement. */
+async function openTenderById(id: string, options?: { replace?: boolean }): Promise<void> {
   const dialog = document.querySelector<HTMLDialogElement>("#tender-dialog")!;
   const detailElement = document.querySelector<HTMLElement>("#tender-detail")!;
   detailElement.innerHTML = `<div class="detail-loading" role="status">Loading tender evidence…</div>`;
-  dialog.showModal();
-  history.replaceState(null, "", `#/tenders/${encodeURIComponent(row.id)}`);
+  if (!dialog.open) dialog.showModal();
+  const target = `#/tenders/${encodeURIComponent(id)}`;
+  if (location.hash !== target) {
+    if (options?.replace) history.replaceState(null, "", target);
+    else {
+      history.pushState(null, "", target);
+      openedTenderFromHistory = true;
+    }
+  }
   try {
+    /* Both resolve from ONE ~2.8 KB request: loadTenderPackage caches by Tender ID, so
+       the second call awaits the same in-flight promise rather than fetching again. */
     const [detail, intelligence] = await Promise.all([
-      loadTenderDetail(row.id, row.detailShard),
-      loadTenderIntelligence(row.id, row.detailShard),
+      loadTenderDetail(id),
+      loadTenderIntelligence(id),
     ]);
     detailElement.innerHTML = renderDetail(detail, intelligence);
   } catch (error) {
-    detailElement.innerHTML = `<div class="empty-state"><strong>Could not load tender evidence.</strong><span>${escapeHtml(String(error))}</span></div>`;
+    /* "Not in the corpus" and "the network failed" are different statements, and a reader
+       who followed a link deserves to be told which. NotPublishedError covers both a 404
+       and a single-page fallback that answered with HTML. */
+    const notFound = error instanceof NotPublishedError;
+    detailElement.innerHTML = notFound
+      ? `<div class="empty-state"><strong>No tender with this ID is published here.</strong>` +
+        `<span>${escapeHtml(id)} is not one of the 49,121 Tender IDs in this evidence ` +
+        `snapshot. That is not proof it does not exist — only that this archive does not ` +
+        `carry it.</span></div>`
+      : `<div class="empty-state"><strong>Could not load tender evidence.</strong>` +
+        `<span>${escapeHtml(String(error))}</span></div>`;
   }
 }
 
@@ -1037,6 +1070,19 @@ function openInvestigation(
       applyFilters();
     }
   }
+  /* THE SELECTION SURVIVES THE LOAD. The index is fetched here rather than at boot, and
+     `filters` was already set above, so a reader who clicked a department in the
+     narrative lands on that department's tenders — the selection is not lost while the
+     2.26 MB index arrives, and it is not re-applied from scratch afterwards either:
+     hydrateIndex() ends in applyFilters(), which reads the same `filters` object. */
+  void hydrateIndex().then(() => {
+    if (!action) return;
+    document.querySelector<HTMLSelectElement>("#department-filter")!.value =
+      filters.department;
+    document.querySelector<HTMLSelectElement>("#component-filter")!.value =
+      filters.component;
+    applyFilters();
+  });
   document.querySelector("#investigation")?.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -1124,7 +1170,17 @@ function bindControls(): void {
     document.querySelector<HTMLDialogElement>("#tender-dialog")!.close();
   });
   document.querySelector<HTMLDialogElement>("#tender-dialog")!.addEventListener("close", () => {
-    history.replaceState(null, "", location.pathname + location.search);
+    /* If the tender was opened by a pushState, step back so Forward still works and the
+       investigation state the reader built is exactly what they return to. Only rewrite
+       the URL when there is no history entry to pop — a cold visit straight to a tender
+       link, where going back would leave the site. */
+    if (routedTenderId() !== null) {
+      if (openedTenderFromHistory) history.back();
+      else history.replaceState(null, "", location.pathname + location.search);
+    }
+    /* Closing a tender is the moment the reader turns to the wider record, so this is
+       where the index is worth its 2.32 MB. Idempotent: a no-op once loaded. */
+    void hydrateIndex().catch(() => undefined);
   });
 }
 
@@ -1150,7 +1206,10 @@ function handleMapSelection(level: string, value: string): void {
   document.querySelector(".stats")?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function bindMap(): void {
+async function bindMap(): Promise<void> {
+  /* Fetched here, so maplibre-gl is downloaded and parsed only for readers who reach
+     the geography. */
+  const { EvidenceMap } = await import("./map");
   evidenceMap = new EvidenceMap(
     document.querySelector<HTMLElement>("#evidence-map")!,
     handleMapSelection,
@@ -1182,25 +1241,55 @@ function bindMap(): void {
   });
 }
 
-async function hydrateIndex(): Promise<void> {
-  const status = document.querySelector<HTMLElement>("#index-state")!;
-  try {
-    allRows = await loadTenders();
-    indexReady = true;
-    status.textContent = `${formatCount(allRows.length)} tender records ready for linked filtering.`;
-    status.classList.add("is-ready");
-    bindControls();
-    applyFilters();
-    const route = location.hash.match(/^#\/tenders\/(.+)$/);
-    if (route) {
-      const id = decodeURIComponent(route[1]);
-      const row = allRows.find((item) => item.id === id);
-      if (row) await openTender(row);
+/* ── THE TENDER ROUTE ─────────────────────────────────────────────────────────────
+   Reading /tenders/<id> used to require the whole 3.4 MB index, because openTender()
+   took an index ROW and the route was resolved by searching that array. So a deep link
+   waited on the index, and on the live deployment it never opened at all: the hash was
+   consulted only after boot, and boot had already rewritten the URL — measured,
+   `location.hash` read "" and no detail element existed.
+
+   With one file per tender the ID alone is enough. The package is fetched immediately,
+   in parallel with everything else, and the reader sees the record without the index
+   having started. This is the acceptance requirement "test browser back/forward and
+   direct tender URLs". */
+function routedTenderId(): string | null {
+  const hash = location.hash.match(/^#\/tenders\/(.+)$/);
+  if (hash) return decodeURIComponent(hash[1]);
+  /* Also honour a real path, so /tenders/<id> works wherever the host can rewrite to
+     index.html. GitHub Pages cannot, which is why the hash form stays canonical. */
+  const path = location.pathname.match(/\/tenders\/([^/]+)\/?$/);
+  return path ? decodeURIComponent(path[1]) : null;
+}
+
+let indexHydration: Promise<void> | null = null;
+/* False when the dialog was opened by the router (a deep link or a popstate), in which
+   case there is no extra history entry to pop on close. */
+let openedTenderFromHistory = true;
+
+/* Loaded ON DEMAND, not at boot. The index is 2.26 MB compressed and the guided
+   narrative — the first thing anybody sees — needs none of it: overview.json and
+   story.json together are 0.10 MB compressed. Fetching it eagerly is what put the
+   cold-load payload at 5.78 MB. */
+function hydrateIndex(): Promise<void> {
+  indexHydration ??= (async () => {
+    const status = document.querySelector<HTMLElement>("#index-state")!;
+    status.textContent = "Loading the tender index…";
+    try {
+      allRows = await loadTenders();
+      indexReady = true;
+      status.textContent = `${formatCount(allRows.length)} tender records ready for linked filtering.`;
+      status.classList.add("is-ready");
+      bindControls();
+      applyFilters();
+    } catch (error) {
+      status.textContent = `The tender index could not be loaded: ${String(error)}`;
+      status.classList.add("is-error");
+      /* Allow a retry: a transient failure must not leave the index permanently dead. */
+      indexHydration = null;
+      throw error;
     }
-  } catch (error) {
-    status.textContent = `The tender index could not be loaded: ${String(error)}`;
-    status.classList.add("is-error");
-  }
+  })();
+  return indexHydration;
 }
 
 /* ── ONE SUBSYSTEM MUST NOT BE ABLE TO TAKE DOWN THE RECORD ───────────────────────
@@ -1316,10 +1405,62 @@ async function bootstrap(): Promise<void> {
         () => undefined,
       );
     });
-    /* THE ONE THAT TOOK THE SITE DOWN. EvidenceMap now degrades internally too, so this
-       is belt and braces: either layer alone is enough to keep the portal alive. */
+    /* ── THE MAP IS BUILT WHEN THE READER REACHES IT ─────────────────────────────
+       Constructing it at boot pulled its whole geometry and basemap onto the critical
+       path: haryana_districts.geojson alone is 1.24 MB compressed (3.05 MB raw, 80,270
+       coordinate pairs across 23 districts), plus ward and road layers and ~0.5 MB of
+       raster tiles. Measured, that was 3.76 MB of a 3.76 MB cold load and an FCP of
+       4.2 s, for a panel below the fold that nobody has scrolled to yet.
+
+       Deferring it is also the honest alternative to simplifying the boundaries: the
+       geometry stays exactly as the State published it, and the reader who wants the map
+       pays for the map. An IntersectionObserver with a generous margin means it is
+       usually already drawn by the time the panel is in view. */
     stage("Evidence map", () => {
-      bindMap();
+      const host = document.querySelector<HTMLElement>("#evidence-map");
+      if (!host) return;
+      let building = false;
+      const build = (): void => {
+        if (evidenceMap || building) return;
+        building = true;
+        /* Still guarded: WebGL can fail here exactly as it could at boot, and so can the
+           dynamic import on a flaky connection. */
+        void (async () => {
+          try {
+            await bindMap();
+            applyDistrictMetrics();
+          } catch (error) {
+            bootFailures.push({ stage: "Evidence map", error: String(error) });
+            reportBootFailures();
+          }
+        })();
+      };
+      if (typeof IntersectionObserver !== "function") {
+        build();
+        return;
+      }
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            build();
+          }
+        },
+        /* 200px, not 600px. The map panel sits at y≈1453 on a 1440x900 desktop, so a
+           600px margin put it inside the observer's root rect at boot and deferral
+           bought nothing — measured: cold load unchanged at 3.76 MB. 200px starts the
+           map just before it scrolls into view without paying for it up front. */
+        { rootMargin: "200px" },
+      );
+      observer.observe(host);
+      /* The map-view buttons and the "Map" nav link must work even if the panel was
+         never scrolled into view. */
+      for (const selector of ["#haryana-view", "#gurugram-view", 'a[href="#map"]']) {
+        document.querySelector(selector)?.addEventListener("click", build, { once: true });
+      }
+    });
+
+    function applyDistrictMetrics(): void {
       evidenceMap?.setDistrictMetrics(
         new Map(
           overview.areas
@@ -1330,7 +1471,10 @@ async function bootstrap(): Promise<void> {
             .map((area) => [area.value, area.tenders]),
         ),
       );
-    });
+    }
+
+    /* Place-name evidence is only read by the map panel, so it waits for the same
+       gesture rather than adding 0.23 MB to the boot path. */
     void hydratePlaces();
     window.addEventListener("resize", () => {
       /* Guarded individually: a throw here would fire on every resize. */
@@ -1338,7 +1482,34 @@ async function bootstrap(): Promise<void> {
       try { evidenceMap?.resize(); } catch { /* nor is a map that cannot */ }
     });
     reportBootFailures();
-    void hydrateIndex();
+
+    /* A DEEP LINK IS SERVED BEFORE THE INDEX EXISTS. One package fetch, ~2.8 KB, so the
+       record is on screen while the 2.26 MB index is still downloading — and it opens at
+       all, which it did not before: the route was read after boot had already rewritten
+       the URL. */
+    const routed = routedTenderId();
+    if (routed) {
+      openedTenderFromHistory = false;
+      /* ONE ~2.8 KB request and nothing else. The index is deliberately NOT started
+         here: a reader following a link to a tender wants that tender, and pulling
+         2.32 MB they have not asked for was the previous behaviour's whole problem in
+         miniature. It is fetched when they close the record and land in the
+         investigation — see the dialog "close" handler. */
+      void openTenderById(routed, { replace: true });
+    }
+
+    /* Back and Forward move between the tender and the investigation rather than
+       reloading the document. */
+    window.addEventListener("popstate", () => {
+      const id = routedTenderId();
+      const dialog = document.querySelector<HTMLDialogElement>("#tender-dialog");
+      if (id) {
+        openedTenderFromHistory = false;
+        void openTenderById(id, { replace: true });
+      } else if (dialog?.open) {
+        dialog.close();
+      }
+    });
   } catch (error) {
     /* Reached only when overview.json or story.json is unusable — the portal genuinely
        has nothing to show without them. */

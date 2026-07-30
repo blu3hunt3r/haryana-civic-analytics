@@ -1,3 +1,13 @@
+<meta charset="utf-8">
+<!-- WITHOUT THIS, EVERY PHONE RENDERS AT 980 px AND SCALES DOWN.
+     Measured: emulating a 320 px viewport reported document.clientWidth = 980, i.e. the
+     desktop layout shrunk to a third of legibility. It is the reason mobile "worked
+     mechanically but was not usable" — no amount of CSS below a breakpoint can help
+     while the layout viewport is 980 px, because the media queries never match. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Haryana public procurement evidence — Civic Voice of India</title>
+<meta name="description" content="49,121 published Haryana tender records, what the evidence proves, and what it does not. Every figure resolves to its source.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2232%22 fill=%22%23173d36%22/><text x=%2232%22 y=%2242%22 text-anchor=%22middle%22 font-size=%2234%22 fill=%22%23fff9ed%22>H</text></svg>">
 <div id="app">
   <div class="boot" role="status">Loading Haryana public procurement evidence…</div>

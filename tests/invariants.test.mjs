@@ -10,10 +10,25 @@ const story = JSON.parse(await readFile(new URL("story.json", root), "utf8"));
 const intelligenceManifest = JSON.parse(
   await readFile(new URL("intelligence-manifest.json", root), "utf8"),
 );
-const tenderIndex = JSON.parse(await readFile(new URL("tenders.json", root), "utf8"));
-const tenders = tenderIndex.rows.map((row) =>
-  Object.fromEntries(tenderIndex.schema.map((field, index) => [field, row[index]])),
-);
+/* The browsing index is now dictionary-encoded and lives in tender-index.json;
+   tenders.json (32 MB raw, fetched on boot) was retired with the shard sets. Decoding
+   here mirrors loadTenders() in src/data.ts so these invariants keep testing the values
+   a reader actually sees rather than the storage form. */
+const tenderIndex = JSON.parse(await readFile(new URL("tender-index.json", root), "utf8"));
+const dictionaryFields = new Set(tenderIndex.dictionaryFields ?? []);
+const tenders = tenderIndex.rows.map((row) => {
+  const record = {};
+  tenderIndex.schema.forEach((field, index) => {
+    const value = row[index];
+    record[field] = dictionaryFields.has(field)
+      ? (typeof value === "number" ? (tenderIndex.dictionaries[field][value] ?? "") : "")
+      : value;
+  });
+  record.contractorKey = record.contractor || "";
+  record.titleKey = record.repeatGroup == null ? "" : `g${record.repeatGroup}`;
+  record.areas ??= [];
+  return record;
+});
 
 test("public headline uses the full verified tender corpus", () => {
   assert.equal(overview.headline.publishedTendersAllScopes, 49_121);

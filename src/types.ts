@@ -54,7 +54,15 @@ export interface TenderIndexRow {
   areas: AreaRef[];
   documentCount: number;
   downloadedDocumentCount: number;
-  detailShard: number;
+  /* Removed from the published index: it pointed at the 64-way shard layout that
+     public/data/tender/<aa>/<bb>/<ID>.json replaced. The path is now derived from the
+     Tender ID itself (see packageUrl in data.ts), so nothing needs to carry it.
+     Optional rather than deleted so an older cached index still typechecks. */
+  detailShard?: number;
+  /* Non-null only where the normalised work title occurs on more than one tender.
+     Replaces `titleKey`, which cost 4.63 MB to publish 35,393 normalised strings when
+     the repeated-work filter only ever needed a group identity. */
+  repeatGroup?: number | null;
 }
 
 export interface Overview {
