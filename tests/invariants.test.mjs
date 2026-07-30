@@ -6,6 +6,10 @@ const root = new URL("../public/data/", import.meta.url);
 const overview = JSON.parse(await readFile(new URL("overview.json", root), "utf8"));
 const validation = JSON.parse(await readFile(new URL("validation.json", root), "utf8"));
 const places = JSON.parse(await readFile(new URL("places.json", root), "utf8"));
+const story = JSON.parse(await readFile(new URL("story.json", root), "utf8"));
+const intelligenceManifest = JSON.parse(
+  await readFile(new URL("intelligence-manifest.json", root), "utf8"),
+);
 const tenderIndex = JSON.parse(await readFile(new URL("tenders.json", root), "utf8"));
 const tenders = tenderIndex.rows.map((row) =>
   Object.fromEntries(tenderIndex.schema.map((field, index) => [field, row[index]])),
@@ -77,4 +81,42 @@ test("place index is name evidence and never invented boundary geometry", () => 
   for (const place of places) {
     for (const id of place.tenderIds) assert.ok(ids.has(id), `${place.name}: ${id}`);
   }
+});
+
+test("narrative outcomes partition the confirmed Gurugram corpus", () => {
+  assert.equal(
+    Object.values(story.confirmedGurugram.outcomes).reduce(
+      (sum, value) => sum + value,
+      0,
+    ),
+    story.confirmedGurugram.records,
+  );
+  assert.equal(story.confirmedGurugram.records, 31_241);
+});
+
+test("narrative contract value uses controlling awards only", () => {
+  const expected = tenders
+    .filter(
+      (row) =>
+        row.scope === "confirmed_gurugram" && row.isControllingAward,
+    )
+    .reduce((sum, row) => sum + (row.contractValue ?? 0), 0);
+  assert.ok(
+    Math.abs(story.confirmedGurugram.contractValue - expected) < 0.01,
+  );
+  assert.match(story.definitions.contractValue, /not money paid/i);
+});
+
+test("completion evidence is preserved as a narrow reviewed subset", () => {
+  assert.equal(story.confirmedGurugram.evidence.actualCompletionEvidence, 3);
+  assert.ok(
+    story.confirmedGurugram.evidence.actualCompletionEvidence <
+      story.confirmedGurugram.evidence.awarded,
+  );
+});
+
+test("knowledge graph retains substantially more relationships than tenders", () => {
+  assert.equal(intelligenceManifest.sourceRows.tenders, 49_121);
+  assert.ok(intelligenceManifest.knowledgeGraph.entities > 300_000);
+  assert.ok(intelligenceManifest.knowledgeGraph.edges > 600_000);
 });

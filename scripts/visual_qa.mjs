@@ -54,10 +54,16 @@ for (const viewport of [
   await page.locator(".tender-row").first().waitFor({ timeout: 10_000 });
   await page.waitForTimeout(2_000);
   const readyMs = Math.round(performance.now() - started);
+  const storyTitle = await page.locator(".story-title").innerText();
   await page.screenshot({
     path: new URL(`${viewport.name}-full.png`, output).pathname,
     fullPage: true,
   });
+
+  for (let index = 0; index < 4; index += 1) {
+    await page.locator('[data-story="next"]').click();
+  }
+  const evidenceStoryTitle = await page.locator(".story-title").innerText();
 
   await page.locator("#gurugram-view").click();
   await page.locator('input[data-layer="sectors"]').check();
@@ -69,6 +75,14 @@ for (const viewport of [
   await page.locator(".tender-row").first().click();
   await page.locator("#tender-dialog[open]").waitFor();
   await page.locator("#tender-detail .detail-header").waitFor({ timeout: 20_000 });
+  await page.locator("#tender-detail .evidence-ladder").waitFor({ timeout: 20_000 });
+  const tenderIntelligenceText = (
+    await page.locator("#tender-detail").innerText()
+  ).toLowerCase();
+  const tenderHasBidIntelligence =
+    tenderIntelligenceText.includes("bid-stage record");
+  const tenderHasLifecycleIntelligence =
+    tenderIntelligenceText.includes("procurement sequence");
   await page.screenshot({
     path: new URL(`${viewport.name}-tender.png`, output).pathname,
     fullPage: false,
@@ -81,6 +95,10 @@ for (const viewport of [
     viewport: viewport.name,
     httpStatus: response?.status(),
     readyMs,
+    storyTitle,
+    evidenceStoryTitle,
+    tenderHasBidIntelligence,
+    tenderHasLifecycleIntelligence,
     resultText,
     consoleErrors,
     pageErrors,

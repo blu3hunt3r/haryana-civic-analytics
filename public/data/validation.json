@@ -1,7 +1,7 @@
 {
   "ok": true,
   "datasetVersion": "2026-07-28.1",
-  "checksPassed": 120,
+  "checksPassed": 195,
   "checks": [
     {
       "name": "source_tender_ids_unique",
@@ -625,6 +625,462 @@
       "passed": true,
       "expected": 248056,
       "actual": 248056
+    },
+    {
+      "name": "story_full_corpus_count",
+      "passed": true,
+      "expected": 49121,
+      "actual": 49121
+    },
+    {
+      "name": "story_confirmed_scope_count",
+      "passed": true,
+      "expected": 31241,
+      "actual": 31241
+    },
+    {
+      "name": "story_confirmed_award_count",
+      "passed": true,
+      "expected": 13398,
+      "actual": 13398
+    },
+    {
+      "name": "story_confirmed_controlling_value",
+      "passed": true,
+      "expected": 83295707464.37,
+      "actual": 83295707464.37
+    },
+    {
+      "name": "story_outcomes_partition_confirmed_scope",
+      "passed": true,
+      "expected": 31241,
+      "actual": 31241
+    },
+    {
+      "name": "reviewed_actual_completion_records",
+      "passed": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_00",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_01",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_02",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_03",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_04",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_05",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_06",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_07",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_08",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_09",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_10",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_11",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_12",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_13",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_14",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_15",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_16",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_17",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_18",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_19",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_20",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_21",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_22",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_23",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_24",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_25",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_26",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_27",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_28",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_29",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_30",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_31",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_32",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_33",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_34",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_35",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_36",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_37",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_38",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_39",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_40",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_41",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_42",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_43",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_44",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_45",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_46",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_47",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_48",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_49",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_50",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_51",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_52",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_53",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_54",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_55",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_56",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_57",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_58",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_59",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_60",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_61",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_62",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_no_duplicate_63",
+      "passed": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "intelligence_shard_count",
+      "passed": true,
+      "expected": 64,
+      "actual": 64
+    },
+    {
+      "name": "intelligence_tender_coverage",
+      "passed": true,
+      "expected": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      },
+      "actual": {
+        "count": 49121,
+        "sha256": "ee0646963fb225a25f5610e86430b15d4f6ffce610cfbea83266639dccb2d6c0"
+      }
+    },
+    {
+      "name": "intelligence_completion_evidence_coverage",
+      "passed": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "name": "knowledge_graph_tender_count",
+      "passed": true,
+      "expected": 49121,
+      "actual": 49121
+    },
+    {
+      "name": "knowledge_graph_has_more_edges_than_tenders",
+      "passed": true,
+      "expected": true,
+      "actual": true
     },
     {
       "name": "source_exists_tenders",

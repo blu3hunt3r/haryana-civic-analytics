@@ -184,6 +184,7 @@ export interface Filters {
   place: string;
   areaLevel: string;
   areaValue: string;
+  outcome: string;
   query: string;
 }
 
@@ -199,4 +200,138 @@ export interface PlaceRecord {
   tenderIds: string[];
   boundaryGeometryAvailable: boolean;
   sourceSha256: string;
+}
+
+export interface StoryEvidence {
+  awarded: number;
+  contractValuePublished: number;
+  contractorPublished: number;
+  awardDocumentDownloaded: number;
+  exactHewpLink: number;
+  actualCompletionEvidence: number;
+}
+
+export interface StoryScope {
+  records: number;
+  outcomes: Record<string, number>;
+  awarded: number;
+  controllingAwards: number;
+  contractValue: number;
+  evidence: StoryEvidence;
+  competition: Record<string, number>;
+  awardVsEstimate: Record<string, number>;
+  largestAwardEstimateDifferences: Array<{
+    tenderId: string;
+    differencePercent: number;
+  }>;
+  contractorCoverage: {
+    publishedContractorAwards: number;
+    publishedContractorValue: number;
+    unattributedContractValue: number;
+  };
+  contractorConcentration: Array<{
+    rank: number;
+    key: string;
+    name: string;
+    awards: number;
+    contractValue: number;
+    shareOfAllPublishedValue: number;
+    shareOfKnownContractorValue: number;
+    cumulativeKnownValueShare: number;
+  }>;
+  departmentComponentEdges: Array<{
+    department: string;
+    component: string;
+    tenders: number;
+    awards: number;
+    contractValue: number;
+  }>;
+  repeatGroups: Array<{
+    key: string;
+    title: string;
+    records: number;
+    awarded: number;
+    contractValue: number;
+    years: string[];
+    departments: string[];
+    components: string[];
+    tenderIds: string[];
+  }>;
+  relationshipCounts: {
+    department: number;
+    component: number;
+    contractor: number;
+    placeReferences: number;
+    documents: number;
+    bidRecords: number;
+    lifecycleEvents: number;
+  };
+}
+
+export interface StoryData {
+  datasetVersion: string;
+  definitions: Record<string, string>;
+  all: StoryScope;
+  confirmedGurugram: StoryScope;
+  confirmedPlusLikely: StoryScope;
+}
+
+export interface TenderIntelligence {
+  understanding: {
+    outcome: string;
+    department: string;
+    components: string[];
+    scope: string;
+    places: AreaRef[];
+    chainRoot: string;
+    evidence: {
+      level: string;
+      awardDocumentRecords: number;
+      awardDocumentDownloaded: boolean;
+      contractorPublished: boolean;
+      contractValuePublished: boolean;
+      exactHewpLinks: number;
+      mcgLinks: number;
+      confirmedAssetLinks: number;
+      actualCompletionRecords: number;
+    };
+    bidMetrics: Record<string, number>;
+    lifecycleEventCounts: Record<string, number>;
+  };
+  bids: Array<{
+    number: string;
+    bidder: string;
+    status: string;
+    submittedAt: string;
+    rank: string;
+    financialValue: number | null;
+    isAwarded: boolean;
+    sourceSha256: string;
+  }>;
+  lifecycle: Array<{
+    sequence: string;
+    at: string;
+    type: string;
+    status: string;
+    detail: string;
+    sourceType: string;
+    sourceSha256: string;
+  }>;
+  reviewFlags: Array<{
+    id: string;
+    severity: string;
+    message: string;
+    observedValue: string;
+    requiredEvidence: string;
+    ruleSourceUrl: string;
+    notAnAccusation: boolean;
+  }>;
+  actualCompletionEvidence: Array<{
+    date: string;
+    assessment: string;
+    context: string;
+    page: string;
+    sha256: string;
+    sourcePath: string;
+  }>;
 }
