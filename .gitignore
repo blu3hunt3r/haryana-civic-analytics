@@ -4,3 +4,8 @@ dist/
 artifacts/
 build/
 __pycache__/
+
+# Build intermediates. build/shards holds the tender-details and intelligence shard sets
+# that scripts/build_tender_packages.py consumes; they are legitimate intermediates and
+# were only ever wrong as PUBLISHED artefacts.
+build/shards/

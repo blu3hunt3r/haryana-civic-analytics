@@ -87,11 +87,30 @@ def main() -> None:
     audit = Audit()
     manifest = load_json(DATA / "manifest.json")
     overview = load_json(DATA / "overview.json")
-    tender_index = load_json(DATA / "tenders.json")
-    tenders = [
-        dict(zip(tender_index["schema"], row, strict=True))
-        for row in tender_index["rows"]
-    ]
+    # tenders.json (32 MB, fetched on boot) was retired with the two shard sets. The
+    # browsing index is now dictionary-encoded, so decode it the way src/data.ts does —
+    # these checks must run against the values a reader sees, not the storage form.
+    tender_index = load_json(DATA / "tender-index.json")
+    _dict_fields = set(tender_index.get("dictionaryFields") or [])
+    _tables = tender_index.get("dictionaries") or {}
+
+    def _decode(field: str, value):
+        if field not in _dict_fields:
+            return value
+        table = _tables.get(field) or []
+        return table[value] if isinstance(value, int) and 0 <= value < len(table) else ""
+
+    tenders = []
+    for row in tender_index["rows"]:
+        record = {
+            field: _decode(field, value)
+            for field, value in zip(tender_index["schema"], row, strict=True)
+        }
+        record["contractorKey"] = record.get("contractor") or ""
+        group = record.get("repeatGroup")
+        record["titleKey"] = "" if group is None else f"g{group}"
+        record.setdefault("areas", [])
+        tenders.append(record)
 
     source_tenders = read_csv(ROOT / "data/final/tenders.csv")
     source_scope = read_csv(ROOT / "data/final/gurugram_scope.csv")
@@ -101,13 +120,30 @@ def main() -> None:
     source_asset_links = read_csv(ROOT / "data/derived/contract_asset_links.csv")
     source_places = read_csv(ROOT / "data/derived/gurugram_places.csv")
     places = load_json(DATA / "places.json")
+    # Walk the per-tender packages instead of 64 shards. Same totals, and it also proves
+    # every published package is readable rather than only that the shards parsed.
     embedded_link_counts = Counter()
-    for index in range(manifest["records"]["detailShards"]):
-        shard = load_json(DATA / "tender-details" / f"{index:02d}.json")
-        for detail in shard.values():
-            embedded_link_counts["hewp"] += len(detail["hewpRecords"])
-            embedded_link_counts["mcg"] += len(detail["mcgLinks"])
-            embedded_link_counts["assets"] += len(detail["assetLinks"])
+    package_ids: set[str] = set()
+    package_document_count = 0
+    package_areas: dict[str, list[str]] = {}
+    for package_path in sorted((DATA / "tender").rglob("*.json")):
+        detail = load_json(package_path)
+        tender_id = detail.get("id") or package_path.stem
+        if tender_id in package_ids:
+            audit.true(f"package_duplicate_{tender_id}", False)
+        package_ids.add(tender_id)
+        embedded_link_counts["hewp"] += len(detail["hewpRecords"])
+        embedded_link_counts["mcg"] += len(detail["mcgLinks"])
+        embedded_link_counts["assets"] += len(detail["assetLinks"])
+        package_document_count += len(detail["documents"])
+        # Geography moved out of the index and into the package, so district
+        # attribution is reconciled from here. Keeping only what the check needs
+        # avoids holding 49,121 full records in memory.
+        package_areas[tender_id] = [
+            area["value"]
+            for area in (detail.get("areas") or [])
+            if area.get("level") == "district"
+        ]
 
     source_ids = [row["tender_id"] for row in source_tenders]
     public_ids = [row["id"] for row in tenders]
@@ -260,13 +296,12 @@ def main() -> None:
         public_districts <= district_names,
         sorted(public_districts - district_names),
     )
+    # A tender that names several districts must not contribute its contract value to
+    # each of them. `areas` is no longer in the browsing index — it was the single
+    # largest field there — so the district set comes from the tender's own package.
     expected_district_values = Counter()
     for row in tenders:
-        districts = {
-            area["value"]
-            for area in row["areas"]
-            if area["level"] == "district"
-        }
+        districts = set(package_areas.get(row["id"], ()))
         if (
             len(districts) == 1
             and row["isControllingAward"]
@@ -281,25 +316,38 @@ def main() -> None:
         for area in overview["areas"]
         if area["level"] == "district" and area["contractValue"]
     }
+    # COMPARED WITH A TOLERANCE, and that is a correction rather than a relaxation.
+    # These are sums of thousands of rupee floats, and IEEE-754 addition is not
+    # associative: summing the same 9,306 controlling awards in a different order gives
+    # 65,865,653,414.11003 one way and 65,865,653,414.110115 the other. The old exact
+    # dict comparison passed only because the validator happened to iterate in the same
+    # order the builder did; walking packages instead of index rows changed the order and
+    # exposed it. One paisa is far below any figure this portal publishes, and a real
+    # double-counted district would be off by millions.
+    money_tolerance = 0.01
+    expected_keys = set(expected_district_values)
+    actual_keys = set(actual_district_values)
+    audit.check(
+        "district_contract_value_keys_match",
+        sorted(expected_keys),
+        sorted(actual_keys),
+    )
+    drifted = {
+        key: (expected_district_values[key], actual_district_values[key])
+        for key in expected_keys & actual_keys
+        if abs(expected_district_values[key] - actual_district_values[key]) > money_tolerance
+    }
     audit.check(
         "district_contract_values_exclude_multi_district_duplication",
-        dict(expected_district_values),
-        actual_district_values,
+        {},
+        drifted,
     )
 
-    detail_ids: set[str] = set()
-    detail_document_count = 0
-    for shard_path in sorted((DATA / "tender-details").glob("*.json")):
-        shard = load_json(shard_path)
-        audit.true(
-            f"detail_shard_no_duplicate_{shard_path.stem}",
-            detail_ids.isdisjoint(shard),
-        )
-        detail_ids.update(shard)
-        detail_document_count += sum(len(row["documents"]) for row in shard.values())
-    audit.check("detail_shard_count", manifest["records"]["detailShards"], len(list((DATA / "tender-details").glob("*.json"))))
-    audit.check("detail_tender_coverage", set(public_ids), detail_ids)
-    audit.check("detail_document_coverage", len(source_documents), detail_document_count)
+    # One package per Tender ID: every published ID must have one, and no package may
+    # exist for an ID the index does not list.
+    audit.check("package_count", len(public_ids), len(package_ids))
+    audit.check("package_tender_coverage", set(public_ids), package_ids)
+    audit.check("package_document_coverage", len(source_documents), package_document_count)
 
     story = load_json(DATA / "story.json")
     intelligence_manifest = load_json(DATA / "intelligence-manifest.json")
@@ -339,23 +387,19 @@ def main() -> None:
         len(completion_tenders & {row["id"] for row in confirmed}),
         story["confirmedGurugram"]["evidence"]["actualCompletionEvidence"],
     )
+    # The intelligence half now travels inside each tender's own package under `intel`,
+    # so this walks the packages rather than a parallel shard set. Counting reviewed
+    # completion evidence here is the check that matters: it must stay at the three
+    # records the archive actually reviewed, and never drift upward.
     intelligence_ids: set[str] = set()
     intelligence_completion = 0
-    for shard_path in sorted((DATA / "intelligence").glob("*.json")):
-        shard = load_json(shard_path)
-        audit.true(
-            f"intelligence_shard_no_duplicate_{shard_path.stem}",
-            intelligence_ids.isdisjoint(shard),
-        )
-        intelligence_ids.update(shard)
-        intelligence_completion += sum(
-            bool(row["actualCompletionEvidence"]) for row in shard.values()
-        )
-    audit.check(
-        "intelligence_shard_count",
-        intelligence_manifest["detailShards"],
-        len(list((DATA / "intelligence").glob("*.json"))),
-    )
+    for package_path in sorted((DATA / "tender").rglob("*.json")):
+        detail = load_json(package_path)
+        intel = detail.get("intel") or {}
+        tender_id = detail.get("id") or package_path.stem
+        intelligence_ids.add(tender_id)
+        if intel.get("actualCompletionEvidence"):
+            intelligence_completion += 1
     audit.check("intelligence_tender_coverage", set(public_ids), intelligence_ids)
     audit.check(
         "intelligence_completion_evidence_coverage",

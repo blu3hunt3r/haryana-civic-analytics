@@ -54,8 +54,30 @@ test("contract value is described as value, never expenditure", () => {
 
 test("source reconciliation report passes", () => {
   assert.equal(validation.ok, true);
-  assert.ok(validation.checksPassed >= 90);
   assert.ok(validation.checks.every((check) => check.passed));
+  /* NAMED COVERAGE, NOT A COUNT. This used to assert checksPassed >= 90, a threshold
+     calibrated to the 64-shard layout: 64 `detail_shard_no_duplicate_NN` plus 64
+     `intelligence_shard_no_duplicate_NN` checks existed only because there were 64
+     files, and they collapsed into two corpus-wide checks that are strictly stronger —
+     they compare the whole published ID set at once rather than 64 pairwise
+     disjointness tests. The honest total fell to 67, so a raw floor would either fail
+     on a correct build or have to be lowered on every refactor. Asserting that the
+     invariants that MATTER are present cannot be satisfied by adding filler checks. */
+  const names = new Set(validation.checks.map((check) => check.name));
+  for (const required of [
+    "source_tender_ids_unique",
+    "public_tender_ids_unique",
+    "public_tender_count",
+    "public_tender_id_set",
+    "package_count",
+    "package_tender_coverage",
+    "package_document_coverage",
+    "district_contract_values_exclude_multi_district_duplication",
+    "place_index_contains_no_invented_boundaries",
+  ]) {
+    assert.ok(names.has(required), `validation must still cover ${required}`);
+  }
+  assert.ok(validation.checksPassed >= 60, `only ${validation.checksPassed} checks ran`);
 });
 
 test("cancelled and retendered history cannot become controlling contract value", () => {

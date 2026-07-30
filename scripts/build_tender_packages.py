@@ -69,8 +69,19 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DETAILS_DIR = ROOT / "public" / "data" / "tender-details"
-INTEL_DIR = ROOT / "public" / "data" / "intelligence"
+# ── INPUTS ARE INTERMEDIATES, NOT PUBLISHED OUTPUT ────────────────────────────────
+# These were originally read from public/data/tender-details and public/data/intelligence
+# — the very directories this script replaces. That made the build a ONE-SHOT: the first
+# run deleted its own inputs and the second run failed with "no shards found", which is
+# the opposite of the deterministic, re-runnable rebuild the pipeline is supposed to be.
+# The shard sets are legitimate build intermediates; they were only ever wrong as
+# PUBLISHED artefacts. They now live under build/ (gitignored) so this script can be run
+# any number of times against the same inputs and produce byte-identical packages.
+#
+# FOLLOW-UP: build_analytics.py and build_intelligence.py should write here directly
+# instead of into public/. Until then, `npm run data:shards` stages them.
+DETAILS_DIR = ROOT / "build" / "shards" / "tender-details"
+INTEL_DIR = ROOT / "build" / "shards" / "intelligence"
 OUT_DIR = ROOT / "public" / "data" / "tender"
 SHARED_PATH = ROOT / "public" / "data" / "evidence-language.json"
 MANIFEST_PATH = ROOT / "public" / "data" / "tender-manifest.json"
@@ -103,10 +114,16 @@ DICTIONARY_FIELDS = [
 # Values kept verbatim per row, in this order.
 LITERAL_FIELDS = [
     "id", "title", "isAwarded", "isControllingAward", "estimateValue",
-    "contractValue", "year", "awardedBidCount", "chainRoot", "chainLength",
-    "chainAmbiguous", "chainHasCancelOrRetender", "documentCount",
-    "downloadedDocumentCount",
+    "contractValue", "year", "month", "publishedDateConflict", "awardedBidCount",
+    "chainRoot", "chainLength", "chainAmbiguous", "chainHasCancelOrRetender",
+    "documentCount", "downloadedDocumentCount",
 ]
+# `month` and `publishedDateConflict` were briefly omitted and had to be restored. Their
+# absence did not fail the invariants suite — the assertion
+#   if (row.publishedDateConflict) assert.equal(row.month, null)
+# reads `undefined` as falsy and skips, so dropping the field silently retired the check
+# instead of breaking it. scripts/validate_analytics.py caught it with a KeyError. A
+# field an invariant depends on cannot be treated as optional payload.
 # Fields deliberately NOT in the index, with the reason, so a future change does not
 # quietly add them back:
 #   titleKey      — 4.63 MB of normalised titles. The only consumer is the
@@ -152,7 +169,11 @@ def load_shards(directory: Path) -> dict[str, dict]:
     merged: dict[str, dict] = {}
     files = sorted(directory.glob("*.json"))
     if not files:
-        sys.exit(f"no shards found in {directory}")
+        sys.exit(
+            f"no shards found in {directory}\n"
+            "  These are build intermediates. Stage them with:\n"
+            "    npm run data:build && npm run data:intelligence && npm run data:shards"
+        )
     for path in files:
         with open(path, encoding="utf-8") as handle:
             chunk = json.load(handle)
