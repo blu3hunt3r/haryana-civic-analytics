@@ -877,3 +877,42 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
   .selection-profile li { grid-template-columns: 1fr; }
   .hash-list li { grid-template-columns: 1fr; gap: 0.2rem; }
 }
+
+/* ── DEGRADED-CAPABILITY SURFACES ─────────────────────────────────────────────────
+   The live deployment was serving "The analytics portal could not start." to every
+   browser without WebGL, because the map constructor threw inside the one bootstrap
+   try/catch. These two surfaces are what replaced that: the map panel says what is
+   missing in place, and #boot-notice lists any panel that was skipped. Both must read
+   as a stated limitation, not as an error the reader caused. */
+.map-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  min-height: 260px;
+  padding: 1.6rem;
+  background: var(--surface-muted, #eceae1);
+  border: 1px solid var(--line, #d6d2c4);
+  border-radius: 12px;
+}
+.map-fallback-title { font-weight: 600; font-size: 1rem; margin: 0; }
+.map-fallback-body { margin: 0; font-size: 0.9rem; line-height: 1.55; max-width: 46ch; }
+.map-unavailable { padding: 0; }
+
+.boot-notice {
+  margin: 1rem auto;
+  max-width: 1180px;
+  padding: 0.9rem 1.1rem;
+  background: #fdf3e0;
+  border: 1px solid #e4c98d;
+  border-left: 4px solid #c2872b;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.boot-notice p { margin: 0 0 0.4rem; }
+.boot-notice ul { margin: 0; padding-left: 1.15rem; }
+.boot-notice li { margin: 0.15rem 0; font-size: 0.85rem; opacity: 0.85; }
+.fatal-hint { font-size: 0.9rem; opacity: 0.75; margin-top: 0.5rem; }

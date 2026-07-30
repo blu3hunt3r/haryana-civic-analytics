@@ -1,0 +1,31 @@
+{
+  "deduplication": {
+    "evidenceLanguageHoistedTo": "/data/evidence-language.json",
+    "placesIdenticalToAreasDropped": 49121,
+    "placesRetainedBecauseTheyDiffered": 0
+  },
+  "indexBytes": 11607717,
+  "indexDictionarySizes": {
+    "awardState": 3,
+    "component": 16,
+    "contractor": 3003,
+    "department": 48,
+    "scope": 4,
+    "status": 10
+  },
+  "layout": "public/data/tender/<sha1(id)[0:2]>/<sha1(id)[2:4]>/<TENDER_ID>.json",
+  "packageBytes": {
+    "max": 35002,
+    "median": 8360,
+    "min": 4361,
+    "p95": 11802,
+    "total": 404625061
+  },
+  "packageVersion": 2,
+  "repeatGroupCount": 6758,
+  "replaces": [
+    "public/data/tender-details/",
+    "public/data/intelligence/"
+  ],
+  "tenderCount": 49121
+}

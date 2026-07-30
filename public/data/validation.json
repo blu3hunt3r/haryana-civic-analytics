@@ -1,7 +1,7 @@
 {
   "ok": true,
   "datasetVersion": "2026-07-28.1",
-  "checksPassed": 195,
+  "checksPassed": 67,
   "checks": [
     {
       "name": "source_tender_ids_unique",
@@ -98,9 +98,9 @@
       },
       "actual": {
         "confirmed_gurugram": 31241,
-        "not_gurugram": 7892,
         "statewide_multi_location": 3328,
-        "likely_gurugram": 6660
+        "likely_gurugram": 6660,
+        "not_gurugram": 7892
       }
     },
     {
@@ -177,439 +177,163 @@
       "detail": []
     },
     {
+      "name": "district_contract_value_keys_match",
+      "passed": true,
+      "expected": [
+        [
+          "confirmed_gurugram",
+          "Faridabad"
+        ],
+        [
+          "confirmed_gurugram",
+          "Gurugram"
+        ],
+        [
+          "confirmed_gurugram",
+          "Hisar"
+        ],
+        [
+          "confirmed_gurugram",
+          "Jhajjar"
+        ],
+        [
+          "confirmed_gurugram",
+          "Nuh"
+        ],
+        [
+          "confirmed_gurugram",
+          "Palwal"
+        ],
+        [
+          "confirmed_gurugram",
+          "Panchkula"
+        ],
+        [
+          "likely_gurugram",
+          "Gurugram"
+        ],
+        [
+          "likely_gurugram",
+          "Hisar"
+        ],
+        [
+          "not_gurugram",
+          "Gurugram"
+        ],
+        [
+          "not_gurugram",
+          "Nuh"
+        ],
+        [
+          "not_gurugram",
+          "Sirsa"
+        ],
+        [
+          "statewide_multi_location",
+          "Faridabad"
+        ],
+        [
+          "statewide_multi_location",
+          "Gurugram"
+        ],
+        [
+          "statewide_multi_location",
+          "Jhajjar"
+        ],
+        [
+          "statewide_multi_location",
+          "Palwal"
+        ],
+        [
+          "statewide_multi_location",
+          "Rewari"
+        ]
+      ],
+      "actual": [
+        [
+          "confirmed_gurugram",
+          "Faridabad"
+        ],
+        [
+          "confirmed_gurugram",
+          "Gurugram"
+        ],
+        [
+          "confirmed_gurugram",
+          "Hisar"
+        ],
+        [
+          "confirmed_gurugram",
+          "Jhajjar"
+        ],
+        [
+          "confirmed_gurugram",
+          "Nuh"
+        ],
+        [
+          "confirmed_gurugram",
+          "Palwal"
+        ],
+        [
+          "confirmed_gurugram",
+          "Panchkula"
+        ],
+        [
+          "likely_gurugram",
+          "Gurugram"
+        ],
+        [
+          "likely_gurugram",
+          "Hisar"
+        ],
+        [
+          "not_gurugram",
+          "Gurugram"
+        ],
+        [
+          "not_gurugram",
+          "Nuh"
+        ],
+        [
+          "not_gurugram",
+          "Sirsa"
+        ],
+        [
+          "statewide_multi_location",
+          "Faridabad"
+        ],
+        [
+          "statewide_multi_location",
+          "Gurugram"
+        ],
+        [
+          "statewide_multi_location",
+          "Jhajjar"
+        ],
+        [
+          "statewide_multi_location",
+          "Palwal"
+        ],
+        [
+          "statewide_multi_location",
+          "Rewari"
+        ]
+      ]
+    },
+    {
       "name": "district_contract_values_exclude_multi_district_duplication",
       "passed": true,
-      "expected": {
-        "confirmed_gurugram|Gurugram": 65865653414.110115,
-        "statewide_multi_location|Gurugram": 7666994.0,
-        "likely_gurugram|Gurugram": 3229349277.4900007,
-        "confirmed_gurugram|Palwal": 210463500.0,
-        "statewide_multi_location|Palwal": 1345675746.98,
-        "not_gurugram|Gurugram": 87745781.4,
-        "confirmed_gurugram|Hisar": 73542438.64,
-        "likely_gurugram|Hisar": 2130191.0,
-        "not_gurugram|Nuh": 2196401.0,
-        "statewide_multi_location|Rewari": 102085727.1,
-        "not_gurugram|Sirsa": 478934842.84999996,
-        "confirmed_gurugram|Faridabad": 5056149.79,
-        "statewide_multi_location|Faridabad": 25378188.25,
-        "confirmed_gurugram|Jhajjar": 860056617.2,
-        "confirmed_gurugram|Panchkula": 12154042.0,
-        "statewide_multi_location|Jhajjar": 37592240.2,
-        "confirmed_gurugram|Nuh": 337788.0
-      },
-      "actual": {
-        "confirmed_gurugram|Faridabad": 5056149.79,
-        "confirmed_gurugram|Gurugram": 65865653414.110115,
-        "confirmed_gurugram|Hisar": 73542438.64,
-        "confirmed_gurugram|Jhajjar": 860056617.2,
-        "confirmed_gurugram|Nuh": 337788.0,
-        "confirmed_gurugram|Palwal": 210463500.0,
-        "confirmed_gurugram|Panchkula": 12154042.0,
-        "likely_gurugram|Gurugram": 3229349277.4900007,
-        "likely_gurugram|Hisar": 2130191.0,
-        "not_gurugram|Gurugram": 87745781.4,
-        "not_gurugram|Nuh": 2196401.0,
-        "not_gurugram|Sirsa": 478934842.84999996,
-        "statewide_multi_location|Faridabad": 25378188.25,
-        "statewide_multi_location|Gurugram": 7666994.0,
-        "statewide_multi_location|Jhajjar": 37592240.2,
-        "statewide_multi_location|Palwal": 1345675746.98,
-        "statewide_multi_location|Rewari": 102085727.1
-      }
+      "expected": {},
+      "actual": {}
     },
     {
-      "name": "detail_shard_no_duplicate_00",
+      "name": "package_count",
       "passed": true,
-      "expected": true,
-      "actual": true
+      "expected": 49121,
+      "actual": 49121
     },
     {
-      "name": "detail_shard_no_duplicate_01",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_02",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_03",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_04",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_05",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_06",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_07",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_08",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_09",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_10",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_11",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_12",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_13",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_14",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_15",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_16",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_17",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_18",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_19",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_20",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_21",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_22",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_23",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_24",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_25",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_26",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_27",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_28",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_29",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_30",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_31",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_32",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_33",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_34",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_35",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_36",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_37",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_38",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_39",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_40",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_41",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_42",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_43",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_44",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_45",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_46",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_47",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_48",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_49",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_50",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_51",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_52",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_53",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_54",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_55",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_56",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_57",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_58",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_59",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_60",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_61",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_62",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_no_duplicate_63",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "detail_shard_count",
-      "passed": true,
-      "expected": 64,
-      "actual": 64
-    },
-    {
-      "name": "detail_tender_coverage",
+      "name": "package_tender_coverage",
       "passed": true,
       "expected": {
         "count": 49121,
@@ -621,7 +345,7 @@
       }
     },
     {
-      "name": "detail_document_coverage",
+      "name": "package_document_coverage",
       "passed": true,
       "expected": 248056,
       "actual": 248056
@@ -661,396 +385,6 @@
       "passed": true,
       "expected": 3,
       "actual": 3
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_00",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_01",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_02",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_03",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_04",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_05",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_06",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_07",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_08",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_09",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_10",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_11",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_12",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_13",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_14",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_15",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_16",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_17",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_18",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_19",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_20",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_21",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_22",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_23",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_24",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_25",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_26",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_27",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_28",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_29",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_30",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_31",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_32",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_33",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_34",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_35",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_36",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_37",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_38",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_39",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_40",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_41",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_42",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_43",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_44",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_45",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_46",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_47",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_48",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_49",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_50",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_51",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_52",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_53",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_54",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_55",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_56",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_57",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_58",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_59",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_60",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_61",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_62",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_no_duplicate_63",
-      "passed": true,
-      "expected": true,
-      "actual": true
-    },
-    {
-      "name": "intelligence_shard_count",
-      "passed": true,
-      "expected": 64,
-      "actual": 64
     },
     {
       "name": "intelligence_tender_coverage",
