@@ -1,13 +1,19 @@
 import type {
   Overview,
   PlaceRecord,
+  StoryData,
   TenderDetail,
   TenderIndexRow,
+  TenderIntelligence,
 } from "./types";
 
 let tenderRowsPromise: Promise<TenderIndexRow[]> | null = null;
 let searchRowsPromise: Promise<Map<string, string>> | null = null;
 const detailCache = new Map<number, Promise<Record<string, TenderDetail>>>();
+const intelligenceCache = new Map<
+  number,
+  Promise<Record<string, TenderIntelligence>>
+>();
 
 async function getJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
@@ -17,6 +23,10 @@ async function getJson<T>(path: string): Promise<T> {
 
 export function loadOverview(): Promise<Overview> {
   return getJson<Overview>("/data/overview.json");
+}
+
+export function loadStory(): Promise<StoryData> {
+  return getJson<StoryData>("/data/story.json");
 }
 
 export function loadTenders(): Promise<TenderIndexRow[]> {
@@ -58,4 +68,18 @@ export async function loadTenderDetail(
   const tender = details[id];
   if (!tender) throw new Error(`Tender ${id} was not found in shard ${shard}.`);
   return tender;
+}
+
+export async function loadTenderIntelligence(
+  id: string,
+  shard: number,
+): Promise<TenderIntelligence | null> {
+  let promise = intelligenceCache.get(shard);
+  if (!promise) {
+    promise = getJson<Record<string, TenderIntelligence>>(
+      `/data/intelligence/${String(shard).padStart(2, "0")}.json`,
+    );
+    intelligenceCache.set(shard, promise);
+  }
+  return (await promise)[id] ?? null;
 }

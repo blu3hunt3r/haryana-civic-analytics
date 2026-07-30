@@ -14,6 +14,7 @@ derive it.
 
 ```bash
 CIVIC_DATA_ROOT=/path/to/civic-stuff npm run data:build
+npm run data:intelligence
 npm run data:validate
 npm test
 npm run dev
@@ -23,8 +24,24 @@ The generated evidence snapshot is committed because GitHub Pages has no access
 to the private local archive during deployment. Rebuilds remain reproducible on a
 machine that has the verified source corpus.
 
+For unattended refreshes, the resumable orchestrator fingerprints the
+heterogeneous source tables, rebuilds only after a change, and records each
+completed stage in `build/pipeline-state.json`:
+
+```bash
+CIVIC_DATA_ROOT=/path/to/civic-stuff npm run pipeline
+CIVIC_DATA_ROOT=/path/to/civic-stuff npm run pipeline:watch
+```
+
+An interrupted run resumes at the first incomplete stage as long as its source
+fingerprints have not changed. A changed source invalidates the derived stages
+and triggers a clean deterministic rebuild.
+
 ## Product surface
 
+- A guided, full-corpus narrative showing how 49,121 published tender records
+  narrow through award, evidence, competition, repeat-work, and contractor
+  relationships.
 - Zoomable Haryana district map with a Gurugram ward/sector/road drill-down.
 - Linked lifecycle, time, value, department and work-family views.
 - Department-by-work-family heatmap.
@@ -33,11 +50,26 @@ machine that has the verified source corpus.
 - Searchable HEWP village/town index without invented boundary geometry.
 - Exact Tender-ID HEWP links, graded MCG links, and validated road-asset links
   on the tender evidence page.
-- Full tender search and evidence detail with document/source SHA-256 values.
+- Full tender search and an on-demand intelligence record for every Tender ID:
+  bid-stage rows, lifecycle events, review flags, linked evidence, and
+  document/source SHA-256 values.
 - Dataset freshness, confidence labels and explicit missing-evidence states.
 
 See [metric definitions](docs/METRICS.md) and the
 [validation report](docs/VALIDATION.md).
+
+## Relationship model
+
+The local builder materialises a typed knowledge graph in
+`build/knowledge-graph.sqlite`. Its current snapshot contains 336,539 entities
+and 658,194 relationships spanning tenders, departments, work components,
+contractors, bidders, places, documents, procurement chains, HEWP works, MCG
+works, and validated assets.
+
+The SQLite graph is an uncommitted build artifact. The public site receives
+compact narrative aggregates plus 64 deterministic, on-demand tender
+intelligence shards. A tender and its associated records therefore remain
+inspectable without loading the entire relationship graph into the browser.
 
 ## Deployment
 

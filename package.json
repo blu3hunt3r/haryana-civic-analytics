@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "data:build": "python3 scripts/build_analytics.py",
+    "data:intelligence": "python3 scripts/build_intelligence.py",
     "data:validate": "python3 scripts/validate_analytics.py",
+    "pipeline": "python3 scripts/run_pipeline.py",
+    "pipeline:watch": "python3 scripts/run_pipeline.py --watch",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "verify": "npm run data:validate && npm test && npm run build",

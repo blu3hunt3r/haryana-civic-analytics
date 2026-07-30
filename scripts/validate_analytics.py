@@ -301,6 +301,77 @@ def main() -> None:
     audit.check("detail_tender_coverage", set(public_ids), detail_ids)
     audit.check("detail_document_coverage", len(source_documents), detail_document_count)
 
+    story = load_json(DATA / "story.json")
+    intelligence_manifest = load_json(DATA / "intelligence-manifest.json")
+    audit.check(
+        "story_full_corpus_count",
+        len(tenders),
+        story["all"]["records"],
+    )
+    audit.check(
+        "story_confirmed_scope_count",
+        len(confirmed),
+        story["confirmedGurugram"]["records"],
+    )
+    audit.check(
+        "story_confirmed_award_count",
+        sum(row["isAwarded"] for row in confirmed),
+        story["confirmedGurugram"]["awarded"],
+    )
+    audit.check(
+        "story_confirmed_controlling_value",
+        controlling_value,
+        story["confirmedGurugram"]["contractValue"],
+    )
+    audit.check(
+        "story_outcomes_partition_confirmed_scope",
+        len(confirmed),
+        sum(story["confirmedGurugram"]["outcomes"].values()),
+    )
+    completion_rows = [
+        row
+        for row in read_csv(ROOT / "data/derived/completion_evidence_scan.csv")
+        if row["record_type"] == "confirmed_actual_completion_record"
+    ]
+    completion_tenders = {row["tender_id"] for row in completion_rows}
+    audit.check(
+        "reviewed_actual_completion_records",
+        len(completion_tenders & {row["id"] for row in confirmed}),
+        story["confirmedGurugram"]["evidence"]["actualCompletionEvidence"],
+    )
+    intelligence_ids: set[str] = set()
+    intelligence_completion = 0
+    for shard_path in sorted((DATA / "intelligence").glob("*.json")):
+        shard = load_json(shard_path)
+        audit.true(
+            f"intelligence_shard_no_duplicate_{shard_path.stem}",
+            intelligence_ids.isdisjoint(shard),
+        )
+        intelligence_ids.update(shard)
+        intelligence_completion += sum(
+            bool(row["actualCompletionEvidence"]) for row in shard.values()
+        )
+    audit.check(
+        "intelligence_shard_count",
+        intelligence_manifest["detailShards"],
+        len(list((DATA / "intelligence").glob("*.json"))),
+    )
+    audit.check("intelligence_tender_coverage", set(public_ids), intelligence_ids)
+    audit.check(
+        "intelligence_completion_evidence_coverage",
+        len(completion_tenders),
+        intelligence_completion,
+    )
+    audit.check(
+        "knowledge_graph_tender_count",
+        len(tenders),
+        intelligence_manifest["sourceRows"]["tenders"],
+    )
+    audit.true(
+        "knowledge_graph_has_more_edges_than_tenders",
+        intelligence_manifest["knowledgeGraph"]["edges"] > len(tenders),
+    )
+
     for name, source in manifest["sources"].items():
         path = ROOT / source["path"]
         audit.true(f"source_exists_{name}", path.exists(), source["path"])

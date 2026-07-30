@@ -14,19 +14,24 @@ import {
   loadOverview,
   loadPlaces,
   loadSearchIndex,
+  loadStory,
   loadTenderDetail,
+  loadTenderIntelligence,
   loadTenders,
 } from "./data";
 import { escapeHtml, formatCount, formatRupees, label, shortHash } from "./format";
 import { EvidenceMap } from "./map";
+import { StoryExperience } from "./story";
 import type {
   Filters,
   Metric,
   Overview,
   PlaceRecord,
   Scope,
+  StoryData,
   TenderDetail,
   TenderIndexRow,
+  TenderIntelligence,
 } from "./types";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -46,10 +51,12 @@ const filters: Filters = {
   place: "",
   areaLevel: "",
   areaValue: "",
+  outcome: "",
   query: "",
 };
 
 let overview: Overview;
+let story: StoryData;
 let allRows: TenderIndexRow[] = [];
 let filteredRows: TenderIndexRow[] = [];
 let fullDescriptionSearch = new Map<string, string>();
@@ -129,6 +136,23 @@ function matches(row: TenderIndexRow): boolean {
     );
     if (!found) return false;
   }
+  if (filters.outcome) {
+    const rowOutcome = row.isAwarded
+      ? "awarded"
+      : row.status === "Cancelled"
+        ? "cancelled"
+        : row.status === "Retender"
+          ? "retendered"
+          : [
+                "Technical Bid Opening",
+                "Technical Evaluation",
+                "Financial Bid Opening",
+                "Financial Evaluation",
+              ].includes(row.status)
+            ? "under_evaluation"
+            : "other_published";
+    if (rowOutcome !== filters.outcome) return false;
+  }
   if (filters.query) {
     const needle = filters.query.toLowerCase();
     const haystack = [
@@ -177,20 +201,23 @@ function renderShell(): void {
         </span>
       </a>
       <nav aria-label="Dashboard sections">
-        <a href="#overview">Overview</a>
-        <a href="#departments">Departments</a>
+        <a href="#story">Findings</a>
+        <a href="#investigation">Investigate</a>
+        <a href="#map">Map</a>
         <a href="#evidence">Evidence</a>
         <a href="#tenders">Tender explorer</a>
       </nav>
       <span class="dataset-version">Evidence snapshot ${escapeHtml(overview.datasetVersion)}</span>
     </header>
 
-    <main>
-      <section class="hero" id="overview">
+    <section class="story-stage" id="story" aria-label="Guided procurement findings"></section>
+
+    <main id="investigation">
+      <section class="hero investigation-hero">
         <div>
-          <p class="eyebrow">Public procurement, made inspectable</p>
-          <h1>See what Haryana tendered, what was awarded, and what evidence is missing.</h1>
-          <p class="lede">Start with the map. Zoom from Haryana into Gurugram, select a ward or sector, and every number below follows that geography. Contract value is never presented as money paid.</p>
+          <p class="eyebrow">Investigation mode</p>
+          <h1>Move from a pattern to its exact tenders and official evidence.</h1>
+          <p class="lede">Cross-filter the relationship graph by geography, department, work family, contractor, lifecycle and evidence. Every public claim resolves to underlying tender rows and source hashes.</p>
         </div>
         <div class="truth-key" aria-label="Evidence definitions">
           <span><i class="dot published"></i> Published tender</span>
@@ -214,7 +241,7 @@ function renderShell(): void {
         <button class="clear-button" id="clear-filters" type="button">Clear filters</button>
       </section>
 
-      <section class="map-stage" aria-label="Interactive Haryana procurement map">
+      <section class="map-stage" id="map" aria-label="Interactive Haryana procurement map">
         <div class="map-toolbar">
           <div>
             <strong id="map-selection">Haryana overview</strong>
@@ -741,6 +768,7 @@ function renderActiveFilters(): void {
   if (filters.contractor) parts.push("Selected contractor");
   if (filters.competition) parts.push(label(filters.competition));
   if (filters.chain) parts.push(`${label(filters.chain)} chains`);
+  if (filters.outcome) parts.push(`${label(filters.outcome)} outcome`);
   if (filters.repeatGroup) parts.push("Repeated work group");
   if (filters.place) parts.push(`HEWP place ${filters.place}`);
   if (filters.areaValue) parts.push(`${label(filters.areaLevel)} ${filters.areaValue}`);
@@ -790,7 +818,10 @@ function renderTenderList(): void {
   });
 }
 
-function renderDetail(detail: TenderDetail): string {
+function renderDetail(
+  detail: TenderDetail,
+  intelligence: TenderIntelligence | null,
+): string {
   const documents = detail.documents.length
     ? detail.documents
         .map(
@@ -834,6 +865,95 @@ function renderDetail(detail: TenderDetail): string {
         )
         .join("")
     : "";
+  const evidence = intelligence?.understanding.evidence;
+  const intelligenceSections = intelligence
+    ? `
+      <section class="detail-section intelligence-section">
+        <p class="eyebrow">Tender understanding</p>
+        <h3>Evidence ladder</h3>
+        <div class="evidence-ladder">
+          <span class="is-present">Tender notice</span>
+          <span class="${detail.isAwarded ? "is-present" : "is-missing"}">Award status</span>
+          <span class="${evidence?.contractValuePublished ? "is-present" : "is-missing"}">Contract value</span>
+          <span class="${evidence?.contractorPublished ? "is-present" : "is-missing"}">Contractor</span>
+          <span class="${evidence?.awardDocumentDownloaded ? "is-present" : "is-missing"}">Award document</span>
+          <span class="${evidence?.exactHewpLinks ? "is-present" : "is-missing"}">Exact HEWP work</span>
+          <span class="${evidence?.actualCompletionRecords ? "is-present" : "is-missing"}">Actual completion</span>
+        </div>
+        <p class="evidence-language">Current evidence level: <strong>${escapeHtml(label(evidence?.level || "unknown"))}</strong>. A missing step is never inferred from a similar tender.</p>
+      </section>
+      ${
+        intelligence.actualCompletionEvidence.length
+          ? `<section class="detail-section intelligence-section completion-proof">
+              <p class="eyebrow">Reviewed delivery evidence</p>
+              <h3>Actual completion record located</h3>
+              ${intelligence.actualCompletionEvidence
+                .map(
+                  (record) =>
+                    `<blockquote>${escapeHtml(record.context)}</blockquote><p>Completion date: <strong>${escapeHtml(record.date)}</strong> · page ${escapeHtml(record.page || "not stated")} · <code>${shortHash(record.sha256)}</code></p>`,
+                )
+                .join("")}
+            </section>`
+          : ""
+      }
+      <section class="detail-section intelligence-section">
+        <p class="eyebrow">Bid-stage record</p>
+        <h3>${formatCount(intelligence.understanding.bidMetrics.records ?? 0)} published bid events · ${formatCount(intelligence.understanding.bidMetrics.distinctBidders ?? 0)} normalized bidder names</h3>
+        <p class="evidence-language">These entries do not prove that no other bid was received.</p>
+        ${
+          intelligence.bids.length
+            ? `<ul class="document-list compact-list">${intelligence.bids
+                .map(
+                  (bid) => `
+                    <li>
+                      <div><b>${escapeHtml(bid.bidder || "Bidder not published")}</b><span>${escapeHtml(bid.status)}${bid.rank ? ` · rank ${escapeHtml(bid.rank)}` : ""}</span></div>
+                      <div>${bid.financialValue === null ? "Financial value not published" : formatRupees(bid.financialValue)}</div>
+                      <code>${shortHash(bid.sourceSha256)}</code>
+                    </li>`,
+                )
+                .join("")}</ul>`
+            : `<div class="empty-state">No bid-stage history was published for this tender.</div>`
+        }
+      </section>
+      <section class="detail-section intelligence-section">
+        <p class="eyebrow">Procurement sequence</p>
+        <h3>${formatCount(intelligence.lifecycle.length)} published lifecycle events</h3>
+        ${
+          intelligence.lifecycle.length
+            ? `<ol class="document-list lifecycle-list">${intelligence.lifecycle
+                .slice()
+                .sort(
+                  (a, b) =>
+                    Number.parseInt(a.sequence || "0", 10) -
+                    Number.parseInt(b.sequence || "0", 10),
+                )
+                .map(
+                  (event) => `
+                    <li>
+                      <div><b>${escapeHtml(label(event.type))}</b><span>${escapeHtml(event.at || "Date not published")} · ${escapeHtml(event.status)}</span></div>
+                      <div>${escapeHtml(event.detail)}</div>
+                      <code>${shortHash(event.sourceSha256)}</code>
+                    </li>`,
+                )
+                .join("")}</ol>`
+            : `<div class="empty-state">No lifecycle event record was published.</div>`
+        }
+      </section>
+      ${
+        intelligence.reviewFlags.length
+          ? `<section class="detail-section intelligence-section">
+              <p class="eyebrow">Deterministic review signals</p>
+              <h3>${formatCount(intelligence.reviewFlags.length)} rule-based flag${intelligence.reviewFlags.length === 1 ? "" : "s"}</h3>
+              <ul class="review-flag-list">${intelligence.reviewFlags
+                .map(
+                  (flag) =>
+                    `<li><b>${escapeHtml(label(flag.id))}</b><span>${escapeHtml(flag.message)}</span><small>Review signal—not an allegation. Required evidence: ${escapeHtml(flag.requiredEvidence)}</small></li>`,
+                )
+                .join("")}</ul>
+            </section>`
+          : ""
+      }`
+    : "";
 
   return `
     <div class="detail-header">
@@ -854,8 +974,9 @@ function renderDetail(detail: TenderDetail): string {
       <div><dt>Award date</dt><dd>${escapeHtml(detail.awardDate || "Not published")}</dd></div>
       <div><dt>Contractor</dt><dd>${escapeHtml(detail.contractor || "Not published by the authority")}</dd></div>
       <div><dt>Scheduled period</dt><dd>${detail.scheduledCompletionDays ? `${formatCount(detail.scheduledCompletionDays)} days` : "Not published"}</dd></div>
-      <div><dt>Actual completion</dt><dd>Not established by the tender record</dd></div>
+      <div><dt>Actual completion</dt><dd>${intelligence?.actualCompletionEvidence.length ? escapeHtml(intelligence.actualCompletionEvidence.map((record) => record.date).join(" · ")) : "Not established by the tender record"}</dd></div>
     </dl>
+    ${intelligenceSections}
     <section class="detail-section"><h3>Published scope</h3><p>${escapeHtml(detail.description || "No full work description was published.")}</p><p><b>Location:</b> ${escapeHtml(detail.workLocation || "Not published")} ${detail.pincode ? `· ${escapeHtml(detail.pincode)}` : ""}</p></section>
     ${detail.chain ? `<section class="detail-section"><h3>Procurement chain</h3><p>Root ${escapeHtml(detail.chain.root)} · position ${detail.chain.position ?? "?"} of ${detail.chain.length ?? "?"} · terminal ${escapeHtml(detail.chain.terminal || "not resolved")}</p>${detail.chain.ambiguous ? `<p class="warning-text">The chain is ambiguous: ${escapeHtml(detail.chain.ambiguityReasons)}</p>` : ""}</section>` : ""}
     ${assetLinks ? `<section class="detail-section"><h3>Validated asset links</h3><ul class="record-link-list">${assetLinks}</ul></section>` : ""}
@@ -876,11 +997,43 @@ async function openTender(row: TenderIndexRow): Promise<void> {
   dialog.showModal();
   history.replaceState(null, "", `#/tenders/${encodeURIComponent(row.id)}`);
   try {
-    const detail = await loadTenderDetail(row.id, row.detailShard);
-    detailElement.innerHTML = renderDetail(detail);
+    const [detail, intelligence] = await Promise.all([
+      loadTenderDetail(row.id, row.detailShard),
+      loadTenderIntelligence(row.id, row.detailShard),
+    ]);
+    detailElement.innerHTML = renderDetail(detail, intelligence);
   } catch (error) {
     detailElement.innerHTML = `<div class="empty-state"><strong>Could not load tender evidence.</strong><span>${escapeHtml(String(error))}</span></div>`;
   }
+}
+
+function openInvestigation(
+  action?: {
+    type: "department" | "component" | "contractor" | "outcome" | "repeat";
+    value: string;
+  },
+): void {
+  if (action) {
+    filters.department = "";
+    filters.component = "";
+    filters.contractor = "";
+    filters.outcome = "";
+    filters.repeatGroup = "";
+    if (action.type === "department") filters.department = action.value;
+    if (action.type === "component") filters.component = action.value;
+    if (action.type === "contractor") filters.contractor = action.value;
+    if (action.type === "outcome") filters.outcome = action.value;
+    if (action.type === "repeat") filters.repeatGroup = action.value;
+    currentPage = 0;
+    if (indexReady) {
+      document.querySelector<HTMLSelectElement>("#department-filter")!.value =
+        filters.department;
+      document.querySelector<HTMLSelectElement>("#component-filter")!.value =
+        filters.component;
+      applyFilters();
+    }
+  }
+  document.querySelector("#investigation")?.scrollIntoView({ behavior: "smooth" });
 }
 
 function bindControls(): void {
@@ -950,6 +1103,7 @@ function bindControls(): void {
     selectedPlaceTenderIds = new Set();
     filters.areaLevel = "";
     filters.areaValue = "";
+    filters.outcome = "";
     filters.query = "";
     document.querySelectorAll<HTMLInputElement>(".scope-filter input").forEach((input) => {
       input.checked = input.value === "confirmed_gurugram";
@@ -1047,8 +1201,14 @@ async function hydrateIndex(): Promise<void> {
 
 async function bootstrap(): Promise<void> {
   try {
-    overview = await loadOverview();
+    [overview, story] = await Promise.all([loadOverview(), loadStory()]);
     renderShell();
+    new StoryExperience(
+      document.querySelector<HTMLElement>("#story")!,
+      story,
+      overview,
+      { investigate: openInvestigation },
+    );
     renderStats(
       Array.from({ length: overview.headline.confirmedGurugram }, () => ({
         isAwarded: false,

@@ -9,7 +9,7 @@ The portal keeps four facts separate:
 | Published tender | An authority invited bids | Work started or finished |
 | Awarded contract | The current portal status is AOC and the award is verified | Money was paid |
 | Scheduled completion | The contract publishes an intended duration | Actual or certified completion |
-| Actual completion | A certified completion record establishes delivery | Not currently established by this tender archive |
+| Reviewed actual completion record | A local evidence review found wording that establishes an actual completion date for the named work | Complete execution evidence for other contracts, payment, quality acceptance, or an active warranty |
 
 ## Headline metrics
 
@@ -54,6 +54,41 @@ category.
   received. The portal uses the narrower official fact.
 - Repeated descriptions and high concentration are review signals, not
   allegations.
+
+## Evidence funnel
+
+The default confirmed-Gurugram story deliberately narrows rather than treating
+all records as equivalent:
+
+| Evidence stage | Records |
+| --- | ---: |
+| Current status is awarded | 13,398 |
+| Published award value is present | 13,398 |
+| Contractor name is published | 13,379 |
+| An AOC/LOA-stage document was downloaded | 13,367 |
+| Exact HEWP Tender-ID link exists | 4,622 |
+| Reviewed actual completion record exists | 3 |
+
+The funnel measures evidence availability. It does not mean the other works
+were not completed; it means the local public record does not establish their
+actual completion.
+
+## Per-tender intelligence
+
+Every Tender ID resolves to an intelligence shard containing:
+
+- its typed relationships to department, work component, contractor, place,
+  document, bidder, procurement chain, HEWP/MCG work, and validated asset where
+  present;
+- every published bid-stage row;
+- every extracted lifecycle event;
+- deterministic procurement review flags;
+- an evidence ladder that marks each stage present or missing;
+- reviewed actual-completion evidence, for the three records where it exists.
+
+Relationships encode published association, not causal proof. A bidder row is
+not automatically a losing bid; a place reference is not proof of exact
+geographic coverage; a review flag is not an allegation.
 
 ## Cross-portal links
 
