@@ -973,6 +973,12 @@ function renderDetail(
         <span>${escapeHtml(detail.status)}</span>
         <span>${escapeHtml(label(detail.scope))}</span>
         <span>${escapeHtml(label(detail.component))}</span>
+        ${(detail.contractModes ?? [])
+          .map(
+            (mode) =>
+              `<span title="How the work was bought — recorded alongside the kind of work, not instead of it">${escapeHtml(label(mode))}</span>`,
+          )
+          .join("")}
       </div>
     </div>
     <div class="detail-warning"><strong>Evidence boundary:</strong> ${detail.isAwarded ? "An award is published." : "No confirmed award is recorded."} Contract value is not payment, and the schedule is not actual completion.</div>

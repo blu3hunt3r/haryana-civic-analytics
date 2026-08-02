@@ -39,6 +39,11 @@ SOURCES = [
 STAGES = [
     ("analytics", [sys.executable, "scripts/build_analytics.py"]),
     ("intelligence", [sys.executable, "scripts/build_intelligence.py"]),
+    # Corrections and packages sit between the builders and validation because
+    # validation reads tender-index.json — which only the package builder writes.
+    # Without these two stages the pipeline validated a stale index, or none at all.
+    ("corrections", [sys.executable, "scripts/build_value_corrections.py"]),
+    ("packages", [sys.executable, "scripts/build_tender_packages.py"]),
     ("validation", [sys.executable, "scripts/validate_analytics.py"]),
     ("tests", ["npm", "test"]),
     ("web", ["npm", "run", "build"]),

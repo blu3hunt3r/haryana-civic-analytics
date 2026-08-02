@@ -15,8 +15,8 @@
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "qa:ui": "node scripts/visual_qa.mjs",
-    "data:shards": "mkdir -p build/shards/tender-details build/shards/intelligence && echo 'stage build_analytics.py / build_intelligence.py shard output into build/shards/ (see scripts/build_tender_packages.py)'",
-    "data:packages": "python3 scripts/build_tender_packages.py"
+    "data:packages": "python3 scripts/build_tender_packages.py",
+    "data:corrections": "python3 scripts/build_value_corrections.py"
   },
   "dependencies": {
     "echarts": "^6.1.0",

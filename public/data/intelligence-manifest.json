@@ -1,1 +1,1 @@
-{"datasetVersion":"2026-07-28.1","detailShards":64,"knowledgeGraph":{"entities":336539,"edges":658194,"localPath":"build/knowledge-graph.sqlite","published":false},"sourceRows":{"tenders":49121,"bids":103258,"lifecycleEvents":339034,"reviewFlags":10112,"actualCompletionRecords":3}}
+{"datasetVersion":"2026-07-28.1","detailShards":64,"knowledgeGraph":{"entities":336544,"edges":658194,"localPath":"build/knowledge-graph.sqlite","published":false},"sourceRows":{"tenders":49121,"bids":103258,"lifecycleEvents":339034,"reviewFlags":10112,"actualCompletionRecords":3}}

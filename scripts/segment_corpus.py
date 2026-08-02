@@ -116,11 +116,19 @@ def main() -> int:
         if len(names) == 1:
             single.add(tender)
 
+    # Contract modes ship as a bitmask over `contractModeFlags` (bit i = flag i).
+    # They answer HOW the work was bought — an AMC, hired manpower, a recalled tender —
+    # which is orthogonal to the component axis this table is built on. Carried per
+    # segment because a group that is 80% maintenance contracts must be read differently
+    # from one that is 80% new construction, even when the component matches.
+    mode_flags = index.get("contractModeFlags") or []
+
     segments: dict[tuple[str, str], dict] = defaultdict(lambda: {
         "tenders": 0, "awarded": 0, "controlling": 0, "cancelled": 0, "retendered": 0,
         "contract_value": 0.0, "with_bids": 0, "single_bidder": 0,
         "documents": 0, "documents_with_text": 0, "tenders_with_text": 0,
         "years": Counter(), "bands": Counter(), "scopes": Counter(),
+        "modes": Counter(),
     })
 
     for row in index["rows"]:
@@ -153,6 +161,11 @@ def main() -> int:
         bucket["documents_with_text"] += have_text.get(tender, 0)
         if have_text.get(tender):
             bucket["tenders_with_text"] += 1
+        packed = row[columns["contractModes"]] if "contractModes" in columns else 0
+        if isinstance(packed, int):
+            for bit, flag in enumerate(mode_flags):
+                if packed & (1 << bit):
+                    bucket["modes"][flag] += 1
 
     records = []
     for (department, component), bucket in segments.items():
@@ -178,6 +191,12 @@ def main() -> int:
             "tenders_with_readable_docs": bucket["tenders_with_text"],
             "doc_coverage_pct": round(bucket["tenders_with_text"] / tenders * 100, 1)
                                 if tenders else 0,
+            "maintenance_pct": round(bucket["modes"]["maintenance"] / tenders * 100, 1)
+                               if tenders else 0,
+            "hired_capacity_pct": round(bucket["modes"]["hired_capacity"] / tenders * 100, 1)
+                                  if tenders else 0,
+            "recalled_pct": round(bucket["modes"]["recalled"] / tenders * 100, 1)
+                            if tenders else 0,
             "top_year": bucket["years"].most_common(1)[0][0] if bucket["years"] else "",
             "top_value_band": bucket["bands"].most_common(1)[0][0] if bucket["bands"] else "",
             "dominant_scope": bucket["scopes"].most_common(1)[0][0] if bucket["scopes"] else "",

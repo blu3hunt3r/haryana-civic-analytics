@@ -4,10 +4,10 @@
     "placesIdenticalToAreasDropped": 49121,
     "placesRetainedBecauseTheyDiffered": 0
   },
-  "indexBytes": 11607717,
+  "indexBytes": 11701522,
   "indexDictionarySizes": {
     "awardState": 3,
-    "component": 16,
+    "component": 21,
     "contractor": 3003,
     "department": 48,
     "scope": 4,
@@ -15,11 +15,11 @@
   },
   "layout": "public/data/tender/<sha1(id)[0:2]>/<sha1(id)[2:4]>/<TENDER_ID>.json",
   "packageBytes": {
-    "max": 35002,
-    "median": 8360,
-    "min": 4361,
-    "p95": 11809,
-    "total": 404696312
+    "max": 35021,
+    "median": 8390,
+    "min": 4380,
+    "p95": 11841,
+    "total": 406123600
   },
   "packageVersion": 3,
   "repeatGroupCount": 6758,

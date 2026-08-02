@@ -78,8 +78,8 @@ ROOT = Path(__file__).resolve().parent.parent
 # PUBLISHED artefacts. They now live under build/ (gitignored) so this script can be run
 # any number of times against the same inputs and produce byte-identical packages.
 #
-# FOLLOW-UP: build_analytics.py and build_intelligence.py should write here directly
-# instead of into public/. Until then, `npm run data:shards` stages them.
+# build_analytics.py and build_intelligence.py now write here directly; nothing under
+# public/ is an input to this script.
 DETAILS_DIR = ROOT / "build" / "shards" / "tender-details"
 INTEL_DIR = ROOT / "build" / "shards" / "intelligence"
 OUT_DIR = ROOT / "public" / "data" / "tender"
@@ -119,6 +119,16 @@ LITERAL_FIELDS = [
     "chainRoot", "chainLength", "chainAmbiguous", "chainHasCancelOrRetender",
     "documentCount", "downloadedDocumentCount",
 ]
+# Contract MODE — how the work was bought (an annual maintenance contract, hired
+# manpower/vehicles, a recalled tender) — is orthogonal to `component`, which says WHAT
+# was bought. A tender carries zero to three modes, so it cannot use the scalar
+# dictionary encoding above. The flags pack into one small integer per row: bit i set
+# means CONTRACT_MODE_FLAGS[i] applies. The legend ships in the payload as
+# `contractModeFlags`, so clients decode against the published list rather than a
+# hardcoded copy. Consumers: mode columns in scripts/segment_corpus.py, mode display
+# in the UI. Measured cost: an integer column, ~0.1 MB raw, versus ~0.4 MB as repeated
+# string lists.
+CONTRACT_MODE_FLAGS = ["maintenance", "hired_capacity", "recalled", "risk_and_cost"]
 # `month` and `publishedDateConflict` were briefly omitted and had to be restored. Their
 # absence did not fail the invariants suite — the assertion
 #   if (row.publishedDateConflict) assert.equal(row.month, null)
@@ -307,10 +317,20 @@ def main() -> int:
         sizes.append(atomic_write_text(package_path(tender_id), text))
         written += 1
 
+        modes = set(detail.get("contractModes") or [])
+        unknown_modes = modes.difference(CONTRACT_MODE_FLAGS)
+        if unknown_modes:
+            sys.exit(
+                f"{tender_id} carries contract modes {sorted(unknown_modes)} that are "
+                "not in CONTRACT_MODE_FLAGS; extend the legend before encoding, or the "
+                "mode would be silently dropped from the index"
+            )
         index_rows.append(
             [detail.get(field) for field in LITERAL_FIELDS]
             + [encode(field, detail.get(field)) for field in DICTIONARY_FIELDS]
             + [repeat_group_ids.get(detail.get("titleKey") or "")]
+            + [sum(1 << bit for bit, flag in enumerate(CONTRACT_MODE_FLAGS)
+                   if flag in modes)]
         )
 
     sizes.sort()
@@ -321,12 +341,14 @@ def main() -> int:
     atomic_write_text(SHARED_PATH, json.dumps(shared_language, **JSON_ARGS))
 
     index_payload = {
-        "indexVersion": 3,
+        "indexVersion": 4,
         # Column order is literal fields, then dictionary-encoded fields, then the
-        # repeat-group id. The client reconstructs a row by position.
-        "schema": LITERAL_FIELDS + DICTIONARY_FIELDS + ["repeatGroup"],
+        # repeat-group id, then the contract-mode bitmask. The client reconstructs a
+        # row by position.
+        "schema": LITERAL_FIELDS + DICTIONARY_FIELDS + ["repeatGroup", "contractModes"],
         "dictionaries": dictionaries,
         "dictionaryFields": DICTIONARY_FIELDS,
+        "contractModeFlags": CONTRACT_MODE_FLAGS,
         "rows": index_rows,
         "count": len(index_rows),
         "repeatGroupCount": len(repeat_group_ids),
@@ -337,7 +359,9 @@ def main() -> int:
             "one request per tender. Dictionary fields are integer indices into "
             "`dictionaries`; null means the value was absent, which is not the same as "
             "an empty string. `repeatGroup` is non-null only where the normalised work "
-            "title occurs on more than one tender."
+            "title occurs on more than one tender. `contractModes` is a bitmask over "
+            "`contractModeFlags`: bit i set means flag i applies; it records HOW the "
+            "work was bought, orthogonal to `component` (what was bought)."
         ),
     }
     index_bytes = atomic_write_text(INDEX_PATH, json.dumps(index_payload, **JSON_ARGS))
@@ -372,7 +396,7 @@ def main() -> int:
     print(f"  p95        {pct(0.95):,} B")
     print(f"  max        {sizes[-1]:,} B")
     print(f"  index      {index_bytes / 1048576:.2f} MB "
-          f"({len(LITERAL_FIELDS) + len(DICTIONARY_FIELDS) + 1} columns, "
+          f"({len(LITERAL_FIELDS) + len(DICTIONARY_FIELDS) + 2} columns, "
           f"{len(repeat_group_ids):,} repeat groups)")
     for field in DICTIONARY_FIELDS:
         print(f"     dict {field:<14} {len(dictionaries[field]):>6,} values")

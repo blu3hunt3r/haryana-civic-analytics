@@ -28,6 +28,11 @@ ROOT = Path(
     os.environ.get("CIVIC_DATA_ROOT", REPO.parent / "civic-stuff")
 ).resolve()
 OUT = REPO / "public" / "data"
+# Build intermediates. tenders.json and the 64 detail shards feed build_intelligence.py
+# and build_tender_packages.py; they are NOT published — the browsing index and the
+# per-tender packages replaced them. Writing them into public/ made every rebuild stage
+# them back into the deploy by accident, and forced a manual copy before packaging.
+SHARDS_OUT = REPO / "build" / "shards"
 DETAIL_SHARDS = 64
 INDEX_FIELDS = [
     "id",
@@ -44,6 +49,7 @@ INDEX_FIELDS = [
     "publishedDateConflict",
     "department",
     "component",
+    "contractModes",
     "contractor",
     "contractorKey",
     "awardedBidCount",
@@ -103,24 +109,131 @@ SCOPES = (
     "not_gurugram",
 )
 
+# ── THE COMPONENT CLASSIFIER ─────────────────────────────────────────────────────
+# Tuned against the real descriptions with scripts/tune_components.py, which reports the
+# unclassified rate, what each rule catches, rule collisions, and the commonest still-
+# unmatched terms as the worklist for the next pass. Re-run it after any edit here.
+#
+# Unclassified fell from 21,470 (43.7% of the corpus) to 7,804 (15.9%) over four passes.
+# The rules encode Haryana public-works shorthand that no general vocabulary contains —
+# IPB, WBM, GSB, DBM, AR of LR, rasta, FHTC, disty, T/F, RDS, MGJG — and every
+# abbreviation carries a comment saying what it stands for, because none of them are
+# guessable by a reader who has not seen an estimate.
+#
+# Two classes of bug found by tuning and worth not reintroducing:
+#   * \bpark\b does not match "parks", and \btree\b does not match "Trees". Plurals cost
+#     several hundred tenders each until they were spotted in the residue.
+#   * \bFHTC\b never fires inside "Gadaipur784FHTC2nd" because a digit-letter boundary is
+#     not a word boundary. Descriptions in this corpus are frequently run together.
+#
+# ORDER IS SIGNIFICANT: first match wins. `building` is last on purpose — "office",
+# "school" and "hospital" appear as LOCATIONS in descriptions of road and drain work, so
+# a building rule placed earlier steals them from the true component.
 COMPONENTS = [
-    (
-        "surface",
-        r"resurfac|strengthen|pothole|pot hole|patch|widen|carriageway|"
-        r"premix|bitumin|special repair|recarpet|\bBT\b",
-    ),
-    ("structure", r"flyover|bridge|subway|underpass|\bROB\b"),
-    ("drainage", r"storm water|stormwater|nala|nallah|culvert|catch pit|drain"),
-    ("sewer", r"sewerage|sewage|manhole|rising main|\bSTP\b"),
-    ("water", r"water supply|tubewell|tube well|trunk main|water works"),
-    ("lighting", r"street light|high mast|feeder pillar|\bLED\b"),
-    ("footpath", r"footpath|paver|kerb|cycle track"),
-    ("landscape", r"horticultur|plantation|green belt|beautif|landscap|\bpark\b"),
-    ("fencing", r"fenc|chainlink|chain link|grill|boundary wall|railing"),
-    ("consultancy", r"third party|consultan|survey|design|\bDPR\b|\bPMC\b"),
-    ("sanitation", r"solid waste|garbage|sanitation|sweeping|housekeeping"),
-    ("electricity", r"substation|sub-station|transformer|feeder|electrical"),
-    ("building", r"building|office|hospital|school|college|quarters|stadium"),
+    # Roads and paving. IPB = interlocking paver block, WBM = water bound macadam,
+    # BT = bitumen, GSB = granular sub-base, DBM = dense bituminous macadam,
+    # AR of LR = annual repair of link roads, "rasta" = a village path,
+    # S/R + Wdg./Stg. = special repair, widening and strengthening.
+    ("surface",
+     r"resurfac|strengthen|pot\s?hole|patch|widen|carriageway|premix|bitumin|"
+     r"special\s+repair|re-?carpet|black\s?top|\bBT\b|\bWBM\b|water\s*bound\s*macadam|"
+     r"\bIPB\b|inter\s*locking\s*paver|interlocking\s+(paver|tile)|\bGSB\b|\bDBM\b|"
+     r"\bC\.?C\.?\s*(locking|road|street|pavement)|\bRMC\b|\bM-?\d{2}\b|"
+     r"\bAR\s+OF\s+LR\b|annual\s+repair\s+of\s+(various\s+)?link|\bPAV\b|paving|"
+     r"\brasta\b|\btopping\b|\bberm\b|\bS/?R\b.*\b(Wdg|Stg|raising)|\bmetalling\b|"
+     r"link\s+road|\broad\s+from\b|\bAR\s+of\s+(various\s+)?LR\b|\bLR\s+Group|"
+     r"\bBM\s+(and\s+)?BC\b"),
+    # Distinct structures before generic building.
+    ("structure",
+     r"flyover|bridge|subway|underpass|\bROB\b|\bRUB\b|retaining\s+wall|"
+     r"culvert\s+cross|\bcauseways?\b"),
+    ("drainage",
+     r"storm\s*water|\bnala\b|nallah|catch\s*pit|\bdrain|desilt|\bSWD\b|"
+     r"\bRCC\s+drain|water\s+logging|waterlogg"),
+    ("sewer",
+     r"sewer|sewage|manhole|rising\s+main|\bSTP\b|sullage|septic|\bMH\b\s*cover|"
+     r"\beffluent\b"),
+    # FHTC = Functional Household Tap Connection (the Jal Jeevan Mission scheme name),
+    # disty = distributary, johad/pond = a village water body, RWH = rainwater harvesting.
+    ("water",
+     r"water\s+supply|tube\s*well|trunk\s+main|water\s+works|\bOHSR\b|\bUGR\b|"
+     r"hand\s*pump|\bboring\b|FHTC|potable|\bWTP\b|pipe\s*line|"
+     r"\bpump(ing)?\b|\bdisty\b|distributary|\bjohads?\b|\bponds?\b|water\s+body|"
+     r"water\s+tanker|\btankers?\b|\bRWH\b|rain\s*water\s+harvest|\bwaterworks\b|\bJJM\b|tap\s+connection"),
+    ("lighting",
+     r"street\s*light|high\s*mast|feeder\s+pillar|\bLED\b|decorative\s+light|"
+     r"fancy\s+light|\bpoles?\b.*light|light\s+point"),
+    ("footpath", r"footpath|\bkerb\b|cycle\s+track|\bpaver\s+block\b"),
+    ("landscape",
+     r"horticultur|plantation|plant(ing)?\b|green\s*belt|beautif|landscap|\bparks?\b|"
+     r"\btrees?\b|\bfelling\b|\bstump|shrub|ornamental|nursery|forestry|\bgardens?\b|lawn|\bL/?S\s+work\b"),
+    ("fencing",
+     r"fenc|chain\s*link|\bgrill|boundary\s+wall|railing|barbed|\bgabion\b"),
+    # NEW CATEGORY. Stray-dog sterilisation, cattle pounds, animal birth control.
+    ("animal_control",
+     r"stray\s+(dog|pig|animal|monkey)s?|steril[iy]|vaccinat|deworm|neuter|cattle|\bgaushala\b|"
+     r"animal\s+birth|\bABC\b\s+programme|dog\s+catch|humane\s+catch"),
+    # NEW CATEGORY. Air conditioning is procured constantly and is not "electricity".
+    ("hvac",
+     r"air\s*condition|\bHVAC\b|\bchiller\b|\bAHU\b|\bVRF\b|\bACs?\b\s+(installed|at|in)|"
+     r"\bsplit\s+AC\b|cooling\s+system"),
+    # Computers, CCTV, servers and licences. Repeatedly procured and not "goods" in any
+    # useful sense — the portal's own category is blank for most of these.
+    ("it_equipment",
+     r"\bhardware\b|\bsoftware\b|\bcomputer|\blaptop|\bprinter|\bserver\b|"
+     r"\bCCTV\b|\bUPS\b|licenc?s?ing|\bLENOVO\b|\bnetworking\b|\bdata\s+cent|"
+     r"commissioning\s+of\s+all\s+hardware"),
+    # Land acquisition and right-of-way work: demarcation, valuation, joint measurement.
+    ("land",
+     r"land\s+acquisit|demarcat|\bROW\b|right\s+of\s+way|joint\s+measurement|"
+     r"\bvaluation\b|\bmutation\b|\bkhasra\b|encroachment"),
+    # Traffic management is not street lighting and not a road surface.
+    ("traffic",
+     r"traffic\s+(light|signal|management)|\bjunctions?\b|\bchowks?\b|road\s+marking|"
+     r"\bsignage\b|\bblinkers?\b|parking\s+system|\bzebra\b|\bbollard"),
+    ("consultancy",
+     r"third\s+party|consultan|feasibility|\bDPR\b|\bPMC\b|survey\s+and\s+(design|invest)|"
+     r"empanelment|"
+     r"design\s+consult|\bQA/?QC\b"),
+    ("sanitation",
+     r"solid\s+waste|garbage|sanitation|sweeping|housekeeping|\bMSW\b|door.to.door|"
+     r"\bC\s*&\s*D\s+waste|dead\s+animal|toilet|urinal|\bpublic\s+convenience\b"),
+    # T/F = transformer, RDS = rural distribution system, LD = load development,
+    # MGJG = Mhatma Gandhi Jan Gram Jyoti (a rural electrification scheme).
+    ("electricity",
+     r"sub-?\s?station|transformer|electrificat|\bLT\b|\bHT\b|\bKV\b|"
+     r"wiring|electrical\s+(work|installation)|\bDG\s+sets?\b|\bpanels?\b|"
+     r"\bT/F\b|\bfeeders?\b|\bRDS\b|\bMGJG\b|\bLD\s+system\b|\bXen\s+Op\b|"
+     r"\bconductor\b|\bHVDS\b|\bmeter(ing)?\b|power\s+supply|\bLRP\b|"
+     r"\bSCADA\b|\bRDSS\b|\bDMS/?OMS\b"),
+    # Building last: "office", "school" and "hospital" appear as LOCATIONS in
+    # descriptions of road and drain work, so a building rule placed earlier steals them.
+    ("building",
+     r"\bbuilding\b|\bchaupal\b|community\s+cent|dwelling|\bquarters?\b|\bhalls?\b|"
+     r"\bsheds?\b|\bbooths?\b|barat\s*ghar|brick\s*work|\bplaster|\bCPLASTER\b|"
+     r"renovat|flooring|\btiles?\b|\bhospital\b|\bschool\b|\bstadium\b|\boffice\b|"
+     r"\bcollege\b|\bcrematori|shamshan|\bghat\b|\btoilet\s+block\b|"
+     r"\brooms?\b|\bcentre\b|\bcenter\b|\bcomplex\b|\bRCC\b|\bcabins?\b|\blibrary\b|"
+     r"\bgymnasium\b|\banganwadi\b|\bPHC\b|\bCHC\b|\bdispensary\b|\bveranda|"
+     r"\bNGM\b|\bNVM\b|(various|committee)\s+propert|\bkabristan\b|\bcemet|\bcanteens?\b|"
+     r"distemper|snowcem|white\s*wash|pucca\s+platform"),
+]
+
+MODES = [
+    ("maintenance",
+     r"annual\s+(repair|maintenance)|\bAMC\b|\bCMC\b|comprehensive\s+maintenance|"
+     r"\bA/?M\s+OF\b|\bA/?Mtc\b|\bmtc\.?\b|day\s*to\s*day\s+(repair|mainten)|"
+     r"operation\s+(and|&)\s+mainten|\bO\s*&\s*M\b|upkeep|\bR/?M\s+of\b"),
+    ("hired_capacity",
+     r"\bhiring\b|\bhire\s+of\b|\bon\s+rent\b|\brental\b|"
+     r"engagement\s+of\s+(manpower|labour|agency)|deployment\s+of\s+(manpower|vehicle)"),
+    # 300+ descriptions carry "RECALL" in the text — the office marking a re-tender in
+    # the title. It says nothing about the work and everything about the procurement.
+    ("recalled", r"\bre-?call(ed)?\b|\bre-?invit|\bre-?tender"),
+    # The original contractor defaulted and the remaining work is re-bought at the
+    # defaulter's expense. 131 tenders carry the clause verbatim; it is the only
+    # contractor-default signal anywhere in the structured data.
+    ("risk_and_cost", r"risk\s+(and|&)\s+cost"),
 ]
 COMPONENT_RX = [(name, re.compile(pattern, re.I)) for name, pattern in COMPONENTS]
 
@@ -255,6 +368,21 @@ def canonical_department(row: dict[str, str]) -> tuple[str, str]:
     )
 
 
+MODE_RX = [(name, re.compile(pattern, re.I)) for name, pattern in MODES]
+
+
+def classify_modes(row: dict[str, str]) -> list[str]:
+    """How the work was bought, which is orthogonal to what the work was.
+
+    "Annual maintenance of parks" is landscape work under a maintenance contract. Making
+    that a component forced the classifier to discard one true fact to record another —
+    1,375 descriptions collided on landscape+maintenance alone. Modes are recorded
+    alongside the component instead of competing with it.
+    """
+    haystack = f"{row.get('work_description', '')} {row.get('title', '')}"
+    return [name for name, rx in MODE_RX if rx.search(haystack)]
+
+
 def classify_components(row: dict[str, str]) -> tuple[str, list[str], str]:
     description = row.get("work_description", "")
     description_hits = [name for name, rx in COMPONENT_RX if rx.search(description)]
@@ -385,6 +513,12 @@ def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
+    for stale in (SHARDS_OUT / "tenders.json", SHARDS_OUT / "tender-details"):
+        if stale.is_dir():
+            shutil.rmtree(stale)
+        elif stale.exists():
+            stale.unlink()
+    (SHARDS_OUT / "tender-details").mkdir(parents=True)
 
     tenders = read_csv(SOURCES["tenders"])
     scopes = {row["tender_id"]: row for row in read_csv(SOURCES["scope"])}
@@ -512,6 +646,8 @@ def main() -> None:
         is_awarded = award_state == "AWARD_CONFIRMED"
         is_controlling = controlling_award(tid, award_state, chain)
         component, components, component_basis = classify_components(source)
+        # How it was bought, alongside what was bought. See classify_modes().
+        modes = classify_modes(source)
         department, department_basis = canonical_department(source)
         contractor = award.get("winning_contractor") or source.get("winning_contractor", "")
         contractor_normalized, contractor_key = normalize_contractor(contractor)
@@ -545,6 +681,7 @@ def main() -> None:
             "component": component,
             "components": components,
             "componentBasis": component_basis,
+            "contractModes": modes,
             "contractor": contractor,
             "contractorKey": contractor_key,
             "awardedBidCount": integer(
@@ -763,7 +900,7 @@ def main() -> None:
 
     write_json(OUT / "overview.json", overview)
     write_json(
-        OUT / "tenders.json",
+        SHARDS_OUT / "tenders.json",
         {
             "schema": INDEX_FIELDS,
             "rows": [
@@ -806,7 +943,7 @@ def main() -> None:
     write_json(OUT / "places.json", places)
     write_json(OUT / "contractors.json", contractor_output)
     for index, shard in enumerate(detail_shards):
-        write_json(OUT / "tender-details" / f"{index:02d}.json", shard)
+        write_json(SHARDS_OUT / "tender-details" / f"{index:02d}.json", shard)
 
     geo_manifest = {}
     for name, relative in GEO_SOURCES.items():

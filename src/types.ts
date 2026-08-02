@@ -63,6 +63,10 @@ export interface TenderIndexRow {
      Replaces `titleKey`, which cost 4.63 MB to publish 35,393 normalised strings when
      the repeated-work filter only ever needed a group identity. */
   repeatGroup?: number | null;
+  /* HOW the work was bought — maintenance / hired_capacity / recalled — orthogonal to
+     `component`, which says WHAT was bought. Ships as a 3-bit integer decoded against
+     the index's `contractModeFlags` legend (see loadTenders). */
+  contractModes: string[];
 }
 
 export interface Overview {

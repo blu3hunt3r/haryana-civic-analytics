@@ -34,6 +34,9 @@ REPO = Path(__file__).resolve().parents[1]
 ROOT = Path(os.environ.get("CIVIC_DATA_ROOT", REPO.parent / "civic-stuff")).resolve()
 PUBLIC = REPO / "public" / "data"
 BUILD = REPO / "build"
+# Shard intermediates live under build/, not public/ — they feed the package builder
+# and are not published. See the note in build_analytics.py.
+SHARDS_DIR = BUILD / "shards"
 SHARDS = 64
 
 
@@ -121,7 +124,7 @@ def evidence_level(
 
 def main() -> None:
     BUILD.mkdir(parents=True, exist_ok=True)
-    index = load_json(PUBLIC / "tenders.json")
+    index = load_json(SHARDS_DIR / "tenders.json")
     tenders = [
         dict(zip(index["schema"], values, strict=True)) for values in index["rows"]
     ]
@@ -130,7 +133,7 @@ def main() -> None:
     details: dict[str, dict[str, Any]] = {}
     for shard in range(SHARDS):
         details.update(
-            load_json(PUBLIC / "tender-details" / f"{shard:02d}.json")
+            load_json(SHARDS_DIR / "tender-details" / f"{shard:02d}.json")
         )
 
     actual_completion: dict[str, list[dict[str, str]]] = defaultdict(list)
@@ -292,7 +295,7 @@ def main() -> None:
         }
 
     for shard, rows in enumerate(intelligence_shards):
-        write_json_atomic(PUBLIC / "intelligence" / f"{shard:02d}.json", rows)
+        write_json_atomic(SHARDS_DIR / "intelligence" / f"{shard:02d}.json", rows)
 
     confirmed = [
         row for row in tenders if row["scope"] == "confirmed_gurugram"
@@ -790,7 +793,7 @@ def main() -> None:
             connection.commit()
 
     for path in [
-        PUBLIC / "tenders.json",
+        SHARDS_DIR / "tenders.json",
         bid_source,
         lifecycle_source,
         flag_source,

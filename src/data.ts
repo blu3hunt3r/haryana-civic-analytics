@@ -107,6 +107,9 @@ interface IndexPayload {
   schema: string[];
   dictionaries: Record<string, string[]>;
   dictionaryFields: string[];
+  /* Legend for the `contractModes` bitmask column: bit i of the row value set means
+     flag i applies. Published alongside the rows so the client never hardcodes it. */
+  contractModeFlags?: string[];
   rows: unknown[][];
   count: number;
 }
@@ -115,6 +118,7 @@ export function loadTenders(): Promise<TenderIndexRow[]> {
   tenderRowsPromise ??= getJson<IndexPayload>("/data/tender-index.json").then(
     (payload) => {
       const dictionaryFields = new Set(payload.dictionaryFields ?? []);
+      const modeFlags = payload.contractModeFlags ?? [];
       return payload.rows.map((values) => {
         const row: Record<string, unknown> = {};
         payload.schema.forEach((field, position) => {
@@ -142,6 +146,15 @@ export function loadTenders(): Promise<TenderIndexRow[]> {
             ? ""
             : `g${row.repeatGroup}`;
         row.areas ??= [];
+        /* `contractModes` arrives as a bitmask over `contractModeFlags` — how the work
+           was bought (maintenance, hired capacity, recalled), orthogonal to
+           `component`. Decoded here to names; an older cached index without the
+           column decodes to []. */
+        const packedModes = row.contractModes;
+        row.contractModes =
+          typeof packedModes === "number"
+            ? modeFlags.filter((_, bit) => packedModes & (1 << bit))
+            : [];
         return row as unknown as TenderIndexRow;
       });
     },
