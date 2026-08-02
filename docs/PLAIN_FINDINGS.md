@@ -204,6 +204,59 @@ in.
 
 ---
 
+## Two things wrong with my own grouping
+
+Someone looked at my tables and said four departments and a handful of work types cannot
+be the whole picture. They were right about the cause.
+
+### Nearly half the tenders have no work category at all
+
+Of 49,121 tenders, **21,470 — 43.7% — are filed as "unclassified".** I built 314 groups
+out of department × type of work and presented them as meaningful, without checking that
+the second half of that pair is empty for nearly half the data. For those tenders a
+"group" is really "department × unknown".
+
+It is not that the descriptions are blank. **Every one of the 21,470 has a description.**
+The classifier simply does not know the words Haryana public works actually use:
+
+| In the records | What it means |
+|---|---|
+| IPB | interlocking paver block — a footpath or road surface |
+| WBM | water bound macadam — road surface |
+| CC locking, RMC M-40 | concrete road surface |
+| AR OF LR | annual repair of link roads |
+| PAV OF RASTA | paving a village path |
+| brick work, CPLASTER | building work |
+
+And three kinds of work are missing from the list of 16 altogether: **annual maintenance
+contracts (836 tenders), animal control such as stray-dog sterilisation (70), and
+air-conditioning maintenance (49).**
+
+Adding that vocabulary classifies **9,663 of the 21,470 — 45% of them** — and takes the
+unclassified share of the whole corpus from **43.7% down to 24%.**
+
+What genuinely cannot be classified is a smaller, stranger set: descriptions with the
+spaces stripped out ("operationandmaintenanceSohna", "Gadaipur784FHTC2nd"), and entries
+that say only "As per DNIT", "COMPLITION" or "mlc".
+
+### 189 real organisations are being reported as 48
+
+The raw records name **189 separate bodies**, in chains three and four levels deep like
+`Haryana Government || Urban Local Bodies || MC Gurgaon`. The build folds them into 48
+canonical departments, so MC Gurgaon, MC Manesar, MC Sohna, MC Pataudi and ten others all
+become one line reading "Municipal Corporation / Urban Local Bodies" — 18,991 tenders.
+
+**How much that actually hides, honestly:** less than I first suggested. Across those
+municipal bodies the re-run rate runs 27.3% to 37.0% against a combined 36.2% — a real
+spread but not a dramatic one. Single-bidder rates vary more, from 0.3% at MC Pataudi
+Mandi to 9.3% at MC Pataudi and MC Farukh Nagar.
+
+The right structure is two levels — the parent for totals, the 189 individual bodies for
+analysis — rather than a flat 48. Neither of these is fixed yet. They are measured and
+written down instead of being left inside a table that looks finished.
+
+---
+
 ## What I still cannot tell you
 
 - **Whether any money was actually paid.** Nothing in 49,121 records evidences a payment.
