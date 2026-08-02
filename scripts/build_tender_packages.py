@@ -111,6 +111,11 @@ JSON_ARGS = dict(separators=(",", ":"), sort_keys=True, ensure_ascii=False)
 # waste. Dictionary encoding replaces each with a small integer and one lookup table.
 DICTIONARY_FIELDS = [
     "scope", "status", "awardState", "department", "component", "contractor",
+    # The leaf office inside the department — 189 distinct bodies. The flat 48-value
+    # `department` made MC Gurgaon, MC Sohna and twelve other municipal bodies one
+    # line; per-office analysis needs the office. 189 values is exactly the
+    # dictionary-encoding case.
+    "departmentUnit",
 ]
 # Values kept verbatim per row, in this order.
 LITERAL_FIELDS = [

@@ -40,6 +40,10 @@ export interface TenderIndexRow {
   publishedDateConflict: boolean;
   department: string;
   departmentBasis: string;
+  /* The leaf office in the organisation chain — 189 distinct bodies. `department`
+     is the arm of government (48 canonical lines); this is which of its offices
+     actually ran the procurement, so MC Sohna is distinguishable from MC Gurgaon. */
+  departmentUnit?: string;
   component: string;
   components: string[];
   componentBasis: string;

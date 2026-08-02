@@ -984,7 +984,11 @@ function renderDetail(
     <div class="detail-warning"><strong>Evidence boundary:</strong> ${detail.isAwarded ? "An award is published." : "No confirmed award is recorded."} Contract value is not payment, and the schedule is not actual completion.</div>
     ${renderValueCorrection(detail)}
     <dl class="detail-grid">
-      <div><dt>Department</dt><dd>${escapeHtml(detail.department)}</dd></div>
+      <div><dt>Department</dt><dd>${escapeHtml(detail.department)}${
+        detail.departmentUnit && detail.departmentUnit !== detail.department
+          ? ` · ${escapeHtml(detail.departmentUnit)}`
+          : ""
+      }</dd></div>
       <div><dt>Published</dt><dd>${escapeHtml(detail.publishedAt || "Not published")}</dd></div>
       <div><dt>Estimate</dt><dd>${formatRupees(detail.estimateValue)}</dd></div>
       <div><dt>Contract value</dt><dd>${formatRupees(detail.contractValue)}</dd></div>

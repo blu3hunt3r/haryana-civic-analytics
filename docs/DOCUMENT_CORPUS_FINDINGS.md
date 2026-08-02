@@ -155,9 +155,15 @@ the tender"`, `"non-participating the sufficient bidders tender is hereby recall
 Nothing in the structured data explains why any of the 6,198 multi-tender chains
 restarted, or why 2,426 of them never reached an award. This does.
 
-**The 39.7% unclassified rate is a precision problem in my clause anchor, not a property
-of the documents** — some matches are plainly mis-anchored (`"be opened on 15"`). The
-extractor needs a tighter grammar before these counts are published.
+**The 39.7% unclassified rate was a precision problem in my clause anchor, not a
+property of the documents.** `scripts/classify_restarts.py` now repairs it: 518 of the
+clauses were the boilerplate warning to bidders ("your tender will be cancelled and you
+will be debarred"), which is a threat about the future and not a restart record, and
+much of the rest was OCR damage ("admin1strat1ve feásons") that a match-time
+normalisation recovers. On the 1,414 genuine clauses the counts become: **no bid /
+too few bids 33.3%, administrative 32.0%, unclassified 24.3%, technical 7.9%, error in
+tender creation 2.2%** — competition failure, not administrative discretion, is the
+commonest stated reason a tender restarts.
 
 ## 7. Field recovery, overall
 

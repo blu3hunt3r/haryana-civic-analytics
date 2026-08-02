@@ -131,89 +131,109 @@ def main() -> int:
         "modes": Counter(),
     })
 
+    # Two cuts from one pass. `department` is the arm of government (48 canonical
+    # lines) and hides that MC Gurgaon, MC Sohna and twelve other bodies answer as
+    # one line; `departmentUnit` is the leaf office that ran the procurement (189
+    # bodies). The parent cut gives totals; the unit cut is where per-office
+    # behaviour becomes visible.
+    units: dict[tuple[str, str], dict] = defaultdict(segments.default_factory)
+
     for row in index["rows"]:
         tender = read(row, "id")
         department = read(row, "department") or "Unknown"
         component = read(row, "component") or "unclassified"
-        key = (department, component)
-        bucket = segments[key]
-        bucket["tenders"] += 1
-        bucket["years"][read(row, "year") or "?"] += 1
-        bucket["scopes"][read(row, "scope") or "?"] += 1
-        if row[columns["isAwarded"]]:
-            bucket["awarded"] += 1
+        unit = (read(row, "departmentUnit") or "Unknown"
+                ) if "departmentUnit" in columns else "Unknown"
         contract = number(row[columns["contractValue"]])
-        if row[columns["isControllingAward"]]:
-            bucket["controlling"] += 1
-            if contract is not None:
-                bucket["contract_value"] += contract
-        bucket["bands"][value_band(contract)] += 1
         status = read(row, "status")
-        if status == "Cancelled":
-            bucket["cancelled"] += 1
-        if status == "Retender":
-            bucket["retendered"] += 1
-        if bids.get(tender):
-            bucket["with_bids"] += 1
-            if tender in single:
-                bucket["single_bidder"] += 1
-        bucket["documents"] += retrieved.get(tender, 0)
-        bucket["documents_with_text"] += have_text.get(tender, 0)
-        if have_text.get(tender):
-            bucket["tenders_with_text"] += 1
         packed = row[columns["contractModes"]] if "contractModes" in columns else 0
-        if isinstance(packed, int):
-            for bit, flag in enumerate(mode_flags):
-                if packed & (1 << bit):
-                    bucket["modes"][flag] += 1
+        for bucket in (segments[(department, component)], units[(unit, component)]):
+            bucket["tenders"] += 1
+            bucket["years"][read(row, "year") or "?"] += 1
+            bucket["scopes"][read(row, "scope") or "?"] += 1
+            if row[columns["isAwarded"]]:
+                bucket["awarded"] += 1
+            if row[columns["isControllingAward"]]:
+                bucket["controlling"] += 1
+                if contract is not None:
+                    bucket["contract_value"] += contract
+            bucket["bands"][value_band(contract)] += 1
+            if status == "Cancelled":
+                bucket["cancelled"] += 1
+            if status == "Retender":
+                bucket["retendered"] += 1
+            if bids.get(tender):
+                bucket["with_bids"] += 1
+                if tender in single:
+                    bucket["single_bidder"] += 1
+            bucket["documents"] += retrieved.get(tender, 0)
+            bucket["documents_with_text"] += have_text.get(tender, 0)
+            if have_text.get(tender):
+                bucket["tenders_with_text"] += 1
+            if isinstance(packed, int):
+                for bit, flag in enumerate(mode_flags):
+                    if packed & (1 << bit):
+                        bucket["modes"][flag] += 1
 
-    records = []
-    for (department, component), bucket in segments.items():
-        tenders = bucket["tenders"]
-        with_bids = bucket["with_bids"]
-        records.append({
-            "department": department,
-            "component": component,
-            "tenders": tenders,
-            "awarded": bucket["awarded"],
-            "controlling_awards": bucket["controlling"],
-            "contract_value_inr": round(bucket["contract_value"], 2),
-            "cancelled": bucket["cancelled"],
-            "retendered": bucket["retendered"],
-            "rework_rate_pct": round((bucket["cancelled"] + bucket["retendered"])
-                                     / tenders * 100, 1) if tenders else 0,
-            "tenders_with_bids": with_bids,
-            "single_bidder": bucket["single_bidder"],
-            "single_bidder_pct": round(bucket["single_bidder"] / with_bids * 100, 1)
-                                 if with_bids else "",
-            "documents_retrieved": bucket["documents"],
-            "documents_with_text": bucket["documents_with_text"],
-            "tenders_with_readable_docs": bucket["tenders_with_text"],
-            "doc_coverage_pct": round(bucket["tenders_with_text"] / tenders * 100, 1)
+    def build_profile(table: dict[tuple[str, str], dict], key_name: str) -> list[dict]:
+        rows_out = []
+        for (group, component), bucket in table.items():
+            tenders = bucket["tenders"]
+            with_bids = bucket["with_bids"]
+            rows_out.append({
+                key_name: group,
+                "component": component,
+                "tenders": tenders,
+                "awarded": bucket["awarded"],
+                "controlling_awards": bucket["controlling"],
+                "contract_value_inr": round(bucket["contract_value"], 2),
+                "cancelled": bucket["cancelled"],
+                "retendered": bucket["retendered"],
+                "rework_rate_pct": round((bucket["cancelled"] + bucket["retendered"])
+                                         / tenders * 100, 1) if tenders else 0,
+                "tenders_with_bids": with_bids,
+                "single_bidder": bucket["single_bidder"],
+                "single_bidder_pct": round(bucket["single_bidder"] / with_bids * 100, 1)
+                                     if with_bids else "",
+                "documents_retrieved": bucket["documents"],
+                "documents_with_text": bucket["documents_with_text"],
+                "tenders_with_readable_docs": bucket["tenders_with_text"],
+                "doc_coverage_pct": round(bucket["tenders_with_text"] / tenders * 100, 1)
+                                    if tenders else 0,
+                "maintenance_pct": round(bucket["modes"]["maintenance"] / tenders * 100, 1)
+                                   if tenders else 0,
+                "hired_capacity_pct": round(bucket["modes"]["hired_capacity"] / tenders * 100, 1)
+                                      if tenders else 0,
+                "recalled_pct": round(bucket["modes"]["recalled"] / tenders * 100, 1)
                                 if tenders else 0,
-            "maintenance_pct": round(bucket["modes"]["maintenance"] / tenders * 100, 1)
-                               if tenders else 0,
-            "hired_capacity_pct": round(bucket["modes"]["hired_capacity"] / tenders * 100, 1)
-                                  if tenders else 0,
-            "recalled_pct": round(bucket["modes"]["recalled"] / tenders * 100, 1)
-                            if tenders else 0,
-            "top_year": bucket["years"].most_common(1)[0][0] if bucket["years"] else "",
-            "top_value_band": bucket["bands"].most_common(1)[0][0] if bucket["bands"] else "",
-            "dominant_scope": bucket["scopes"].most_common(1)[0][0] if bucket["scopes"] else "",
-        })
+                "top_year": bucket["years"].most_common(1)[0][0] if bucket["years"] else "",
+                "top_value_band": bucket["bands"].most_common(1)[0][0] if bucket["bands"] else "",
+                "dominant_scope": bucket["scopes"].most_common(1)[0][0] if bucket["scopes"] else "",
+            })
+        # Readable first: a segment can only be analysed from documents if it has some.
+        rows_out.sort(key=lambda r: (-r["tenders_with_readable_docs"], -r["tenders"]))
+        return rows_out
 
-    # Readable first: a segment can only be analysed from documents if it has some.
-    records.sort(key=lambda r: (-r["tenders_with_readable_docs"], -r["tenders"]))
+    records = build_profile(segments, "department")
+    unit_records = build_profile(units, "unit")
+
     OUT.mkdir(parents=True, exist_ok=True)
     target = OUT / "segment_profile.csv"
     with open(target, "w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(records[0].keys()))
         writer.writeheader()
         writer.writerows(records)
+    unit_target = OUT / "unit_profile.csv"
+    with open(unit_target, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(unit_records[0].keys()))
+        writer.writeheader()
+        writer.writerows(unit_records)
 
     print(f"{len(records):,} segments across "
           f"{len({r['department'] for r in records})} departments and "
-          f"{len({r['component'] for r in records})} work components\n")
+          f"{len({r['component'] for r in records})} work components; "
+          f"{len(unit_records):,} unit segments across "
+          f"{len({r['unit'] for r in unit_records})} leaf offices\n")
     print(f"{'department':30}{'component':14}{'tend':>6}{'readable':>9}{'cov%':>6}"
           f"{'1-bid%':>8}{'rework%':>8}{'value (cr)':>12}")
     for record in records[:18]:
@@ -223,7 +243,7 @@ def main() -> int:
               f"{record['doc_coverage_pct']:>6.0f}"
               f"{str(record['single_bidder_pct']):>8}{record['rework_rate_pct']:>8.1f}"
               f"{crore:>12,.1f}")
-    print(f"\nwrote {target}")
+    print(f"\nwrote {target}\n      {unit_target}")
     return 0
 
 

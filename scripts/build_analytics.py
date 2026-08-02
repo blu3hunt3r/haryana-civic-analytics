@@ -149,24 +149,27 @@ COMPONENTS = [
      r"culvert\s+cross|\bcauseways?\b"),
     ("drainage",
      r"storm\s*water|\bnala\b|nallah|catch\s*pit|\bdrain|desilt|\bSWD\b|"
-     r"\bRCC\s+drain|water\s+logging|waterlogg"),
+     r"\bRCC\s+drain|water\s+logging|waterlogg|de-?watering|"
+     r"disposal\s+of\s+water"),
     ("sewer",
      r"sewer|sewage|manhole|rising\s+main|\bSTP\b|sullage|septic|\bMH\b\s*cover|"
-     r"\beffluent\b"),
+     r"\beffluent\b|grey\s+water|waste\s*water|super\s+sucker|jetting\s+machine"),
     # FHTC = Functional Household Tap Connection (the Jal Jeevan Mission scheme name),
     # disty = distributary, johad/pond = a village water body, RWH = rainwater harvesting.
     ("water",
      r"water\s+supply|tube\s*well|trunk\s+main|water\s+works|\bOHSR\b|\bUGR\b|"
      r"hand\s*pump|\bboring\b|FHTC|potable|\bWTP\b|pipe\s*line|"
      r"\bpump(ing)?\b|\bdisty\b|distributary|\bjohads?\b|\bponds?\b|water\s+body|"
-     r"water\s+tanker|\btankers?\b|\bRWH\b|rain\s*water\s+harvest|\bwaterworks\b|\bJJM\b|tap\s+connection"),
+     r"water\s+tanker|\btankers?\b|\bRWH\b|rain\s*water\s+harvest|\bwaterworks\b|\bJJM\b|tap\s+connection|"
+     r"water\s+line|\btanki\b|water\s+course"),
     ("lighting",
      r"street\s*light|high\s*mast|feeder\s+pillar|\bLED\b|decorative\s+light|"
      r"fancy\s+light|\bpoles?\b.*light|light\s+point"),
     ("footpath", r"footpath|\bkerb\b|cycle\s+track|\bpaver\s+block\b"),
     ("landscape",
      r"horticultur|plantation|plant(ing)?\b|green\s*belt|beautif|landscap|\bparks?\b|"
-     r"\btrees?\b|\bfelling\b|\bstump|shrub|ornamental|nursery|forestry|\bgardens?\b|lawn|\bL/?S\s+work\b"),
+     r"\btrees?\b|\bfelling\b|\bstump|shrub|ornamental|nursery|forestry|\bgardens?\b|lawn|\bL/?S\s+work\b|"
+     r"play\s+equipment|playground|open\s+(air\s+)?gym"),
     ("fencing",
      r"fenc|chain\s*link|\bgrill|boundary\s+wall|railing|barbed|\bgabion\b"),
     # NEW CATEGORY. Stray-dog sterilisation, cattle pounds, animal birth control.
@@ -176,13 +179,14 @@ COMPONENTS = [
     # NEW CATEGORY. Air conditioning is procured constantly and is not "electricity".
     ("hvac",
      r"air\s*condition|\bHVAC\b|\bchiller\b|\bAHU\b|\bVRF\b|\bACs?\b\s+(installed|at|in)|"
-     r"\bsplit\s+AC\b|cooling\s+system"),
+     r"\bsplit\s+AC\b|cooling\s+system|water\s+heating"),
     # Computers, CCTV, servers and licences. Repeatedly procured and not "goods" in any
     # useful sense — the portal's own category is blank for most of these.
     ("it_equipment",
      r"\bhardware\b|\bsoftware\b|\bcomputer|\blaptop|\bprinter|\bserver\b|"
      r"\bCCTV\b|\bUPS\b|licenc?s?ing|\bLENOVO\b|\bnetworking\b|\bdata\s+cent|"
-     r"commissioning\s+of\s+all\s+hardware"),
+     r"commissioning\s+of\s+all\s+hardware|\bEPABX\b|audio\s+conference|"
+     r"attendance\s+management|biometric|video\s+record"),
     # Land acquisition and right-of-way work: demarcation, valuation, joint measurement.
     ("land",
      r"land\s+acquisit|demarcat|\bROW\b|right\s+of\s+way|joint\s+measurement|"
@@ -191,6 +195,10 @@ COMPONENTS = [
     ("traffic",
      r"traffic\s+(light|signal|management)|\bjunctions?\b|\bchowks?\b|road\s+marking|"
      r"\bsignage\b|\bblinkers?\b|parking\s+system|\bzebra\b|\bbollard"),
+    # Advance stockpiling of aggregate/material for the coming year's road repair.
+    ("goods", r"collection\s+of\s+material|supply\s+(and\s+stacking\s+)?of\s+material"),
+    # Municipal revenue outsourcing: toll points, tehbazari (street-vendor ground rent).
+    ("services", r"collection\s+of\s+toll|toll\s+collection|tehbazari|advertisement\s+rights"),
     ("consultancy",
      r"third\s+party|consultan|feasibility|\bDPR\b|\bPMC\b|survey\s+and\s+(design|invest)|"
      r"empanelment|"
@@ -212,7 +220,7 @@ COMPONENTS = [
      r"\bbuilding\b|\bchaupal\b|community\s+cent|dwelling|\bquarters?\b|\bhalls?\b|"
      r"\bsheds?\b|\bbooths?\b|barat\s*ghar|brick\s*work|\bplaster|\bCPLASTER\b|"
      r"renovat|flooring|\btiles?\b|\bhospital\b|\bschool\b|\bstadium\b|\boffice\b|"
-     r"\bcollege\b|\bcrematori|shamshan|\bghat\b|\btoilet\s+block\b|"
+     r"\bcollege\b|\bcrematori|shamshan|\bghat\b|\btoilet\s+block\b|fire\s+fighting|fire\s+hydrant|"
      r"\brooms?\b|\bcentre\b|\bcenter\b|\bcomplex\b|\bRCC\b|\bcabins?\b|\blibrary\b|"
      r"\bgymnasium\b|\banganwadi\b|\bPHC\b|\bCHC\b|\bdispensary\b|\bveranda|"
      r"\bNGM\b|\bNVM\b|(various|committee)\s+propert|\bkabristan\b|\bcemet|\bcanteens?\b|"
@@ -366,6 +374,27 @@ def canonical_department(row: dict[str, str]) -> tuple[str, str]:
     return (meaningful[0] if meaningful else (parts[0] if parts else "Unclassified")), (
         "organisation_chain"
     )
+
+
+def department_unit(row: dict[str, str]) -> str:
+    """The LEAF body in the organisation chain — the office that actually ran the
+    procurement. The canonical department above answers "which arm of government";
+    this answers "which of its 189 offices", so MC Sohna stops answering for MC
+    Gurgaon inside the Urban Local Bodies line. Returned verbatim (whitespace
+    collapsed): the raw names are clean — 189 distinct leaves, one case duplicate —
+    and inventing canonical spellings here would trade a checkable name for a
+    guessed one."""
+    parts = [
+        " ".join(part.split())
+        for part in row.get("organisation_chain", "").split("||")
+        if part.strip()
+    ]
+    meaningful = [
+        part
+        for part in parts
+        if part.lower() not in {"haryana government", "haryana board corporation"}
+    ]
+    return meaningful[-1] if meaningful else (parts[-1] if parts else "")
 
 
 MODE_RX = [(name, re.compile(pattern, re.I)) for name, pattern in MODES]
@@ -649,6 +678,7 @@ def main() -> None:
         # How it was bought, alongside what was bought. See classify_modes().
         modes = classify_modes(source)
         department, department_basis = canonical_department(source)
+        unit = department_unit(source)
         contractor = award.get("winning_contractor") or source.get("winning_contractor", "")
         contractor_normalized, contractor_key = normalize_contractor(contractor)
         year, month, year_basis, published_date_conflict = parse_tender_period(
@@ -678,6 +708,7 @@ def main() -> None:
             "publishedDateConflict": published_date_conflict,
             "department": department,
             "departmentBasis": department_basis,
+            "departmentUnit": unit,
             "component": component,
             "components": components,
             "componentBasis": component_basis,

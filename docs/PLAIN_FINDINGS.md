@@ -49,10 +49,10 @@ unremarkable. Split it by the department running the tender:
 | XEN TS Gurugram | **0.0%** |
 
 The 8.3% average is the one number in that table that tells you nothing. So the corpus is
-now cut into **375 groups — 48 departments crossed with 21 kinds of work** — and each is
+now cut into **376 groups — 48 departments crossed with 21 kinds of work** — and each is
 read on its own. (An earlier cut had 314 groups and left 43.7% of tenders without a work
 category; the classifier has since been taught the vocabulary Haryana public works
-actually use, and the uncategorised share is now 12.4%. The section near the end records
+actually use, and the uncategorised share is now 11.1%. The section near the end records
 that repair honestly.)
 
 *(A single bid is lawful and often innocent — a small village job may simply not interest
@@ -62,7 +62,7 @@ many firms. It is a reason to look, not a finding.)*
 
 ## The clearest thing in the data
 
-One group stands out from all 375.
+One group stands out from all 376.
 
 **Development & Panchayats — the department that builds village paths, retaining walls
 and community halls.**
@@ -125,10 +125,12 @@ never got as far as a contract.**
 ### Why?
 
 **I don't know, and the documents for this department don't say.** I searched their
-paperwork for a stated reason and found **zero**. Elsewhere in the corpus 1,201 documents
-do give a reason — most commonly "administrative reasons", "no bid received", or once
-memorably "error in creation of tender" — but none of those documents belong to this
-department.
+paperwork for a stated reason and found **zero**. Elsewhere in the corpus 1,414
+documents do give a reason (after excluding 518 boilerplate warnings to bidders that an
+earlier count mistook for reasons). The commonest stated reason, now that the counting
+is honest, is **"no bids, or too few" — 33.3%** — just ahead of "administrative
+reasons" (32.0%), with "error in creation of tender" among the 2.2% of plain mistakes.
+But none of those documents belong to this department.
 
 That is an honest gap, not a conclusion. What can be said is that when bidders do turn up
 here, **27.8% of the time only one bidder turns up.**
@@ -163,7 +165,7 @@ big total barely moves. The individual pages were badly wrong, and that was the 
 
 ## The groups that stand out
 
-With the corpus cut into 375 groups, 51 of them have enough tenders (150+) to draw a
+With the corpus cut into 376 groups, 51 of them have enough tenders (150+) to draw a
 conclusion from. Across those, the normal rate is **31.3% rework** and **9.4%
 single-bidder**. (These baselines barely moved when the classifier was repaired — from
 31.4% and 9.5% — which is reassuring: the corpus-wide picture was right, it was the
@@ -290,8 +292,8 @@ actually use:
 Teaching it that vocabulary — plus five missing kinds of work (IT equipment, traffic
 infrastructure, animal control, air-conditioning, land) — and separating *how* work is
 bought (maintenance, hired capacity, recalled) from *what* is bought, is now **live in
-the published data**: the unclassified share is **12.4% (6,108 tenders)**, the groups
-number 375, and every table on this page has been recomputed from the repaired records.
+the published data**: the unclassified share is **11.1% (5,459 tenders)**, the groups
+number 376, and every table on this page has been recomputed from the repaired records.
 The verification suite and all 26 invariant tests pass on the rebuilt data.
 
 The findings mostly survived, which is what real patterns should do — the baselines
@@ -306,7 +308,7 @@ that say only "As per DNIT", "COMPLITION" or "mlc", and the biggest remaining bl
 budget head but genuinely not a kind of work. This classifier is treated as a live system: the residue is a
 worklist, not a verdict.
 
-### 189 real organisations are being reported as 48 — NOT YET FIXED
+### 189 real organisations were being reported as 48 — NOW FIXED
 
 The raw records name **189 separate bodies**, in chains three and four levels deep like
 `Haryana Government || Urban Local Bodies || MC Gurgaon`. The build folds them into 48
@@ -318,9 +320,17 @@ municipal bodies the re-run rate runs 27.3% to 37.0% against a combined 36.2% �
 spread but not a dramatic one. Single-bidder rates vary more, from 0.3% at MC Pataudi
 Mandi to 9.3% at MC Pataudi and MC Farukh Nagar.
 
-The right structure is two levels — the parent for totals, the 189 individual bodies for
-analysis — rather than a flat 48. This one is still measured-and-written-down rather
-than fixed.
+The right structure is two levels — the parent for totals, the 189 individual bodies
+for analysis — and that is now what the data carries: every tender records both its
+department and the leaf office that ran it, and the office is on the tender's page.
+
+What the office-level cut shows immediately: **the Development & Panchayats failure has
+an address.** XEN Panchayati Raj Gurugram ran 3,051 tenders with 65.0% re-run, and SDO
+Panchayati Raj Pataudi ran 415 with 69.9% — the worst two large offices in the state.
+GMDA's re-tendering concentrates in its two infrastructure divisions (INFRA I and
+INFRA II: ₹1,148 crore between them, both at 47.5% re-run). The fourteen municipal
+bodies, by contrast, really do behave alike — 31% to 37% re-run — so folding them
+together was hiding less than it appeared, which is also worth knowing.
 
 ---
 
@@ -342,9 +352,10 @@ than fixed.
 
 1. Keep working the classifier residue down — 6,255 tenders remain, half of them
    municipal ward works whose descriptions may genuinely name no kind of work. Each
-   pass so far has been measured before shipping: 43.7% → 15.9% → 12.7% → 12.4%.
-2. Split the 48 flat departments into the 189 real bodies, two levels deep, so MC
-   Sohna stops answering for MC Gurgaon.
+   pass so far has been measured before shipping: 43.7% → 15.9% → 12.7% → 12.4% → 11.1%.
+2. Join the 1,414 stated restart reasons to their procurement chains, so a cancelled
+   tender can carry its cause (611 of them name no tender ID in the document and
+   need the chain resolved another way).
 3. Dig into why Development & Panchayats' village buildings fail at 68.9% — compare
    its bid windows, estimate sizes and locations against the same work bought by
    departments whose buildings do get built.
