@@ -7,22 +7,27 @@ something I say so.
 
 ## First, honestly: how much have I actually read?
 
-The archive holds **118,079 separate documents, about 61 GB**.
+The archive holds **118,079 separate documents, about 61 GB**. I have now read the text
+of **112,223 of them — 95%, covering 89.7% of the bytes.**
 
-I have opened and read the text of **41,059 of them — roughly a third**, covering about
-42% of the bytes. Specifically:
+The remaining **5,856 have no text layer at all** — they are photographs of paper. They
+cannot be read without OCR, and I have not run OCR. That is the honest remainder.
 
-- Award letters, AOC letters, tender documents: **read all of them**.
-- Tender summaries and corrigenda: **read 83%**.
-- Technical Evaluation, Financial Evaluation, Technical Bid Opening: **I read about 60 to
-  100 of each.** There are 72,703 of them. My statement that these are near-empty
-  rubber stamps comes from that sample, not from reading them all.
+An earlier version of this page said I had read a third. That was true when written, and
+the gap mattered, because the three biggest groups had only been sampled at 60-100
+documents each. Those are now read in full, and the sample turned out to be accurate:
 
-A background job is currently reading the rest. Until it finishes, treat anything I say
-about those three groups as a sample result, not a fact about all of them.
+| Group | predicted from sample | true, all read |
+|---|---|---|
+| Technical Evaluation | 304 characters | **289** (29,826 docs) |
+| Financial Evaluation | 396 | **377** (22,210) |
+| Technical Bid Opening | 385 | **356** (19,313) |
 
-So: no, I have not deeply analysed 61 GB, and anyone who tells you they have in an
-afternoon is overstating it.
+**But reading everything found something the sample could not.** Buried in those three
+groups are **6,133 documents (8.4%) that are not stamps at all** — including 416
+bid-comparison tables showing every bidder and their rates, 193 bills of quantity, and
+64 award letters filed in the wrong place. Sampling would have missed all of them,
+because they are the rare exception in a pile of near-identical filler.
 
 ---
 
@@ -128,6 +133,49 @@ Effect on the headline total: ₹83,295,707,464 → ₹83,578,763,198. A rise of
 big total barely moves. The individual pages were badly wrong, and that was the point.**
 
 ---
+
+## The groups that stand out
+
+With the corpus cut into 314 groups, 47 of them have enough tenders (150+) to draw a
+conclusion from. Across those, the normal rate is **31.4% rework** and **9.5%
+single-bidder**. Against that baseline:
+
+**Worst for work having to be re-run:**
+
+| Department | Work | Tenders | Re-run | Single bidder |
+|---|---|---|---|---|
+| Development & Panchayats | fencing | 167 | **77.2%** | **59.5%** |
+| Development & Panchayats | drainage | 199 | 64.8% | 32.0% |
+| Development & Panchayats | (general) | 3,328 | 64.2% | 27.8% |
+| Development & Panchayats | building | 239 | 56.1% | 27.4% |
+| GMDA | (general) | 495 | 48.9% | 8.4% |
+| GMDA | sewer | 181 | 47.0% | 13.3% |
+
+**Worst for only one firm turning up:**
+
+| Department | Work | Tenders | Single bidder |
+|---|---|---|---|
+| Development & Panchayats | fencing | 167 | **59.5%** |
+| PWD (B&R) | street lighting | 238 | **52.7%** |
+| PHED | water | 726 | 37.4% |
+| PHED | (general) | 1,013 | 35.4% |
+
+Two different problems sit in that table.
+
+**Village fencing is the most extreme thing in the entire corpus.** Three out of four
+fencing jobs have to be re-run, and when a firm does bid, six times out of ten it is the
+only one. The whole segment is worth ₹4 crore — small money, but these are boundary walls
+and fencing for village facilities, and they are failing more than anything else.
+
+**GMDA is the opposite shape.** Roughly half its work is re-run too, but on ₹402 crore
+and ₹271 crore of sewer and general infrastructure — and competition there looks normal
+(8-13% single-bidder). Big money being re-tendered is a different problem from small jobs
+nobody bids for.
+
+**Where you can check the least is often where the money is.** The groups with the worst
+document coverage include GMDA general (62% coverage, ₹402 crore) and GMDA sewer (61%,
+₹271 crore). PHED water is 55% and PWD street lighting 52% — so the group with the second
+highest single-bidder rate is also one of the hardest to verify.
 
 ## Other things worth knowing
 
