@@ -86,6 +86,7 @@ OUT_DIR = ROOT / "public" / "data" / "tender"
 SHARED_PATH = ROOT / "public" / "data" / "evidence-language.json"
 MANIFEST_PATH = ROOT / "public" / "data" / "tender-manifest.json"
 INDEX_PATH = ROOT / "public" / "data" / "tender-index.json"
+CORRECTIONS_PATH = ROOT / "public" / "data" / "value-corrections.json"
 
 JSON_ARGS = dict(separators=(",", ":"), sort_keys=True, ensure_ascii=False)
 
@@ -198,6 +199,23 @@ def main() -> int:
     details = load_shards(DETAILS_DIR)
     intel = load_shards(INTEL_DIR)
 
+    # THE PUBLISHED AWARD VALUE IS WRONG FOR 264 TENDERS, and the archive can prove it
+    # for 117 of them. scripts/build_value_corrections.py detects a lakh-denominated
+    # figure stored in a rupee column — the published award equals the estimate divided
+    # by 100,000 — and attaches the award letter that states the true agreement amount.
+    # Carried per tender rather than applied to the field, so the page can show what the
+    # portal published, what the letter says, and the SHA-256 of the document that
+    # settles it. Silently rewriting the value would hide the defect instead of
+    # reporting it.
+    corrections: dict[str, dict] = {}
+    if CORRECTIONS_PATH.exists():
+        with open(CORRECTIONS_PATH, encoding="utf-8") as handle:
+            corrections = (json.load(handle) or {}).get("tenders", {})
+        print(f"value corrections available for {len(corrections):,} tenders")
+    else:
+        print("WARNING: no value-corrections.json; run build_value_corrections.py first",
+              file=sys.stderr)
+
     # The two sets must describe the same corpus. If they ever diverge, a tender
     # would silently publish half its evidence.
     only_details = details.keys() - intel.keys()
@@ -280,7 +298,10 @@ def main() -> int:
         package.pop("detailShard", None)
         if it:
             package["intel"] = it
-        package["packageVersion"] = 2
+        correction = corrections.get(tender_id)
+        if correction:
+            package["valueCorrection"] = correction
+        package["packageVersion"] = 3
 
         text = json.dumps(package, **JSON_ARGS)
         sizes.append(atomic_write_text(package_path(tender_id), text))
@@ -322,7 +343,7 @@ def main() -> int:
     index_bytes = atomic_write_text(INDEX_PATH, json.dumps(index_payload, **JSON_ARGS))
 
     manifest = {
-        "packageVersion": 2,
+        "packageVersion": 3,
         "layout": "public/data/tender/<sha1(id)[0:2]>/<sha1(id)[2:4]>/<TENDER_ID>.json",
         "tenderCount": written,
         "indexBytes": index_bytes,

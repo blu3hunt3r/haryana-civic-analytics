@@ -18,10 +18,10 @@
     "max": 35002,
     "median": 8360,
     "min": 4361,
-    "p95": 11802,
-    "total": 404625061
+    "p95": 11809,
+    "total": 404696312
   },
-  "packageVersion": 2,
+  "packageVersion": 3,
   "repeatGroupCount": 6758,
   "replaces": [
     "public/data/tender-details/",

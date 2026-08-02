@@ -1,0 +1,2664 @@
+{
+  "counts": {
+    "controllingCorrected": 97,
+    "controllingFlagged": 106,
+    "correctedFromLetter": 117,
+    "detected": 264,
+    "flaggedNoLetter": 147
+  },
+  "datasetVersion": "2026-07-28.1",
+  "headline": {
+    "afterLetterCorrections": 83578763197.63,
+    "differenceInr": 283055733.26,
+    "note": "Only the letter-evidenced awards move this figure. The flagged tenders keep their published value because their true award value is not established by this archive.",
+    "publishedControllingContractValue": 83295707464.37
+  },
+  "rule": {
+    "correctionPolicy": "Only an award letter may correct an award value. Where a letter states an agreement amount it replaces the published figure and the document SHA-256 is printed. Where no letter exists the value is flagged and NOTHING is substituted: an estimate is not an award value.",
+    "name": "lakh_denominated_award_value",
+    "reason": "The portal stores a lakh-denominated figure in a rupee column, so the published award equals the estimate divided by 100,000.",
+    "test": "published award value < 1000 AND 50000 <= (estimate / published) <= 200000"
+  },
+  "tenders": {
+    "2020_HRY_119539_1": {
+      "correctedValueInr": null,
+      "estimateInr": 174000.0,
+      "estimateOverPublished": 174000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_129319_1": {
+      "correctedValueInr": null,
+      "estimateInr": 152000.0,
+      "estimateOverPublished": 152000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_147032_1": {
+      "correctedValueInr": null,
+      "estimateInr": 8517681.0,
+      "estimateOverPublished": 86853.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 98.07,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_147299_1": {
+      "correctedValueInr": null,
+      "estimateInr": 156000.0,
+      "estimateOverPublished": 156000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_147969_4": {
+      "correctedValueInr": null,
+      "estimateInr": 1206000.0,
+      "estimateOverPublished": 102901.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 11.72,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_150225_1": {
+      "correctedValueInr": null,
+      "estimateInr": 7000000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 70.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_150235_1": {
+      "correctedValueInr": null,
+      "estimateInr": 7000000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 70.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_151128_1": {
+      "correctedValueInr": null,
+      "estimateInr": 121000.0,
+      "estimateOverPublished": 121000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2020_HRY_152716_3": {
+      "correctedValueInr": null,
+      "estimateInr": 9433842.0,
+      "estimateOverPublished": 78931.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 119.52,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_155247_1": {
+      "correctedValueInr": null,
+      "estimateInr": 190000.0,
+      "estimateOverPublished": 190000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_157324_1": {
+      "correctedValueInr": null,
+      "estimateInr": 118000.0,
+      "estimateOverPublished": 118000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_157330_1": {
+      "correctedValueInr": null,
+      "estimateInr": 198000.0,
+      "estimateOverPublished": 198000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_164774_1": {
+      "correctedValueInr": null,
+      "estimateInr": 136000.0,
+      "estimateOverPublished": 136000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_166096_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1675335.0,
+      "estimateOverPublished": 150119.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 11.16,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_167255_2": {
+      "correctedValueInr": null,
+      "estimateInr": 2446694.0,
+      "estimateOverPublished": 98221.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 24.91,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_169465_1": {
+      "correctedValueInr": null,
+      "estimateInr": 36083000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 360.83,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_175476_2": {
+      "correctedValueInr": null,
+      "estimateInr": 5845261.0,
+      "estimateOverPublished": 107291.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 54.48,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_185058_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1785607.0,
+      "estimateOverPublished": 107696.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 16.58,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_187598_1": {
+      "correctedValueInr": null,
+      "estimateInr": 185000.0,
+      "estimateOverPublished": 185000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_191234_1": {
+      "correctedValueInr": null,
+      "estimateInr": 171000.0,
+      "estimateOverPublished": 171000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_191237_1": {
+      "correctedValueInr": null,
+      "estimateInr": 106000.0,
+      "estimateOverPublished": 106000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_192189_1": {
+      "correctedValueInr": null,
+      "estimateInr": 115000.0,
+      "estimateOverPublished": 115000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_192225_1": {
+      "correctedValueInr": null,
+      "estimateInr": 127000.0,
+      "estimateOverPublished": 127000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_198145_1": {
+      "correctedValueInr": null,
+      "estimateInr": 102000.0,
+      "estimateOverPublished": 102000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_198162_1": {
+      "correctedValueInr": null,
+      "estimateInr": 8258343.0,
+      "estimateOverPublished": 90651.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 91.1,
+      "status": "implausible_no_letter"
+    },
+    "2021_HRY_198881_3": {
+      "correctedValueInr": null,
+      "estimateInr": 4933700.0,
+      "estimateOverPublished": 101349.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 48.68,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_204759_1": {
+      "correctedValueInr": null,
+      "estimateInr": 175000.0,
+      "estimateOverPublished": 175000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_205595_1": {
+      "correctedValueInr": null,
+      "estimateInr": 142000.0,
+      "estimateOverPublished": 142000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_209669_10": {
+      "correctedValueInr": null,
+      "estimateInr": 11450000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 114.5,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_221495_1": {
+      "correctedValueInr": null,
+      "estimateInr": 136000.0,
+      "estimateOverPublished": 136000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_221701_10": {
+      "correctedValueInr": null,
+      "estimateInr": 961477.0,
+      "estimateOverPublished": 119438.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 8.05,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_222362_7": {
+      "correctedValueInr": null,
+      "estimateInr": 991436.0,
+      "estimateOverPublished": 90212.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 10.99,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_223847_1": {
+      "correctedValueInr": null,
+      "estimateInr": 15543850.0,
+      "estimateOverPublished": 87031.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 178.6,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_223857_2": {
+      "correctedValueInr": null,
+      "estimateInr": 3187012.0,
+      "estimateOverPublished": 89673.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 35.54,
+      "status": "implausible_no_letter"
+    },
+    "2022_HRY_246005_11": {
+      "correctedValueInr": null,
+      "estimateInr": 2204750.0,
+      "estimateOverPublished": 99988.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 22.05,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_252578_1": {
+      "correctedValueInr": null,
+      "estimateInr": 116000.0,
+      "estimateOverPublished": 116000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_252591_1": {
+      "correctedValueInr": null,
+      "estimateInr": 163000.0,
+      "estimateOverPublished": 163000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_255553_1": {
+      "correctedValueInr": null,
+      "estimateInr": 24519883.0,
+      "estimateOverPublished": 58660.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 418.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_256095_5": {
+      "correctedValueInr": null,
+      "estimateInr": 8072400.0,
+      "estimateOverPublished": 94913.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 85.05,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_257581_4": {
+      "correctedValueInr": null,
+      "estimateInr": 6960000.0,
+      "estimateOverPublished": 94913.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 73.33,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_258143_2": {
+      "correctedValueInr": null,
+      "estimateInr": 14469958.0,
+      "estimateOverPublished": 99999.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 144.7,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_261311_1": {
+      "correctedValueInr": null,
+      "estimateInr": 103000.0,
+      "estimateOverPublished": 103000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_275595_1": {
+      "correctedValueInr": null,
+      "estimateInr": 35801000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 358.01,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_279822_3": {
+      "correctedValueInr": null,
+      "estimateInr": 5427505.0,
+      "estimateOverPublished": 94919.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 57.18,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_279827_11": {
+      "correctedValueInr": null,
+      "estimateInr": 1497302.0,
+      "estimateOverPublished": 94886.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 15.78,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_281555_3": {
+      "correctedValueInr": null,
+      "estimateInr": 44154277.0,
+      "estimateOverPublished": 94914.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 465.2,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_282993_1": {
+      "correctedValueInr": null,
+      "estimateInr": 167619.0,
+      "estimateOverPublished": 167619.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_300086_1": {
+      "correctedValueInr": null,
+      "estimateInr": 810239.0,
+      "estimateOverPublished": 94875.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 8.54,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_300128_2": {
+      "correctedValueInr": null,
+      "estimateInr": 50659852.0,
+      "estimateOverPublished": 94914.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 533.74,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_306476_2": {
+      "correctedValueInr": null,
+      "estimateInr": 1870313.0,
+      "estimateOverPublished": 100016.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 18.7,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_306485_2": {
+      "correctedValueInr": null,
+      "estimateInr": 2152000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 21.52,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_308812_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3082540.0,
+      "estimateOverPublished": 99985.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 30.83,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_309484_1": {
+      "correctedValueInr": null,
+      "estimateInr": 21255232.0,
+      "estimateOverPublished": 100001.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 212.55,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_309492_1": {
+      "correctedValueInr": null,
+      "estimateInr": 7806753.0,
+      "estimateOverPublished": 99996.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 78.07,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_314860_2": {
+      "correctedValueInr": null,
+      "estimateInr": 8431263.0,
+      "estimateOverPublished": 100003.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 84.31,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_314888_1": {
+      "correctedValueInr": null,
+      "estimateInr": 109687.0,
+      "estimateOverPublished": 109687.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_322032_2": {
+      "correctedValueInr": null,
+      "estimateInr": 10793945.0,
+      "estimateOverPublished": 99999.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 107.94,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_322563_1": {
+      "correctedValueInr": null,
+      "estimateInr": 12477337.0,
+      "estimateOverPublished": 100002.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 124.77,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_330023_1": {
+      "correctedValueInr": null,
+      "estimateInr": 14066662.0,
+      "estimateOverPublished": 99997.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 140.67,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_330029_1": {
+      "correctedValueInr": null,
+      "estimateInr": 8993136.0,
+      "estimateOverPublished": 100001.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 89.93,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_332630_1": {
+      "correctedValueInr": null,
+      "estimateInr": 726686.0,
+      "estimateOverPublished": 99956.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 7.27,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_332993_3": {
+      "correctedValueInr": null,
+      "estimateInr": 336829.0,
+      "estimateOverPublished": 99949.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.37,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_332996_3": {
+      "correctedValueInr": null,
+      "estimateInr": 336829.0,
+      "estimateOverPublished": 99949.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.37,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_336160_1": {
+      "correctedValueInr": null,
+      "estimateInr": 83217282.0,
+      "estimateOverPublished": 100000.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 832.17,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_336162_3": {
+      "correctedValueInr": null,
+      "estimateInr": 1031164.0,
+      "estimateOverPublished": 100015.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 10.31,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_336169_2": {
+      "correctedValueInr": null,
+      "estimateInr": 2619800.0,
+      "estimateOverPublished": 99992.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 26.2,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_336339_1": {
+      "correctedValueInr": null,
+      "estimateInr": 305320.0,
+      "estimateOverPublished": 100104.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.05,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_337632_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3846816.0,
+      "estimateOverPublished": 99995.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 38.47,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_337741_1": {
+      "correctedValueInr": null,
+      "estimateInr": 78484564.0,
+      "estimateOverPublished": 99999.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 784.85,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_338821_1": {
+      "correctedValueInr": null,
+      "estimateInr": 6584568.0,
+      "estimateOverPublished": 99993.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 65.85,
+      "status": "implausible_no_letter"
+    },
+    "2023_HRY_340539_1": {
+      "correctedValueInr": null,
+      "estimateInr": 417820.0,
+      "estimateOverPublished": 99956.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 4.18,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_341590_2": {
+      "correctedValueInr": null,
+      "estimateInr": 4455471.0,
+      "estimateOverPublished": 100010.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 44.55,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_341593_2": {
+      "correctedValueInr": null,
+      "estimateInr": 2566267.0,
+      "estimateOverPublished": 100010.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 25.66,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_341596_2": {
+      "correctedValueInr": null,
+      "estimateInr": 7342950.0,
+      "estimateOverPublished": 99999.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 73.43,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_341598_2": {
+      "correctedValueInr": null,
+      "estimateInr": 3956334.0,
+      "estimateOverPublished": 100008.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 39.56,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_341599_3": {
+      "correctedValueInr": null,
+      "estimateInr": 950110.0,
+      "estimateOverPublished": 100011.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 9.5,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_342734_2": {
+      "correctedValueInr": null,
+      "estimateInr": 1184634.0,
+      "estimateOverPublished": 99969.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 11.85,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_342738_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1583347.0,
+      "estimateOverPublished": 100021.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 15.83,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_349273_3": {
+      "correctedValueInr": null,
+      "estimateInr": 262073.0,
+      "estimateOverPublished": 100027.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 2.62,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_351144_1": {
+      "correctedValueInr": null,
+      "estimateInr": 8355455.0,
+      "estimateOverPublished": 100005.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 83.55,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_352791_1": {
+      "correctedValueInr": null,
+      "estimateInr": 159112.0,
+      "estimateOverPublished": 159112.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_352820_1": {
+      "correctedValueInr": null,
+      "estimateInr": 128578.0,
+      "estimateOverPublished": 128578.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_356905_2": {
+      "correctedValueInr": null,
+      "estimateInr": 1324460.0,
+      "estimateOverPublished": 100034.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 13.24,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_356911_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1495530.0,
+      "estimateOverPublished": 99968.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 14.96,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_356914_2": {
+      "correctedValueInr": null,
+      "estimateInr": 1481132.0,
+      "estimateOverPublished": 100008.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 14.81,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_360437_2": {
+      "correctedValueInr": null,
+      "estimateInr": 3824294.0,
+      "estimateOverPublished": 100007.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 38.24,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_362030_1": {
+      "correctedValueInr": 4110068.0,
+      "estimateInr": 4216157.0,
+      "estimateOverPublished": 100003.7,
+      "evidenceLine": "Agreement Amount (Rs.) 41,10,068/-",
+      "evidenceSha256": "209efc999a84524857c411cec4d67a881529a02b10966e8283319300dc60b689",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 42.16,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_366979_2": {
+      "correctedValueInr": null,
+      "estimateInr": 82335.0,
+      "estimateOverPublished": 100408.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 0.82,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_366987_2": {
+      "correctedValueInr": null,
+      "estimateInr": 162285.0,
+      "estimateOverPublished": 100175.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.62,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_366992_2": {
+      "correctedValueInr": null,
+      "estimateInr": 107615.0,
+      "estimateOverPublished": 99643.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.08,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_367793_2": {
+      "correctedValueInr": null,
+      "estimateInr": 143469.0,
+      "estimateOverPublished": 100328.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.43,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_367796_2": {
+      "correctedValueInr": null,
+      "estimateInr": 124670.0,
+      "estimateOverPublished": 99736.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.25,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_369331_1": {
+      "correctedValueInr": null,
+      "estimateInr": 605910.0,
+      "estimateOverPublished": 99985.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 6.06,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_369340_1": {
+      "correctedValueInr": null,
+      "estimateInr": 605910.0,
+      "estimateOverPublished": 99985.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 6.06,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_369348_2": {
+      "correctedValueInr": null,
+      "estimateInr": 738090.0,
+      "estimateOverPublished": 100012.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 7.38,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_369356_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1252433.0,
+      "estimateOverPublished": 100034.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 12.52,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_370326_2": {
+      "correctedValueInr": null,
+      "estimateInr": 15619761.0,
+      "estimateOverPublished": 99998.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 156.2,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_372939_1": {
+      "correctedValueInr": 2304416.0,
+      "estimateInr": 2123319.0,
+      "estimateOverPublished": 100015.0,
+      "evidenceLine": "Agreement Amount (Rs.) 23,04,416/-",
+      "evidenceSha256": "1c086cc16750ba17abb981473e362a8fe6a7c219d39f8ef8997d522e610c1ded",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 21.23,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_372941_1": {
+      "correctedValueInr": null,
+      "estimateInr": 923798.0,
+      "estimateOverPublished": 99978.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 9.24,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_372944_1": {
+      "correctedValueInr": null,
+      "estimateInr": 4459750.0,
+      "estimateOverPublished": 99994.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 44.6,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_377854_1": {
+      "correctedValueInr": 2289495.0,
+      "estimateInr": 2109000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": "Agreement Amount (Rs.) 22,89,495/-",
+      "evidenceSha256": "4bf65086459154058dbbd202978d3d9fac177bfe8493d481baf2f33ee8e1befa",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 21.09,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_377855_1": {
+      "correctedValueInr": 1526330.0,
+      "estimateInr": 1406000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": "Agreement Amount (Rs.) 15,26,330/-",
+      "evidenceSha256": "14699b1c49c2c1e3885e2e79d519e969bb67c02a5cce13e105f549853c0eb6ab",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 14.06,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_377862_1": {
+      "correctedValueInr": 13992713.0,
+      "estimateInr": 15366619.0,
+      "estimateOverPublished": 99997.5,
+      "evidenceLine": "Agreement Amount (Rs.) 1,39,92,713/-",
+      "evidenceSha256": "eec764a88ea02cdc885902ca35e85468a8a41c6826358a2f860d781a6bd8dd18",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 153.67,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_381416_1": {
+      "correctedValueInr": null,
+      "estimateInr": 4863353.0,
+      "estimateOverPublished": 86229.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 56.4,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_381923_1": {
+      "correctedValueInr": null,
+      "estimateInr": 878925.0,
+      "estimateOverPublished": 99991.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 8.79,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_382078_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1771433.0,
+      "estimateOverPublished": 100024.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 17.71,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_382082_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1562868.0,
+      "estimateOverPublished": 99991.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 15.63,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_384193_1": {
+      "correctedValueInr": null,
+      "estimateInr": 2052650.0,
+      "estimateOverPublished": 99983.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 20.53,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_384204_1": {
+      "correctedValueInr": null,
+      "estimateInr": 2365743.0,
+      "estimateOverPublished": 99989.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 23.66,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_384227_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1868710.0,
+      "estimateOverPublished": 99984.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 18.69,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_386134_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3867365.0,
+      "estimateOverPublished": 87814.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 44.04,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_386136_1": {
+      "correctedValueInr": null,
+      "estimateInr": 2645300.0,
+      "estimateOverPublished": 100011.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 26.45,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_386140_1": {
+      "correctedValueInr": null,
+      "estimateInr": 6054565.0,
+      "estimateOverPublished": 99992.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 60.55,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_387498_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1065104.0,
+      "estimateOverPublished": 100009.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 10.65,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_387502_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1544700.0,
+      "estimateOverPublished": 99980.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 15.45,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_387537_1": {
+      "correctedValueInr": null,
+      "estimateInr": 388393.0,
+      "estimateOverPublished": 100101.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.88,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_388606_1": {
+      "correctedValueInr": null,
+      "estimateInr": 7244578.0,
+      "estimateOverPublished": 99994.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 72.45,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_391638_1": {
+      "correctedValueInr": null,
+      "estimateInr": 13882715.0,
+      "estimateOverPublished": 99997.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 138.83,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_391653_1": {
+      "correctedValueInr": null,
+      "estimateInr": 302244.0,
+      "estimateOverPublished": 100080.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.02,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_392136_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1898410.0,
+      "estimateOverPublished": 100021.6,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 18.98,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_395442_1": {
+      "correctedValueInr": null,
+      "estimateInr": 762548.0,
+      "estimateOverPublished": 99940.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 7.63,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_395444_1": {
+      "correctedValueInr": null,
+      "estimateInr": 844423.0,
+      "estimateOverPublished": 100050.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 8.44,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_401573_1": {
+      "correctedValueInr": 6625529.0,
+      "estimateInr": 6494580.0,
+      "estimateOverPublished": 99993.5,
+      "evidenceLine": "Agreement Amount (Rs.) 66,25,529/-",
+      "evidenceSha256": "a80f5e8470e92aefa5e8ebd218410a6d477f94e24c5a4b73d0696f3915c4b2e3",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 64.95,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_401576_1": {
+      "correctedValueInr": 2657299.0,
+      "estimateInr": 2529075.0,
+      "estimateOverPublished": 100003.0,
+      "evidenceLine": "Agreement Amount (Rs.) 26,57,299/-",
+      "evidenceSha256": "68dfb96762391a1db017ee8b68f8ee4d77b886d443df5c3d3f68e06663df6bfd",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 25.29,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_401625_1": {
+      "correctedValueInr": 6137586.0,
+      "estimateInr": 5904142.0,
+      "estimateOverPublished": 100002.4,
+      "evidenceLine": "Agreement Amount (Rs.) 61,37,586/-",
+      "evidenceSha256": "ccace190e50dfa0e925754db64838cdee34cafb52f16193d312bed0f0866051d",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 59.04,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_402054_1": {
+      "correctedValueInr": 3652100.0,
+      "estimateInr": 2649485.0,
+      "estimateOverPublished": 100018.3,
+      "evidenceLine": "Agreement Amount (Rs.) 36,52,100/-",
+      "evidenceSha256": "031c837e912f20081e605ffe97bdfb46b515e34c038750f3f8cc4c66b5433248",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 26.49,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_402055_1": {
+      "correctedValueInr": 6145120.0,
+      "estimateInr": 5624000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": "Agreement Amount (Rs.) 61,45,120/-",
+      "evidenceSha256": "d5f956e0a8199118b477bc195289021bbc62ca463fbb4247a56ae9b50947802a",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 56.24,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_403301_1": {
+      "correctedValueInr": 2122141.0,
+      "estimateInr": 2102198.0,
+      "estimateOverPublished": 100009.4,
+      "evidenceLine": "Agreement Amount (Rs.) 21,22,141/-",
+      "evidenceSha256": "c849774503d67084ba88fab62f523fdcff5b6b5f2a4cb8f4203b2cb4623bd4b5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 21.02,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_403303_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1094571.0,
+      "estimateOverPublished": 99960.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 10.95,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_403305_1": {
+      "correctedValueInr": 2122680.0,
+      "estimateInr": 2102198.0,
+      "estimateOverPublished": 100009.4,
+      "evidenceLine": "Agreement Amount (Rs.) 21,22,680/-",
+      "evidenceSha256": "4a6e1af75e39118a4eb0014c62d4a04a6e19964413e344e467ed7fd62a93ab43",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 21.02,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_403315_1": {
+      "correctedValueInr": 2122729.0,
+      "estimateInr": 2102198.0,
+      "estimateOverPublished": 100009.4,
+      "evidenceLine": "Agreement Amount (Rs.) 21,22,729/-",
+      "evidenceSha256": "f519e4d4b8e84ff44779f0ef5ab10bfacac082f89511567426e9ddd10069a662",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 21.02,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_403318_1": {
+      "correctedValueInr": 7189065.0,
+      "estimateInr": 6767410.0,
+      "estimateOverPublished": 100006.1,
+      "evidenceLine": "Agreement Amount (Rs.) 71,89,065/-",
+      "evidenceSha256": "829dc6e84566c290da6c73c3290381c1fc76c6e35a844be40d684017ec001f77",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 67.67,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406257_1": {
+      "correctedValueInr": 2009750.0,
+      "estimateInr": 2011450.0,
+      "estimateOverPublished": 100022.4,
+      "evidenceLine": "Agreement Amount (Rs.) 20,09,750/-",
+      "evidenceSha256": "8444c1f7baf882ca68e9581560a79ecd44bede0582113fde2fa6a86692c19929",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 20.11,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406268_1": {
+      "correctedValueInr": 2086805.0,
+      "estimateInr": 2091025.0,
+      "estimateOverPublished": 100001.2,
+      "evidenceLine": "Agreement Amount (Rs.) 20,86,805/-",
+      "evidenceSha256": "f37ec0010b0d7aed4d6976506ece7f9864fc6ce9cc9bf575edd6ccfe26c4d9b7",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 20.91,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406272_1": {
+      "correctedValueInr": 315000.0,
+      "estimateInr": 315050.0,
+      "estimateOverPublished": 100015.9,
+      "evidenceLine": "Agreement Amount (Rs.) 3,15,000/-",
+      "evidenceSha256": "0744a0c53d8d8d5b7c7dee80f7ba63e208bc4f1d81b5b598be553fb680849bda",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 3.15,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406306_1": {
+      "correctedValueInr": 4516175.0,
+      "estimateInr": 5074325.0,
+      "estimateOverPublished": 100006.4,
+      "evidenceLine": "Agreement Amount (Rs.) 45,16,175/-",
+      "evidenceSha256": "b617786af6d7ef68faac01f3a00d62025b8b7337ff0c2108fc15cf7162cde95d",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 50.74,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406308_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1615544.0,
+      "estimateOverPublished": 99971.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 16.16,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_406312_1": {
+      "correctedValueInr": 974437.0,
+      "estimateInr": 921651.0,
+      "estimateOverPublished": 99962.1,
+      "evidenceLine": "Agreement Amount (Rs.) 9,74,437/-",
+      "evidenceSha256": "8c593d7bc7e931ccb069119cff1cd06ce1ab0aa3e751698e0ffe4ea76bcce587",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 9.22,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_406320_1": {
+      "correctedValueInr": null,
+      "estimateInr": 14297000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 142.97,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_406720_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1478839.0,
+      "estimateOverPublished": 99989.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 14.79,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_408281_1": {
+      "correctedValueInr": 13521699.0,
+      "estimateInr": 12595830.0,
+      "estimateOverPublished": 99998.7,
+      "evidenceLine": "Agreement Amount (Rs.) 1,35,21,699/-",
+      "evidenceSha256": "d3fea2433ebf213d42f00515a48c9024ecc3b74a3cf7137553cd3db0cde3a945",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 125.96,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_410760_1": {
+      "correctedValueInr": 3084840.0,
+      "estimateInr": 3047600.0,
+      "estimateOverPublished": 99986.9,
+      "evidenceLine": "Agreement Amount (Rs.) 30,84,840/-",
+      "evidenceSha256": "fa5c3b6085252475c6f90ab884cdda0d895ea38b0c93e4e135465bc7eefdab93",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 30.48,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_410761_1": {
+      "correctedValueInr": 175600.0,
+      "estimateInr": 186625.0,
+      "estimateOverPublished": 99799.5,
+      "evidenceLine": "Agreement Amount (Rs.) 1,75,600/-",
+      "evidenceSha256": "2dd9eb797f5fd416559c358b229fac1b7d1a0791369e2b186fcf14e081ca7fd1",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 1.87,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_411115_1": {
+      "correctedValueInr": null,
+      "estimateInr": 628000.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 6.28,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_412040_1": {
+      "correctedValueInr": 9339000.0,
+      "estimateInr": 9443643.0,
+      "estimateOverPublished": 99996.2,
+      "evidenceLine": "Agreement Amount (Rs.) 93,39,000/-",
+      "evidenceSha256": "bcba40d79c3fec150f62e50af32096c402ef348469341dc14982d05a54457d81",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 94.44,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_412506_1": {
+      "correctedValueInr": 1038200.0,
+      "estimateInr": 1060740.0,
+      "estimateOverPublished": 99975.5,
+      "evidenceLine": "Agreement Amount (Rs.) 10,38,200/-",
+      "evidenceSha256": "65bccfef8a9e6af1086bb0b008805f4bc56b49af22402ce4ede18d8271175a2c",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 10.61,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_412560_1": {
+      "correctedValueInr": 1834560.0,
+      "estimateInr": 1840750.0,
+      "estimateOverPublished": 99986.4,
+      "evidenceLine": "Agreement Amount (Rs.) 18,34,560/-",
+      "evidenceSha256": "74b77eaa3c4b768ce57e53542ac01d46038425bbe4c322cfdd1c0df2ea08b7f2",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 18.41,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_412561_1": {
+      "correctedValueInr": null,
+      "estimateInr": 7969973.0,
+      "estimateOverPublished": 99999.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 79.7,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_412859_1": {
+      "correctedValueInr": 1712291.0,
+      "estimateInr": 1785031.0,
+      "estimateOverPublished": 100001.7,
+      "evidenceLine": "Agreement Amount (Rs.) 17,12,291/-",
+      "evidenceSha256": "018d17799c5f97ad84086547a99878ac14205e567b33235a7fc82949af4e4bf9",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 17.85,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_414584_1": {
+      "correctedValueInr": 15124406.0,
+      "estimateInr": 14164611.0,
+      "estimateOverPublished": 99997.3,
+      "evidenceLine": "Agreement Amount (Rs.) 1,51,24,406/-",
+      "evidenceSha256": "fced407f7f16c9cc9aac1f581ff4d1b656c0acbe3e00f52189765b9223fee0e9",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 141.65,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_414587_1": {
+      "correctedValueInr": null,
+      "estimateInr": 48374648.0,
+      "estimateOverPublished": 99999.3,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 483.75,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_415413_1": {
+      "correctedValueInr": 349145.0,
+      "estimateInr": 349407.0,
+      "estimateOverPublished": 100116.6,
+      "evidenceLine": "Agreement Amount (Rs.) 3,49,145/-",
+      "evidenceSha256": "abdef7b73ee5dfec57e6df7a2d34342c991ff67d52fb31acadcbf54bd04cf7f6",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 3.49,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_416267_1": {
+      "correctedValueInr": null,
+      "estimateInr": 126216.0,
+      "estimateOverPublished": 126216.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_417403_1": {
+      "correctedValueInr": null,
+      "estimateInr": 4582941.0,
+      "estimateOverPublished": 99998.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 45.83,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_417409_1": {
+      "correctedValueInr": 5327180.0,
+      "estimateInr": 5332580.0,
+      "estimateOverPublished": 99992.1,
+      "evidenceLine": "Agreement Amount (Rs.) 53,27,180/-",
+      "evidenceSha256": "02c7f7c94bd2e2190d2d3d29810e816b7089fb8f2598d8fb7090151e4fcf6278",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 53.33,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_419050_1": {
+      "correctedValueInr": 29504502.0,
+      "estimateInr": 27104316.0,
+      "estimateOverPublished": 100001.2,
+      "evidenceLine": "Agreement Amount (Rs.) 2,95,04,502/-",
+      "evidenceSha256": "a927032ee8b4d59df8614df32f0910c7e87fe46da829df75365727c0c65db498",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 271.04,
+      "status": "corrected_from_award_letter"
+    },
+    "2024_HRY_421070_1": {
+      "correctedValueInr": null,
+      "estimateInr": 2483619.0,
+      "estimateOverPublished": 99984.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 24.84,
+      "status": "implausible_no_letter"
+    },
+    "2024_HRY_421072_1": {
+      "correctedValueInr": 4150119.0,
+      "estimateInr": 3924455.0,
+      "estimateOverPublished": 100011.6,
+      "evidenceLine": "Agreement Amount (Rs.) 41,50,119/-",
+      "evidenceSha256": "7b1ca9d461c18d5016ad7e0d1480fd9ec4d3963b486c29262769040d275806ff",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 39.24,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HBC_424280_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3980100.0,
+      "estimateOverPublished": 124378.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 32.0,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_423021_1": {
+      "correctedValueInr": 27580000.0,
+      "estimateInr": 30685924.0,
+      "estimateOverPublished": 99999.8,
+      "evidenceLine": "Agreement Amount (Rs.) 2,75,80,000/-",
+      "evidenceSha256": "2333d73f098c3949dfa8a3fab1047d01c42c6540360ed93cac60c1ebc59b1e9a",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 306.86,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_423022_1": {
+      "correctedValueInr": 1273507.0,
+      "estimateInr": 1182494.0,
+      "estimateOverPublished": 100041.8,
+      "evidenceLine": "Agreement Amount (Rs.) 12,73,507/-",
+      "evidenceSha256": "77c6b3af9786b184bc119437f9f74569f21b07078427c6057719281e81fbfcff",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 11.82,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_423685_1": {
+      "correctedValueInr": null,
+      "estimateInr": 174230.0,
+      "estimateOverPublished": 100132.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.74,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_425586_1": {
+      "correctedValueInr": null,
+      "estimateInr": 192206.0,
+      "estimateOverPublished": 192206.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_425629_1": {
+      "correctedValueInr": 239149.0,
+      "estimateInr": 219997.0,
+      "estimateOverPublished": 99998.6,
+      "evidenceLine": "Agreement Amount (Rs.) 2,39,149/-",
+      "evidenceSha256": "cc2a00b9acf5f69246118eda66d5e501edfd207c402adbb4eb7bcecbf0d41bb5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 2.2,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_425927_1": {
+      "correctedValueInr": 626578.0,
+      "estimateInr": 627043.0,
+      "estimateOverPublished": 100006.9,
+      "evidenceLine": "Agreement Amount (Rs.) 6,26,578/-",
+      "evidenceSha256": "b0ed17004cd757e24bd3f8afc912c52e0e46df59725c7078040b75c5d83baef3",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 6.27,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_426722_1": {
+      "correctedValueInr": 6591490.0,
+      "estimateInr": 6695830.0,
+      "estimateOverPublished": 99997.5,
+      "evidenceLine": "Agreement Amount (Rs.) 65,91,490/-",
+      "evidenceSha256": "94a5bad88b6163107d274e8ce7fb02d7e1cb1d5ca2390bfd1bcfa0d2193afa87",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 66.96,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_426724_1": {
+      "correctedValueInr": null,
+      "estimateInr": 233123.0,
+      "estimateOverPublished": 100052.8,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 2.33,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_428656_1": {
+      "correctedValueInr": 333034.0,
+      "estimateInr": 320031.0,
+      "estimateOverPublished": 100009.7,
+      "evidenceLine": "Agreement Amount (Rs.) 3,33,034/-",
+      "evidenceSha256": "284de69443712537d6529eef06a323cfaa67b5d771434d90a28a4f580f09f9f7",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 3.2,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_428658_1": {
+      "correctedValueInr": 3510574.0,
+      "estimateInr": 3376838.0,
+      "estimateOverPublished": 99995.2,
+      "evidenceLine": "Agreement Amount (Rs.) 35,10,574/-",
+      "evidenceSha256": "661e0f89ea7d2cb6fc0a2d62924bceb93014695df57cd6335858d8a635a40b46",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 33.77,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_431707_1": {
+      "correctedValueInr": 386290.0,
+      "estimateInr": 406815.0,
+      "estimateOverPublished": 99954.5,
+      "evidenceLine": "Agreement Amount (Rs.) 3,86,290/-",
+      "evidenceSha256": "75c522fff5be95eb298426d98e7a39ccf4b75cabc2590eb01e84989d14b4bf30",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.07,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_431715_1": {
+      "correctedValueInr": null,
+      "estimateInr": 5751004.0,
+      "estimateOverPublished": 100000.1,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 57.51,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_432214_1": {
+      "correctedValueInr": 2800150.0,
+      "estimateInr": 2756775.0,
+      "estimateOverPublished": 99991.8,
+      "evidenceLine": "Agreement Amount (Rs.) 28,00,150/-",
+      "evidenceSha256": "4928461c0595808f6b2cc2603509b06218d7536ff5a486fba021cdb2fa94f5a8",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 27.57,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432331_1": {
+      "correctedValueInr": 28268030.0,
+      "estimateInr": 25839128.0,
+      "estimateOverPublished": 100000.5,
+      "evidenceLine": "Agreement Amount (Rs.) 2,82,68,030/-",
+      "evidenceSha256": "dda80a1a62df263d3d61601465cad350027270bbd1e821fabfa6c3399ee834b2",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 258.39,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432517_1": {
+      "correctedValueInr": 1500875.0,
+      "estimateInr": 1626637.0,
+      "estimateOverPublished": 99977.7,
+      "evidenceLine": "Agreement Amount (Rs.) 15,00,875/-",
+      "evidenceSha256": "e532c0f7f731464140cf4df61ccd37bf6d7c53bcf8a48c7de2f2ea820f15ae45",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 16.27,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432519_1": {
+      "correctedValueInr": 8733505.0,
+      "estimateInr": 8153264.0,
+      "estimateOverPublished": 100003.2,
+      "evidenceLine": "Agreement Amount (Rs.) 87,33,505/-",
+      "evidenceSha256": "a7e6e80699c9a08ca86d6d56b2559ddb79ad7346280481aeee4cad3c32b46e2e",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 81.53,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432521_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1381740.0,
+      "estimateOverPublished": 99981.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 13.82,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_432523_1": {
+      "correctedValueInr": 292286.0,
+      "estimateInr": 279874.0,
+      "estimateOverPublished": 99955.0,
+      "evidenceLine": "Agreement Amount (Rs.) 2,92,286/-",
+      "evidenceSha256": "f38c71d1d72c17936bec5e581f3e20eb71a86f07aaf4737f32c9f4368f466711",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 2.8,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432578_1": {
+      "correctedValueInr": 12555457.0,
+      "estimateInr": 11743175.0,
+      "estimateOverPublished": 100001.5,
+      "evidenceLine": "Agreement Amount (Rs.) 1,25,55,457/-",
+      "evidenceSha256": "3cc18a826ca7760f399cc7e00f944308b1f6e7ba8466a5282867659b67e7d411",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 117.43,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432580_1": {
+      "correctedValueInr": 2642051.0,
+      "estimateInr": 2516350.0,
+      "estimateOverPublished": 100013.9,
+      "evidenceLine": "Agreement Amount (Rs.) 26,42,051/-",
+      "evidenceSha256": "08eda94da37037b0e4e836f324f8f94a001e6ca141ea9e0ec5813115213127d6",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 25.16,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_432679_1": {
+      "correctedValueInr": null,
+      "estimateInr": 5584639.0,
+      "estimateOverPublished": 99993.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 55.85,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_432897_1": {
+      "correctedValueInr": null,
+      "estimateInr": 61247287.0,
+      "estimateOverPublished": 100000.5,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 612.47,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_435772_1": {
+      "correctedValueInr": null,
+      "estimateInr": 4381360.0,
+      "estimateOverPublished": 100008.2,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 43.81,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_435773_1": {
+      "correctedValueInr": 743500.0,
+      "estimateInr": 744610.0,
+      "estimateOverPublished": 99947.7,
+      "evidenceLine": "Agreement Amount (Rs.) 7,43,500/-",
+      "evidenceSha256": "65c2b69ed3071b398eb83ea602bd83c3e4c05844fc78939d353a45fce06d79b5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 7.45,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_435774_1": {
+      "correctedValueInr": null,
+      "estimateInr": 834323.0,
+      "estimateOverPublished": 100038.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 8.34,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_435775_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1883051.0,
+      "estimateOverPublished": 100002.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 18.83,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_436304_1": {
+      "correctedValueInr": null,
+      "estimateInr": 1262404.0,
+      "estimateOverPublished": 85067.7,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 14.84,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_440106_1": {
+      "correctedValueInr": null,
+      "estimateInr": 722100.0,
+      "estimateOverPublished": 100013.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 7.22,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_440464_1": {
+      "correctedValueInr": null,
+      "estimateInr": 346368.0,
+      "estimateOverPublished": 100106.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 3.46,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_441885_1": {
+      "correctedValueInr": null,
+      "estimateInr": 199356.0,
+      "estimateOverPublished": 100178.9,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.99,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_443874_1": {
+      "correctedValueInr": 7386779.0,
+      "estimateInr": 6756050.0,
+      "estimateOverPublished": 100000.7,
+      "evidenceLine": "Agreement Amount (Rs.) 73,86,779/-",
+      "evidenceSha256": "3b7118947ca65943d2edc2332f6392ccef7e4bfb77e326c3e618c352130963b7",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 67.56,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_444909_1": {
+      "correctedValueInr": 70327583.0,
+      "estimateInr": 68526021.0,
+      "estimateOverPublished": 100000.0,
+      "evidenceLine": "Agreement Amount (Rs.) 7,03,27,583/-",
+      "evidenceSha256": "9bc8a02db85fe90b70fe2677bd754839aecc2f188ebb61d17b72f3ae49c4d920",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 685.26,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446234_1": {
+      "correctedValueInr": 1989480.0,
+      "estimateInr": 2205178.0,
+      "estimateOverPublished": 100008.1,
+      "evidenceLine": "Agreement Amount (Rs.) 19,89,480/-",
+      "evidenceSha256": "6317d3a90173707b00cb45a7a92b32d7cddf85b105ae08afb43a90eb6549ba7a",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 22.05,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446237_1": {
+      "correctedValueInr": 1368970.0,
+      "estimateInr": 1369602.0,
+      "estimateOverPublished": 99970.9,
+      "evidenceLine": "Agreement Amount (Rs.) 13,68,970/-",
+      "evidenceSha256": "c508325add08a82f205599b415b4a7affe974b7ac72581870eaf18515344ef10",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 13.7,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446241_1": {
+      "correctedValueInr": 1104412.0,
+      "estimateInr": 1126836.0,
+      "estimateOverPublished": 99985.4,
+      "evidenceLine": "Agreement Amount (Rs.) 11,04,412/-",
+      "evidenceSha256": "4c8d496a90bba0081ac7fb675693da7203111323a538f6909fc87ce79921e23c",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 11.27,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446243_1": {
+      "correctedValueInr": 1837209.0,
+      "estimateInr": 1842493.0,
+      "estimateOverPublished": 100026.8,
+      "evidenceLine": "Agreement Amount (Rs.) 18,37,209/-",
+      "evidenceSha256": "1709dabcb8bfb5e674336a866b294a18b5a72649febfebced732c6597677c67b",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 18.42,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446613_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3881621.0,
+      "estimateOverPublished": 100016.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 38.81,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_446654_1": {
+      "correctedValueInr": 5987105.0,
+      "estimateInr": 6003255.0,
+      "estimateOverPublished": 100004.2,
+      "evidenceLine": "Agreement Amount (Rs.) 59,87,105/-",
+      "evidenceSha256": "072de63fccc88c95075335383701dc44e4d847517e3d67c3a31dd783448d2a38",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 60.03,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_446658_1": {
+      "correctedValueInr": 3004055.0,
+      "estimateInr": 2954545.0,
+      "estimateOverPublished": 100018.4,
+      "evidenceLine": "Agreement Amount (Rs.) 30,04,055/-",
+      "evidenceSha256": "55473013fef82e0f738d84e91496e03680611712a73bff8e3629f53fb5b9c442",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 29.54,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_448639_1": {
+      "correctedValueInr": 1813061.0,
+      "estimateInr": 1711459.0,
+      "estimateOverPublished": 100026.8,
+      "evidenceLine": "Agreement Amount (Rs.) 18,13,061/-",
+      "evidenceSha256": "9692b49077ca52251c5be87ddbb54866d7e002077f04d4afb73171dc54ff8780",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 17.11,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_449534_1": {
+      "correctedValueInr": 312190.0,
+      "estimateInr": 391215.0,
+      "estimateOverPublished": 100055.0,
+      "evidenceLine": "Agreement Amount (Rs.) 3,12,190/-",
+      "evidenceSha256": "ba3374752df92ce945d6413be270c809d8ddac963158cebccbc4f2b6b1c5b9cc",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 3.91,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_449537_1": {
+      "correctedValueInr": null,
+      "estimateInr": 3213885.0,
+      "estimateOverPublished": 99996.4,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 32.14,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_450369_1": {
+      "correctedValueInr": 966390.0,
+      "estimateInr": 1020702.0,
+      "estimateOverPublished": 100068.8,
+      "evidenceLine": "Agreement Amount (Rs.) 9,66,390/-",
+      "evidenceSha256": "e5e9c381cf4f46747bebbf658c3fbcd92a7d0ec507e2386ccf46403984c89f97",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 10.2,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_450818_1": {
+      "correctedValueInr": 880408.0,
+      "estimateInr": 1060702.0,
+      "estimateOverPublished": 99971.9,
+      "evidenceLine": "Agreement Amount (Rs.) 8,80,408/-",
+      "evidenceSha256": "e6b3da999ab3b9dc5b47611c3cd6c5d68f92eb314f81211cdf45537d72327422",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 10.61,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_453056_1": {
+      "correctedValueInr": 29200571.0,
+      "estimateInr": 27290156.0,
+      "estimateOverPublished": 100000.6,
+      "evidenceLine": "Agreement Amount (Rs.) 2,92,00,571/-",
+      "evidenceSha256": "1cbbec7403e3dc5bb9d55a7d414983c00324e96802d7d9beb17ece325b1e1824",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 272.9,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_453588_1": {
+      "correctedValueInr": 1209073.0,
+      "estimateInr": 1152100.0,
+      "estimateOverPublished": 100008.7,
+      "evidenceLine": "Agreement Amount (Rs.) 12,09,073/-",
+      "evidenceSha256": "6585b890555c13d423ef6bebc02562fc2c8638e41177f28847b4d140941ad95d",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 11.52,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_455114_1": {
+      "correctedValueInr": 7539120.0,
+      "estimateInr": 7343030.0,
+      "estimateOverPublished": 100000.4,
+      "evidenceLine": "Agreement Amount (Rs.) 75,39,120/-",
+      "evidenceSha256": "6efe587db68fb149b94bd1e58aa1a5a076545c603437a009340523f6a551ba26",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 73.43,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_456115_1": {
+      "correctedValueInr": null,
+      "estimateInr": 125479.0,
+      "estimateOverPublished": 125479.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_457726_1": {
+      "correctedValueInr": 973740.0,
+      "estimateInr": 1026025.0,
+      "estimateOverPublished": 100002.4,
+      "evidenceLine": "Agreement Amount (Rs.) 9,73,740/-",
+      "evidenceSha256": "21b5c1ea4d6f76c6453a34fd0ae62650672ed2ac4b6ca8731a83cd12e51ab480",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 10.26,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_457731_1": {
+      "correctedValueInr": 1766255.0,
+      "estimateInr": 1768936.0,
+      "estimateOverPublished": 99996.4,
+      "evidenceLine": "Agreement Amount (Rs.) 17,66,255/-",
+      "evidenceSha256": "9e7c222d4cfc15bf26aa4cf76e6cf99fe72f33b44494fbc2c54552fbd04afcd1",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 17.69,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_457738_1": {
+      "correctedValueInr": 414999.0,
+      "estimateInr": 419788.0,
+      "estimateOverPublished": 99949.5,
+      "evidenceLine": "Agreement Amount (Rs.) 4,14,999/-",
+      "evidenceSha256": "dd88c2f868a5bee4e6b896183cd52efca439f5f8852ad5363b56b121d0e403b2",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.2,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_459632_1": {
+      "correctedValueInr": null,
+      "estimateInr": 174510.0,
+      "estimateOverPublished": 174510.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_460310_1": {
+      "correctedValueInr": 6467786.0,
+      "estimateInr": 6416998.0,
+      "estimateOverPublished": 99226.8,
+      "evidenceLine": "Agreement Amount (Rs.) 64,67,786/-",
+      "evidenceSha256": "5192fcbe1506b05c8834389c2bef0c919b0a250d16597a74b8ac95574aa79e61",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 64.67,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_460317_1": {
+      "correctedValueInr": 2755857.0,
+      "estimateInr": 2552736.0,
+      "estimateOverPublished": 99989.7,
+      "evidenceLine": "Agreement Amount (Rs.) 27,55,857/-",
+      "evidenceSha256": "58fcfc83448c9d3f1775d661557cfd4b89d32199ad38d18743b05bc5bc77eac9",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 25.53,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_460321_1": {
+      "correctedValueInr": 274165.0,
+      "estimateInr": 259870.0,
+      "estimateOverPublished": 99950.0,
+      "evidenceLine": "Agreement Amount (Rs.) 2,74,165/-",
+      "evidenceSha256": "403e7bd130d2857521b2070d8da3ff803f9e8b056bd675ac570c0d3017c4c93d",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 2.6,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_460323_1": {
+      "correctedValueInr": 3817339.0,
+      "estimateInr": 3943707.0,
+      "estimateOverPublished": 99992.6,
+      "evidenceLine": "Agreement Amount (Rs.) 38,17,339/-",
+      "evidenceSha256": "b8b12e36201a318a273ed915a3dad84021fa4b45e4106e6e132cf61aaf2e12f4",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 39.44,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_460907_1": {
+      "correctedValueInr": 23871038.0,
+      "estimateInr": 22282916.0,
+      "estimateOverPublished": 99999.6,
+      "evidenceLine": "Agreement Amount (Rs.) 2,38,71,038/-",
+      "evidenceSha256": "28d909ac58317ac0813953ac65856d149ed6f2f0a1dd5257d7dcf287701aaf1b",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 222.83,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_462805_1": {
+      "correctedValueInr": 2834686.0,
+      "estimateInr": 2758230.0,
+      "estimateOverPublished": 100008.3,
+      "evidenceLine": "Agreement Amount (Rs.) 28,34,686/-",
+      "evidenceSha256": "e8c6ce7ea03dbd8596d565ca959f267aba8920d6a4b468fbf5e0a7ad1303d83f",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 27.58,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_463968_1": {
+      "correctedValueInr": 433905.0,
+      "estimateInr": 416637.0,
+      "estimateOverPublished": 99912.9,
+      "evidenceLine": "Agreement Amount (Rs.) 4,33,905/-",
+      "evidenceSha256": "012649692142aaaa8cc24c34459f529339ed915673d37614320384b771bb9351",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.17,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_463976_1": {
+      "correctedValueInr": 1959285.0,
+      "estimateInr": 1870474.0,
+      "estimateOverPublished": 100025.3,
+      "evidenceLine": "Agreement Amount (Rs.) 19,59,285/-",
+      "evidenceSha256": "509b883d83a9138ec2fc973c4d2d66fe383fe8041513798854ea8e404b88f3ae",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 18.7,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_463980_1": {
+      "correctedValueInr": 3509699.0,
+      "estimateInr": 3297670.0,
+      "estimateOverPublished": 99990.0,
+      "evidenceLine": "Agreement Amount (Rs.) 35,09,699/-",
+      "evidenceSha256": "c844ef315f7b8a6198b929057555dc19998c34eb6317bec026e8fc401f0f493b",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 32.98,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_466561_1": {
+      "correctedValueInr": 939114.0,
+      "estimateInr": 906670.0,
+      "estimateOverPublished": 99963.6,
+      "evidenceLine": "Agreement Amount (Rs.) 9,39,114/-",
+      "evidenceSha256": "9a25aa67b66d0b19b6e198172071513be4655b45c98601769be89737f633a6d5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 9.07,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_466995_1": {
+      "correctedValueInr": 191552.0,
+      "estimateInr": 182838.0,
+      "estimateOverPublished": 99911.5,
+      "evidenceLine": "Agreement Amount (Rs.) 1,91,552/-",
+      "evidenceSha256": "4f85d05520d90238d61c296e73dd24e51662cffb30ad8b55c53a9533743fe386",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 1.83,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_466999_1": {
+      "correctedValueInr": 449950.0,
+      "estimateInr": 460246.0,
+      "estimateOverPublished": 100053.5,
+      "evidenceLine": "Agreement Amount (Rs.) 4,49,950/-",
+      "evidenceSha256": "5a6afa0bd1a6758bd4fd45a6c9b77de621a0cb0c7cd73c70b43c532cc39fc916",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.6,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_467763_1": {
+      "correctedValueInr": 1661774.0,
+      "estimateInr": 1618902.0,
+      "estimateOverPublished": 100055.7,
+      "evidenceLine": "Agreement Amount (Rs.) 16,61,774/-",
+      "evidenceSha256": "f1e87f0eb5bd77dac818de8a5987e3213c61e999c91569009e303f63d83cc202",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 16.18,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_473275_1": {
+      "correctedValueInr": 25341543.0,
+      "estimateInr": 23472454.0,
+      "estimateOverPublished": 100001.9,
+      "evidenceLine": "Agreement Amount (Rs.) 2,53,41,543/-",
+      "evidenceSha256": "6117c916e1d6e4be7ed49e0fe32b722c9d3ef0eaab225d57a4ec5503f246fcf2",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 234.72,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_473483_1": {
+      "correctedValueInr": 516345.0,
+      "estimateInr": 524285.0,
+      "estimateOverPublished": 100054.4,
+      "evidenceLine": "Agreement Amount (Rs.) 5,16,345/-",
+      "evidenceSha256": "881ece251ba2e8ac38bcb173ed4fa8918a596fba5cc5c28293101cca98213051",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 5.24,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_475237_1": {
+      "correctedValueInr": 1639199.0,
+      "estimateInr": 1689691.0,
+      "estimateOverPublished": 99981.7,
+      "evidenceLine": "Agreement Amount (Rs.) 16,39,199/-",
+      "evidenceSha256": "58ebf9d995a887070a0937a77fdc3794fb20db3482e6da488234353f6ee4f6c7",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 16.9,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_477259_1": {
+      "correctedValueInr": 2623495.0,
+      "estimateInr": 2519703.0,
+      "estimateOverPublished": 96061.9,
+      "evidenceLine": "Agreement Amount (Rs.) 26,23,495/-",
+      "evidenceSha256": "5c3b4bb290752dcd60ae157affe2cad97dda1e2a7fabcb51f4718ad0ed52ca87",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 26.23,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_477261_1": {
+      "correctedValueInr": 2481153.0,
+      "estimateInr": 2354027.0,
+      "estimateOverPublished": 100001.1,
+      "evidenceLine": "Agreement Amount (Rs.) 24,81,153/-",
+      "evidenceSha256": "97df29a12623698cfec7fd16f3ff30c99e9b27dbfdd4ae3b055bad8130986bc6",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 23.54,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_477386_1": {
+      "correctedValueInr": 4546612.0,
+      "estimateInr": 4374750.0,
+      "estimateOverPublished": 99994.3,
+      "evidenceLine": "Agreement Amount (Rs.) 45,46,612/-",
+      "evidenceSha256": "51720bcea4a2d8b8312c007c3574ab9891327650843b7e1091f18ad6bba4370d",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 43.75,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_482275_1": {
+      "correctedValueInr": null,
+      "estimateInr": 162206.0,
+      "estimateOverPublished": 162206.0,
+      "evidenceLine": null,
+      "evidenceSha256": null,
+      "evidenceStage": null,
+      "publishedValueInr": 1.0,
+      "status": "implausible_no_letter"
+    },
+    "2025_HRY_489187_1": {
+      "correctedValueInr": 1374400.0,
+      "estimateInr": 1388303.0,
+      "estimateOverPublished": 100021.8,
+      "evidenceLine": "Agreement Amount (Rs.) 13,74,400/-",
+      "evidenceSha256": "7665236f8490a6154ca5bb49db1d3200fea6acf2699401f806f6aef830d67bdf",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 13.88,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_491751_1": {
+      "correctedValueInr": 1614077.0,
+      "estimateInr": 1658472.0,
+      "estimateOverPublished": 100028.5,
+      "evidenceLine": "Agreement Amount (Rs.) 16,14,077/-",
+      "evidenceSha256": "3f25f90129f8ded6f4e25eb12d29fe42afc97963ca2ccf9c98f52d9e3efb6cc8",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 16.58,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_491754_1": {
+      "correctedValueInr": 1022944.0,
+      "estimateInr": 1015470.0,
+      "estimateOverPublished": 100046.3,
+      "evidenceLine": "Agreement Amount (Rs.) 10,22,944/-",
+      "evidenceSha256": "2ea381757e5d01d6fedf06144c9a86ece7eb3c813ff75da5090f759872ae72cf",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 10.15,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_493871_1": {
+      "correctedValueInr": 5237758.0,
+      "estimateInr": 4987100.0,
+      "estimateOverPublished": 100002.0,
+      "evidenceLine": "Agreement Amount (Rs.) 52,37,758/-",
+      "evidenceSha256": "eb2a1d4c8fac75c332600d229a6d8442014e80dfcc692ce01f75b0fd9ce8ca17",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 49.87,
+      "status": "corrected_from_award_letter"
+    },
+    "2025_HRY_494050_1": {
+      "correctedValueInr": 1811579.0,
+      "estimateInr": 1887061.0,
+      "estimateOverPublished": 100003.2,
+      "evidenceLine": "Agreement Amount (Rs.) 18,11,579/-",
+      "evidenceSha256": "4a49df3e46fdbeab26e12606c7ddda5f909c57ef08fb04ee880ac931f69b9843",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 18.87,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_494809_1": {
+      "correctedValueInr": 2064270.0,
+      "estimateInr": 2073020.0,
+      "estimateOverPublished": 100001.0,
+      "evidenceLine": "Agreement Amount (Rs.) 20,64,270/-",
+      "evidenceSha256": "1cd741b2cc06da812232a04e24845bdc75ed4158e6c4d5af46f835bc601393b1",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 20.73,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_494810_1": {
+      "correctedValueInr": 1947630.0,
+      "estimateInr": 1953141.0,
+      "estimateOverPublished": 100007.2,
+      "evidenceLine": "Agreement Amount (Rs.) 19,47,630/-",
+      "evidenceSha256": "bb47744ef5b4f67a172fc09229166242fffa1c5e3ea9b42743ee135623c1efd5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 19.53,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_495561_1": {
+      "correctedValueInr": 1996366.0,
+      "estimateInr": 2056220.0,
+      "estimateOverPublished": 103017.0,
+      "evidenceLine": "Agreement Amount (Rs.) 19,96,366/-",
+      "evidenceSha256": "b13eca6a1b7728e285f0a1228f8e09bd5cd27af0743309203039b458631b2b75",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 19.96,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_498596_1": {
+      "correctedValueInr": 254550.0,
+      "estimateInr": 268888.0,
+      "estimateOverPublished": 99958.4,
+      "evidenceLine": "Agreement Amount (Rs.) 2,54,550/-",
+      "evidenceSha256": "0451e6911e4dd8961ea70bea672105038204bc6bd9a95059dd12c2b60b18246e",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 2.69,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_499996_1": {
+      "correctedValueInr": 24490640.0,
+      "estimateInr": 31226688.0,
+      "estimateOverPublished": 99999.0,
+      "evidenceLine": "Agreement Amount (Rs.) 2,44,90,640/-",
+      "evidenceSha256": "3ab248b2c24fd4cbeb339bd213c7972047e0673c5af80db168c5069953e2f303",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 312.27,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_500954_1": {
+      "correctedValueInr": 1947379.0,
+      "estimateInr": 1877098.0,
+      "estimateOverPublished": 96409.8,
+      "evidenceLine": "Agreement Amount (Rs.) 19,47,379/-",
+      "evidenceSha256": "9ae9eb7d749b94e025aa6318b7d868785b27bd365020678cfc0ff53553b0d298",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 19.47,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_500955_1": {
+      "correctedValueInr": 3781748.0,
+      "estimateInr": 3783185.0,
+      "estimateOverPublished": 100057.8,
+      "evidenceLine": "Agreement Amount (Rs.) 37,81,748/-",
+      "evidenceSha256": "4fec1ca578d9aba79a1d77d84eba5c51817fe9bc5d7110d7c1031e7f04d6098b",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 37.81,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_502367_1": {
+      "correctedValueInr": 1397012.0,
+      "estimateInr": 1332125.0,
+      "estimateOverPublished": 95356.1,
+      "evidenceLine": "Agreement Amount (Rs.) 13,97,012/-",
+      "evidenceSha256": "6d872fb238e0fdf7a17e43ddc77a351a133b7c45779a0c7955230fd423a56016",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 13.97,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_504806_1": {
+      "correctedValueInr": 2872350.0,
+      "estimateInr": 2796750.0,
+      "estimateOverPublished": 97379.9,
+      "evidenceLine": "Agreement Amount (Rs.) 28,72,350/-",
+      "evidenceSha256": "d612902a91006c2dfe79d75a984f90418bec280ad95779cfcf23228d87e6b079",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 28.72,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_506708_1": {
+      "correctedValueInr": 4038932.0,
+      "estimateInr": 3928361.0,
+      "estimateOverPublished": 97284.8,
+      "evidenceLine": "Agreement Amount (Rs.) 40,38,932/-",
+      "evidenceSha256": "efb463312c2d6863a317a81119111be760b6e14f6f30da28a84d82b423a5b644",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 40.38,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_506927_1": {
+      "correctedValueInr": 636500.0,
+      "estimateInr": 650526.0,
+      "estimateOverPublished": 102284.0,
+      "evidenceLine": "Agreement Amount (Rs.) 6,36,500/-",
+      "evidenceSha256": "ce47f7edb7f4a682474180f5d2d18f90a8f0683f1fb7909db4fd234dcb7ab09f",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 6.36,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_507126_1": {
+      "correctedValueInr": 5147646.0,
+      "estimateInr": 5147999.0,
+      "estimateOverPublished": 100019.4,
+      "evidenceLine": "Agreement Amount (Rs.) 51,47,646/-",
+      "evidenceSha256": "7dad8c23180f35b0cce0f93fc4699741001f36901e80010f3ac1be6eece5ed42",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 51.47,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_508081_1": {
+      "correctedValueInr": 4682023.0,
+      "estimateInr": 4484158.0,
+      "estimateOverPublished": 95774.4,
+      "evidenceLine": "Agreement Amount (Rs.) 46,82,023/-",
+      "evidenceSha256": "b852ddfdd104ede8b8b994acea72f3c53a4eba398c8696be957c9214c3a12f5a",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 46.82,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_508563_1": {
+      "correctedValueInr": 1257928.0,
+      "estimateInr": 1342516.0,
+      "estimateOverPublished": 106803.2,
+      "evidenceLine": "Agreement Amount (Rs.) 12,57,928/-",
+      "evidenceSha256": "b728cf177a1b841547a7424cb51919496a2582bde1c75aeed063b07b78b66a77",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 12.57,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_508853_1": {
+      "correctedValueInr": 460472.0,
+      "estimateInr": 503347.0,
+      "estimateOverPublished": 109423.3,
+      "evidenceLine": "Agreement Amount (Rs.) 4,60,472/-",
+      "evidenceSha256": "d4f6bb1fe29a090fc7e20c143b911d76a05979d90d6421a9f088a59360496e23",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.6,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_510934_1": {
+      "correctedValueInr": 9726431.0,
+      "estimateInr": 9177333.0,
+      "estimateOverPublished": 94358.8,
+      "evidenceLine": "Agreement Amount (Rs.) 97,26,431/-",
+      "evidenceSha256": "e6202d02c4ddc6151cd3c1e2ebd99c52ba875ede060b0b67299d231e53866170",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 97.26,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_512798_1": {
+      "correctedValueInr": 3068186.0,
+      "estimateInr": 3187395.0,
+      "estimateOverPublished": 103891.6,
+      "evidenceLine": "Agreement Amount (Rs.) 30,68,186/-",
+      "evidenceSha256": "9afd12e61893e972c0267df22f2f0f9eae740a303f5fec148b9378560bcdccd6",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 30.68,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_512805_1": {
+      "correctedValueInr": 1215017.0,
+      "estimateInr": 1227290.0,
+      "estimateOverPublished": 101011.5,
+      "evidenceLine": "Agreement Amount (Rs.) 12,15,017/-",
+      "evidenceSha256": "c3855f50915a6c733b6068814971f21e9cafed2a9aa00d2b729d089a6350a255",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 12.15,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_515292_1": {
+      "correctedValueInr": 2630150.0,
+      "estimateInr": 2653075.0,
+      "estimateOverPublished": 100877.4,
+      "evidenceLine": "Agreement Amount (Rs.) 26,30,150/-",
+      "evidenceSha256": "0d0f2204d73bccd3bc97b93bf97124396ad386e2a4c4423f3a0e5eccad5e5410",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 26.3,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_516616_1": {
+      "correctedValueInr": 2350335.0,
+      "estimateInr": 2450819.0,
+      "estimateOverPublished": 104290.2,
+      "evidenceLine": "Agreement Amount (Rs.) 23,50,335/-",
+      "evidenceSha256": "114295dbec5e09bdc09d82411d0cebc77d166389ad0438c24dea765116468ab1",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 23.5,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_517312_1": {
+      "correctedValueInr": 8401115.0,
+      "estimateInr": 8034323.0,
+      "estimateOverPublished": 95635.3,
+      "evidenceLine": "Agreement Amount (Rs.) 84,01,115/-",
+      "evidenceSha256": "7215ff555647e9f0634f91acd090dfbee0d07b4e09115c11bffe874da4812870",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 84.01,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_518532_1": {
+      "correctedValueInr": 497375.0,
+      "estimateInr": 494900.0,
+      "estimateOverPublished": 99577.5,
+      "evidenceLine": "Agreement Amount (Rs.) 4,97,375/-",
+      "evidenceSha256": "79be257efb03a22bb2ff19984f7cf9555dcecaffb1f84afa54ffdba35abdb818",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 4.97,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_518537_1": {
+      "correctedValueInr": 4176742.0,
+      "estimateInr": 4187210.0,
+      "estimateOverPublished": 100268.4,
+      "evidenceLine": "Agreement Amount (Rs.) 41,76,742/-",
+      "evidenceSha256": "46c4a796ba59cb80cebbeca42b1e4d447b3d5519dbc825fb3a43ac4545cf57e5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 41.76,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_519008_1": {
+      "correctedValueInr": 2095736.0,
+      "estimateInr": 2099936.0,
+      "estimateOverPublished": 100235.6,
+      "evidenceLine": "Agreement Amount (Rs.) 20,95,736/-",
+      "evidenceSha256": "2bc3560257ac0a9ad8f5fef907e664d22f4f55c653724689cd7b01baccb81710",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 20.95,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_519011_1": {
+      "correctedValueInr": 27149441.0,
+      "estimateInr": 27481138.0,
+      "estimateOverPublished": 101223.4,
+      "evidenceLine": "Agreement Amount (Rs.) 2,71,49,441/-",
+      "evidenceSha256": "ff4771798b9d9d2a1a440daa8be0bd887fe003902971ea4717c145d783616032",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 271.49,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_522581_1": {
+      "correctedValueInr": 1218977.0,
+      "estimateInr": 1231290.0,
+      "estimateOverPublished": 101091.1,
+      "evidenceLine": "Agreement Amount (Rs.) 12,18,977/-",
+      "evidenceSha256": "c1874046097a15cd79f109e82051da09a5bce24d390f019bc1210af6afb7ecaf",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 12.18,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_522586_1": {
+      "correctedValueInr": 560448.0,
+      "estimateInr": 623760.0,
+      "estimateOverPublished": 111385.7,
+      "evidenceLine": "Agreement Amount (Rs.) 5,60,448/-",
+      "evidenceSha256": "973f43ce5f4de5761622d1403134c4fc1127f10c50c19838d3daf528aa2036a5",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 5.6,
+      "status": "corrected_from_award_letter"
+    },
+    "2026_HRY_525817_1": {
+      "correctedValueInr": 255357.0,
+      "estimateInr": 267390.0,
+      "estimateOverPublished": 104858.8,
+      "evidenceLine": "Agreement Amount (Rs.) 2,55,357/-",
+      "evidenceSha256": "fab418baa634e23cef88ed0bd92f03b3fd92157602c81326f0e318b9d3f739fb",
+      "evidenceStage": "AOC",
+      "publishedValueInr": 2.55,
+      "status": "corrected_from_award_letter"
+    }
+  }
+}

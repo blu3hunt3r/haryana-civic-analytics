@@ -343,3 +343,18 @@ export interface TenderIntelligence {
     sourcePath: string;
   }>;
 }
+
+/* Attached by scripts/build_value_corrections.py to the 264 tenders whose published
+   award value carries the lakh-denomination signature. `correctedValueInr` is present
+   only where an award letter states an agreement amount; otherwise the value is flagged
+   and nothing is substituted. */
+export interface ValueCorrection {
+  status: "corrected_from_award_letter" | "implausible_no_letter";
+  publishedValueInr: number;
+  correctedValueInr: number | null;
+  estimateInr: number;
+  estimateOverPublished: number;
+  evidenceSha256: string | null;
+  evidenceStage: string | null;
+  evidenceLine: string | null;
+}

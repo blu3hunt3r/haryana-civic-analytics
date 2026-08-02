@@ -48,7 +48,10 @@ test("the index carries every tender exactly once", () => {
 
 test("the manifest agrees with the index and with the archive", () => {
   assert.equal(manifest.tenderCount, EXPECTED_TENDERS);
-  assert.equal(manifest.packageVersion, 2);
+  /* 3 adds valueCorrection to the 264 tenders whose published award value carries the
+     lakh-denomination signature. Bumped deliberately: a consumer caching v2 packages
+     would otherwise miss the correction entirely. */
+  assert.equal(manifest.packageVersion, 3);
   assert.equal(overview.headline.publishedTendersAllScopes, EXPECTED_TENDERS);
 });
 
@@ -243,4 +246,85 @@ test("packages stay small enough to open one tender cheaply", () => {
   assert.ok(manifest.packageBytes.median < 16_000, `median ${manifest.packageBytes.median} B`);
   assert.ok(manifest.packageBytes.p95 < 24_000, `p95 ${manifest.packageBytes.p95} B`);
   assert.ok(manifest.packageBytes.max < 200_000, `max ${manifest.packageBytes.max} B`);
+});
+
+/* ── PUBLISHED-VALUE CORRECTIONS ─────────────────────────────────────────────────
+   264 tenders publish an award value equal to the estimate divided by 100,000 — a
+   lakh-denominated figure in a rupee column. These assertions exist because the
+   correction is the one place in this codebase where the portal deliberately disagrees
+   with its own source, and the rules that make that legitimate must not erode:
+   only a letter may correct an award, an estimate may never stand in for one, and the
+   original figure is never hidden. */
+const corrections = await read("value-corrections.json");
+
+test("value corrections are evidenced or flagged, never invented", () => {
+  const entries = Object.entries(corrections.tenders);
+  assert.equal(entries.length, corrections.counts.detected);
+  assert.ok(entries.length > 0, "the detector found tenders");
+  let corrected = 0;
+  let flagged = 0;
+  for (const [id, record] of entries) {
+    assert.ok(record.publishedValueInr > 0, `${id} has a published value`);
+    assert.ok(record.estimateInr > 0, `${id} has an estimate`);
+    /* The signature itself: the published value really is the estimate / ~100,000. */
+    assert.ok(
+      record.estimateOverPublished >= 50_000 && record.estimateOverPublished <= 200_000,
+      `${id} ratio ${record.estimateOverPublished} is outside the detection window`,
+    );
+    if (record.status === "corrected_from_award_letter") {
+      corrected += 1;
+      assert.ok(record.correctedValueInr > 0, `${id} corrected value`);
+      /* A CORRECTION MUST CARRY ITS DOCUMENT. An unevidenced correction is a guess. */
+      assert.ok(
+        typeof record.evidenceSha256 === "string" && record.evidenceSha256.length === 64,
+        `${id} must cite the SHA-256 of the letter it was corrected from`,
+      );
+      /* An award lands near its estimate. A "correction" far outside that is not a
+         reading of the agreement amount and must not be published as one. */
+      const ratio = record.correctedValueInr / record.estimateInr;
+      assert.ok(ratio >= 0.5 && ratio <= 1.5,
+        `${id} corrected/estimate ${ratio.toFixed(2)} is not a plausible award`);
+    } else {
+      flagged += 1;
+      assert.equal(record.status, "implausible_no_letter");
+      /* THE RULE THAT MATTERS MOST: with no letter, nothing is substituted. */
+      assert.equal(record.correctedValueInr, null,
+        `${id} has no letter, so it must not carry a corrected value`);
+      assert.equal(record.evidenceSha256, null, `${id} must cite no evidence`);
+    }
+  }
+  assert.equal(corrected, corrections.counts.correctedFromLetter);
+  assert.equal(flagged, corrections.counts.flaggedNoLetter);
+});
+
+test("only letter-evidenced awards move the published headline", () => {
+  const h = corrections.headline;
+  assert.equal(h.publishedControllingContractValue, 83_295_707_464.37);
+  assert.ok(h.afterLetterCorrections > h.publishedControllingContractValue,
+    "corrections raise the total, because the bug understates");
+  assert.ok(
+    Math.abs((h.afterLetterCorrections - h.publishedControllingContractValue)
+             - h.differenceInr) < 1,
+    "the stated difference matches the two totals",
+  );
+  /* A sanity ceiling. If this ever moves by more than a few per cent, the detector has
+     started matching something other than the lakh bug and must be re-examined before
+     anything is published. */
+  const shift = h.differenceInr / h.publishedControllingContractValue;
+  assert.ok(shift > 0 && shift < 0.05,
+    `headline shift ${(shift * 100).toFixed(2)}% is outside the expected range`);
+});
+
+test("affected tenders carry their correction in the package", async () => {
+  const ids = Object.keys(corrections.tenders).slice(0, 12);
+  for (const id of ids) {
+    const pkg = JSON.parse(await readFile(packagePath(id), "utf8"));
+    assert.ok(pkg.valueCorrection, `${id} package carries its correction`);
+    assert.equal(pkg.valueCorrection.status, corrections.tenders[id].status);
+    /* The portal's own figure survives in the package. It is what the State published
+       and a reader may already have quoted it; the page strikes it through rather than
+       removing it. */
+    assert.equal(pkg.valueCorrection.publishedValueInr,
+                 corrections.tenders[id].publishedValueInr);
+  }
 });

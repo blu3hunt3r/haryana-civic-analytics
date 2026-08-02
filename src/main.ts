@@ -37,6 +37,7 @@ import type {
   TenderDetail,
   TenderIndexRow,
   TenderIntelligence,
+  ValueCorrection,
 } from "./types";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -975,6 +976,7 @@ function renderDetail(
       </div>
     </div>
     <div class="detail-warning"><strong>Evidence boundary:</strong> ${detail.isAwarded ? "An award is published." : "No confirmed award is recorded."} Contract value is not payment, and the schedule is not actual completion.</div>
+    ${renderValueCorrection(detail)}
     <dl class="detail-grid">
       <div><dt>Department</dt><dd>${escapeHtml(detail.department)}</dd></div>
       <div><dt>Published</dt><dd>${escapeHtml(detail.publishedAt || "Not published")}</dd></div>
@@ -996,6 +998,57 @@ function renderDetail(
     <div class="detail-actions">
       ${detail.officialStatusUrl ? `<a href="${escapeHtml(detail.officialStatusUrl)}" target="_blank" rel="noopener">Official tender status ↗</a>` : ""}
       ${detail.officialDetailUrl ? `<a href="${escapeHtml(detail.officialDetailUrl)}" target="_blank" rel="noopener">Official tender detail ↗</a>` : ""}
+    </div>`;
+}
+
+
+/* ── THE PORTAL'S OWN AWARD VALUE IS WRONG FOR 264 TENDERS ────────────────────────
+   The published `aoc_total_contract_value_inr` sometimes holds a LAKH-denominated
+   figure in a rupee column, so the award reads as the estimate divided by 100,000.
+   Measured example: tender 2025_HRY_444909_1, a hospital HVAC upgrade, publishes
+   Rs 685.26 against an award letter stating an Agreement Amount of Rs 7,03,27,583.
+
+   Both figures are shown. The portal's value is never hidden — it is what the State
+   published and a reader may have quoted it — and the letter's value is never presented
+   as though the portal agreed. Where no letter exists nothing is substituted: an
+   estimate is not an award value, and putting one in an award column to complete a
+   total would repeat the class of error being reported. */
+function renderValueCorrection(detail: TenderDetail): string {
+  const correction = (detail as { valueCorrection?: ValueCorrection }).valueCorrection;
+  if (!correction) return "";
+  const published = formatRupees(correction.publishedValueInr);
+  const estimate = formatRupees(correction.estimateInr);
+  if (correction.status === "corrected_from_award_letter" && correction.correctedValueInr) {
+    return `
+      <div class="value-correction corrected">
+        <strong>The published award value on this tender is wrong by a factor of about
+        100,000.</strong>
+        <dl>
+          <div><dt>Published by the portal</dt><dd class="struck">${escapeHtml(published)}</dd></div>
+          <div><dt>Stated in the award letter</dt><dd class="corrected-value">${escapeHtml(formatRupees(correction.correctedValueInr))}</dd></div>
+          <div><dt>Government estimate</dt><dd>${escapeHtml(estimate)}</dd></div>
+        </dl>
+        <p>The portal's figure equals the estimate divided by 100,000 — a lakh-denominated
+        value stored in a rupee column. The award letter states the agreement amount
+        directly${correction.evidenceLine ? `: <q>${escapeHtml(correction.evidenceLine)}</q>` : ""}.</p>
+        ${correction.evidenceSha256
+          ? `<p class="provenance">Evidence: ${escapeHtml(correction.evidenceStage ?? "award document")} ·
+             SHA-256 <code>${escapeHtml(shortHash(correction.evidenceSha256))}</code></p>`
+          : ""}
+      </div>`;
+  }
+  return `
+    <div class="value-correction flagged">
+      <strong>The published award value on this tender is implausible.</strong>
+      <dl>
+        <div><dt>Published by the portal</dt><dd class="struck">${escapeHtml(published)}</dd></div>
+        <div><dt>Government estimate</dt><dd>${escapeHtml(estimate)}</dd></div>
+      </dl>
+      <p>The published figure is almost exactly the estimate divided by 100,000, the
+      signature of a lakh-denominated value stored in a rupee column. <strong>No award
+      letter for this tender was retrieved, so the true agreement amount is not
+      established by this archive.</strong> The estimate is shown as the reason the
+      figure is implausible — it is not the award value and must not be read as one.</p>
     </div>`;
 }
 
