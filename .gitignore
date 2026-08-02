@@ -9,3 +9,4 @@ __pycache__/
 # that scripts/build_tender_packages.py consumes; they are legitimate intermediates and
 # were only ever wrong as PUBLISHED artefacts.
 build/shards/
+build/normalised/
