@@ -10,3 +10,5 @@ __pycache__/
 # were only ever wrong as PUBLISHED artefacts.
 build/shards/
 build/normalised/
+build/doctext/
+build/mined/
